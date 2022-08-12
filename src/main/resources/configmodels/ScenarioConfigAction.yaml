@@ -1,0 +1,27 @@
+---
+"$schema": http://json-schema.org/draft-07/schema#
+"$id": https://github.com/airbytehq/airbyte/blob/master/airbyte-config/models/src/main/resources/types/State.yaml
+title: ScenarioConfigAction
+description: Test scenario action settings
+type: object
+required:
+  - action
+additionalProperties: false
+properties:
+  action:
+    description: tbd
+    type: object
+    "$ref": Actions.yaml
+  requiredCreds:
+    description: tbd
+    type: array
+    items:
+      "$ref": InstanceCreds.yaml
+  resultInstanceName:
+    description: tbd
+    type: string
+  requiredInstances:
+    description: tbd
+    type: array
+    items:
+      type: string

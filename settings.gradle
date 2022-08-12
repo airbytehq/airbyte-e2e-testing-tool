@@ -8,3 +8,13 @@
  */
 
 rootProject.name = 'airbyte-e2e-testing-tool'
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        // this plugin
+        classpath 'org.jsonschema2pojo:jsonschema2pojo-gradle-plugin:latest.integration'
+    }
+}

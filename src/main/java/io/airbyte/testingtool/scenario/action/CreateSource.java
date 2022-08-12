@@ -1,26 +1,25 @@
 package io.airbyte.testingtool.scenario.action;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import io.airbyte.testingtool.scenario.instance.AirbyteConnection;
-import io.airbyte.testingtool.scenario.instance.AirbyteInstance;
 import lombok.Builder;
 
 @Builder
-public class ResetConnection extends AbstractScenarioAction {
+public class CreateSource extends AbstractScenarioAction {
 
   private final AirbyteConnection connection;
-  private final AirbyteInstance airbyteInstance;
+  private final JsonNode sourceConfig;
 
   @Override
   public String getActionName() {
-    return "Reset Connection";
+    return "Create Source";
   }
 
   @Override
   public void doActionInternal() {
-    reset();
+    createSource();
   }
 
-  private void reset() {
+  private void createSource() {
   }
-
 }

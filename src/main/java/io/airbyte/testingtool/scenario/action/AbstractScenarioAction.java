@@ -1,6 +1,5 @@
 package io.airbyte.testingtool.scenario.action;
 
-import io.airbyte.testingtool.TestingTool;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -8,13 +7,9 @@ public abstract class AbstractScenarioAction implements Comparable<Integer> {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(AbstractScenarioAction.class);
 
-  private final int order;
+  protected int order;
   private String resultSummary = "Not executed";
   private boolean isExecuted = false;
-
-  public AbstractScenarioAction(int order) {
-    this.order = order;
-  }
 
   public int getOrder() {
     return order;
