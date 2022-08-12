@@ -1,6 +1,18 @@
 package io.airbyte.testingtool.scenario.instance;
 
-public class AirbyteConnection implements Instance {
+import lombok.Builder;
+
+public class AirbyteConnection extends Instance {
+
+  @Builder
+  public AirbyteConnection(String instanceName) {
+    super(instanceName);
+  }
+
+  @Override
+  public InstanceTypes getInstanceType() {
+    return InstanceTypes.CONNECTION;
+  }
 
   public void configureConnection(AirbyteInstance airbyteInstance, SourceInstance sourceInstance, DestinationInstance destinationInstance) {
 

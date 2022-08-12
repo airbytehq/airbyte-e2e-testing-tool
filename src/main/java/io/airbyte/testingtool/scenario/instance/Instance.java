@@ -1,5 +1,14 @@
 package io.airbyte.testingtool.scenario.instance;
 
-public interface Instance {
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
+@Getter
+@AllArgsConstructor
+public abstract class Instance {
+
+  protected String instanceName;
+
+  public abstract InstanceTypes getInstanceType();
 
 }

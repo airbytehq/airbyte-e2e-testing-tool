@@ -3,24 +3,65 @@
   "preparationActions" : [
     {
       "action" : "CREATE_SOURCE",
-      "requiredCreds" : ["SOURCE_CREDS"],
-      "resultInstanceName" : "source_1"
+      "requiredInstances" : [
+        {
+          "instanceName" : "airbyte_1",
+          "instanceType" : "AIRBYTE"
+        }
+      ],
+      "resultInstance" : {
+        "instanceName" : "source_1",
+        "instanceType" : "SOURCE"
+      }
     },
     {
-      "action" : "CREATE_DESTINATION",
-      "requiredCreds" : ["DESTINATION_CREDS"],
-      "resultInstanceName" : "destination_1"
+      "action": "CREATE_DESTINATION",
+      "requiredInstances" : [
+        {
+          "instanceName" : "airbyte_1",
+          "instanceType" : "AIRBYTE"
+        }
+      ],
+      "resultInstance": {
+        "instanceName": "destination_1",
+        "instanceType": "DESTINATION"
+      }
     },
     {
       "action" : "CREATE_CONNECTION",
-      "requiredInstances" : ["source_1", "destination_1"],
-      "resultInstanceName" : "connection_1"
+      "requiredInstances" : [
+        {
+          "instanceName" : "airbyte_1",
+          "instanceType" : "AIRBYTE"
+        },
+        {
+          "instanceName" : "source_1",
+          "instanceType" : "SOURCE"
+        },
+        {
+          "instanceName": "destination_1",
+          "instanceType": "DESTINATION"
+        }
+      ],
+      "resultInstanceName" : {
+        "instanceName": "connection_1",
+        "instanceType": "CONNECTION"
+      }
     }
   ],
   "scenarioActions" : [
     {
       "action" : "SYNC_CONNECTION",
-      "requiredInstances" : ["connection_1"]
+      "requiredInstances" : [
+        {
+          "instanceName" : "airbyte_1",
+          "instanceType" : "AIRBYTE"
+        },
+        {
+          "instanceName": "connection_1",
+          "instanceType": "CONNECTION"
+        }
+      ]
     }
   ]
 }

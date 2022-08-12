@@ -1,22 +1,17 @@
 ---
 "$schema": http://json-schema.org/draft-07/schema#
 "$id": https://github.com/airbytehq/airbyte/blob/master/airbyte-config/models/src/main/resources/types/State.yaml
-title: ScenarioConfigAction
+title: ScenarioConfigInstance
 description: Test scenario action settings
 type: object
 required:
-  - action
+  - instanceName
+  - instanceType
 additionalProperties: false
 properties:
-  action:
+  instanceName:
     description: tbd
-    type: object
-    existingJavaType: io.airbyte.testingtool.scenario.action.Actions
-  resultInstance:
+    type: string
+  instanceType:
     description: tbd
-    "$ref": ScenarioConfigInstance.yaml
-  requiredInstances:
-    description: tbd
-    type: array
-    items:
-      "$ref": ScenarioConfigInstance.yaml
+    existingJavaType: io.airbyte.testingtool.scenario.instance.InstanceTypes

@@ -4,11 +4,17 @@ import io.airbyte.testingtool.scenario.instance.AirbyteConnection;
 import io.airbyte.testingtool.scenario.instance.AirbyteInstance;
 import lombok.Builder;
 
-@Builder
-public class SyncConnection extends AbstractScenarioAction {
+public class ActionSyncConnection extends ScenarioAction {
 
   private final AirbyteConnection connection;
   private final AirbyteInstance airbyteInstance;
+
+  @Builder
+  public ActionSyncConnection(int order, AirbyteConnection connection, AirbyteInstance airbyteInstance) {
+    super(order);
+    this.connection = connection;
+    this.airbyteInstance = airbyteInstance;
+  }
 
   @Override
   public String getActionName() {

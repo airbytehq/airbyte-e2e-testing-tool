@@ -1,6 +1,20 @@
 package io.airbyte.testingtool.scenario.instance;
 
-public class DestinationInstance implements Instance {
+import io.airbyte.testingtool.scenario.config.CredentialConfig;
+import io.airbyte.testingtool.scenario.config.CredentialConfig.InstanceCredTypes;
+import lombok.Builder;
+
+public class DestinationInstance extends InstanceWithCredentials {
+
+  @Builder
+  public DestinationInstance(String instanceName, CredentialConfig credentialConfig) {
+    super(instanceName, credentialConfig);
+  }
+
+  @Override
+  public InstanceTypes getInstanceType() {
+    return InstanceTypes.DESTINATION;
+  }
 
   public void configureDestination(AirbyteInstance airbyteInstance) {
 

@@ -21,3 +21,6 @@ sonar-project.properties
 # netbeans
 .nb-gradle
 .nb-gradle-properties
+
+# local credentials
+secrets

@@ -3,21 +3,25 @@ package io.airbyte.testingtool.scenario.action;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public abstract class AbstractScenarioAction implements Comparable<Integer> {
+public abstract class ScenarioAction implements Comparable<ScenarioAction> {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(AbstractScenarioAction.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(ScenarioAction.class);
 
   protected int order;
   private String resultSummary = "Not executed";
   private boolean isExecuted = false;
+
+  public ScenarioAction(int order) {
+    this.order = order;
+  }
 
   public int getOrder() {
     return order;
   }
 
   @Override
-  public int compareTo(Integer o) {
-    return Integer.compare(order, o);
+  public int compareTo(ScenarioAction o) {
+    return Integer.compare(order, o.getOrder());
   }
 
   public boolean doAction() {
