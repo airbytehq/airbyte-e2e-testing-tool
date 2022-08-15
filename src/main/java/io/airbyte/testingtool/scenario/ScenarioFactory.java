@@ -68,7 +68,9 @@ public class ScenarioFactory {
   }
 
   private static CredentialConfig getCorrespondingConfigAndRemove(ScenarioConfigInstance instanceConfig, List<CredentialConfig> credentialConfigs) {
-    var cred = credentialConfigs.stream().filter(credentialConfig -> credentialConfig.getCredentialType().equals(instanceConfig.getInstanceType().getRequiredCredentials())).findFirst().orElse(null);
+    var cred = credentialConfigs.stream()
+        .filter(credentialConfig -> credentialConfig.getCredentialType().equals(instanceConfig.getInstanceType().getRequiredCredentials()))
+        .findFirst().orElse(null);
     if (cred != null) {
       credentialConfigs.remove(cred);
       LOGGER.info("Instance {} is mapped with credential config {}.", instanceConfig.getInstanceName(), cred.getCredentialName());
@@ -80,10 +82,11 @@ public class ScenarioFactory {
     return getScenario(ScenarioConfigService.getConfig(args), getCreds(args));
   }
 
-  private static SortedSet<ScenarioAction> getActions(List<ScenarioConfigAction> actionConfigs, Map<String, Instance> scenarioInstanceNameToInstanceMap) {
+  private static SortedSet<ScenarioAction> getActions(List<ScenarioConfigAction> actionConfigs,
+      Map<String, Instance> scenarioInstanceNameToInstanceMap) {
     SortedSet<ScenarioAction> actions = new TreeSet<>();
     actionConfigs.forEach(scenarioConfigAction ->
-      actions.add(ActionFactory.getScenarioAction(actions.size(), scenarioConfigAction, scenarioInstanceNameToInstanceMap))
+        actions.add(ActionFactory.getScenarioAction(actions.size(), scenarioConfigAction, scenarioInstanceNameToInstanceMap))
     );
     return actions;
   }

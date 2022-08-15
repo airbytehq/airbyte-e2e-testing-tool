@@ -18,7 +18,8 @@ public abstract class InstanceWithCredentials extends Instance {
     if (credentialConfig.getCredentialType().equals(getRequiredCredentialType())) {
       this.credentialConfig = credentialConfig;
     } else {
-      throw new RuntimeException("Unexpected credential type! Expected : " + getRequiredCredentialType() + ", actual : " + credentialConfig.getCredentialType());
+      throw new RuntimeException(
+          "Unexpected credential type! Expected : " + getRequiredCredentialType() + ", actual : " + credentialConfig.getCredentialType());
     }
   }
 }

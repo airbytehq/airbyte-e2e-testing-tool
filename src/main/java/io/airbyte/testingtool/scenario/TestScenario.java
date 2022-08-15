@@ -14,7 +14,8 @@ public class TestScenario {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(TestScenario.class);
 
-  @Getter protected String scenarioName;
+  @Getter
+  protected String scenarioName;
   protected boolean isFailed;
   protected SortedSet<ScenarioAction> preparationActions;
   protected SortedSet<ScenarioAction> scenarioActions;
@@ -29,9 +30,9 @@ public class TestScenario {
 
   private String executeActions(SortedSet<ScenarioAction> actions) {
     if (isFailed) {
-      return "Skip execution of actions " + actions.stream().map(ScenarioAction::getActionName).collect(Collectors.joining(", ")) + " due to previous failure.";
-    }
-    else {
+      return "Skip execution of actions " + actions.stream().map(ScenarioAction::getActionName).collect(Collectors.joining(", "))
+          + " due to previous failure.";
+    } else {
       StringBuilder summary = new StringBuilder();
       for (ScenarioAction action : actions) {
         boolean isActionSuccessful = action.doAction();

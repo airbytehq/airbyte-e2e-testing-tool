@@ -14,7 +14,8 @@ public class ActionCreateConnection extends ScenarioAction {
   private final SourceInstance sourceInstance;
 
   @Builder
-  public ActionCreateConnection(int order, AirbyteInstance airbyteInstance, AirbyteConnection connection, DestinationInstance destinationInstance, SourceInstance sourceInstance) {
+  public ActionCreateConnection(int order, AirbyteInstance airbyteInstance, AirbyteConnection connection, DestinationInstance destinationInstance,
+      SourceInstance sourceInstance) {
     super(order);
     this.connection = connection;
     this.airbyteInstance = airbyteInstance;

@@ -7,7 +7,8 @@ import lombok.Getter;
 
 public class AirbyteInstance extends InstanceWithCredentials {
 
-  @Getter private AirbyteApiClient airbyteApi;
+  @Getter
+  private AirbyteApiClient airbyteApi;
 
   @Builder
   public AirbyteInstance(String instanceName, CredentialConfig credentialConfig) {

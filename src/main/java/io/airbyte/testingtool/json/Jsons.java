@@ -124,8 +124,7 @@ public class Jsons {
   }
 
   /**
-   * By the Jackson DefaultPrettyPrinter prints objects with an extra space as follows: {"name" :
-   * "airbyte"}. We prefer {"name": "airbyte"}.
+   * By the Jackson DefaultPrettyPrinter prints objects with an extra space as follows: {"name" : "airbyte"}. We prefer {"name": "airbyte"}.
    */
   private static class JsonPrettyPrinter extends DefaultPrettyPrinter {
 

@@ -1,7 +1,5 @@
 package io.airbyte.testingtool.scenario.action;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import io.airbyte.testingtool.scenario.instance.AirbyteConnection;
 import io.airbyte.testingtool.scenario.instance.AirbyteInstance;
 import io.airbyte.testingtool.scenario.instance.DestinationInstance;
 import lombok.Builder;

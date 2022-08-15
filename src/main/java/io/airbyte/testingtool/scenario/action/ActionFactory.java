@@ -28,20 +28,25 @@ public class ActionFactory {
     };
   }
 
-  private static <T extends Instance> T getInstanceByType(InstanceTypes type, List<ScenarioConfigInstance> scenarioConfigInstances, Map<String, Instance> scenarioInstanceNameToInstanceMap, Class<T> clazz) {
-    var filteredList = scenarioConfigInstances.stream().filter(scenarioConfigInstance -> scenarioConfigInstance.getInstanceType().equals(type)).toList();
+  private static <T extends Instance> T getInstanceByType(InstanceTypes type, List<ScenarioConfigInstance> scenarioConfigInstances,
+      Map<String, Instance> scenarioInstanceNameToInstanceMap, Class<T> clazz) {
+    var filteredList = scenarioConfigInstances.stream().filter(scenarioConfigInstance -> scenarioConfigInstance.getInstanceType().equals(type))
+        .toList();
     if (filteredList.size() == 1) {
       return getInstance(filteredList.get(0), scenarioInstanceNameToInstanceMap, clazz);
     } else {
-      throw new RuntimeException("Found " + (filteredList.size()>1?"multiply("+filteredList.size()+") values ": "zero values ") + "for type " + type );
+      throw new RuntimeException(
+          "Found " + (filteredList.size() > 1 ? "multiply(" + filteredList.size() + ") values " : "zero values ") + "for type " + type);
     }
   }
 
-  private static <T extends Instance> T getInstance(ScenarioConfigInstance scenarioConfigInstance, Map<String, Instance> scenarioInstanceNameToInstanceMap, Class<T> clazz)  {
+  private static <T extends Instance> T getInstance(ScenarioConfigInstance scenarioConfigInstance,
+      Map<String, Instance> scenarioInstanceNameToInstanceMap, Class<T> clazz) {
     return clazz.cast(scenarioInstanceNameToInstanceMap.get(scenarioConfigInstance.getInstanceName()));
   }
 
-  private static ActionCreateSource getActionCreateSource(int order, ScenarioConfigAction config, Map<String, Instance> scenarioInstanceNameToInstanceMap) {
+  private static ActionCreateSource getActionCreateSource(int order, ScenarioConfigAction config,
+      Map<String, Instance> scenarioInstanceNameToInstanceMap) {
     return ActionCreateSource
         .builder()
         .order(order)
@@ -50,7 +55,8 @@ public class ActionFactory {
         .build();
   }
 
-  private static ActionCreateDestination getActionCreateDestination(int order, ScenarioConfigAction config, Map<String, Instance> scenarioInstanceNameToInstanceMap) {
+  private static ActionCreateDestination getActionCreateDestination(int order, ScenarioConfigAction config,
+      Map<String, Instance> scenarioInstanceNameToInstanceMap) {
     return ActionCreateDestination
         .builder()
         .order(order)
@@ -59,18 +65,21 @@ public class ActionFactory {
         .build();
   }
 
-  private static ActionCreateConnection getActionCreateConnection(int order, ScenarioConfigAction config, Map<String, Instance> scenarioInstanceNameToInstanceMap) {
+  private static ActionCreateConnection getActionCreateConnection(int order, ScenarioConfigAction config,
+      Map<String, Instance> scenarioInstanceNameToInstanceMap) {
     return ActionCreateConnection
         .builder()
         .order(order)
         .airbyteInstance(getInstanceByType(AIRBYTE, config.getRequiredInstances(), scenarioInstanceNameToInstanceMap, AirbyteInstance.class))
-        .destinationInstance(getInstanceByType(DESTINATION, config.getRequiredInstances(), scenarioInstanceNameToInstanceMap, DestinationInstance.class))
+        .destinationInstance(
+            getInstanceByType(DESTINATION, config.getRequiredInstances(), scenarioInstanceNameToInstanceMap, DestinationInstance.class))
         .sourceInstance(getInstanceByType(SOURCE, config.getRequiredInstances(), scenarioInstanceNameToInstanceMap, SourceInstance.class))
         .connection(getInstance(config.getResultInstance(), scenarioInstanceNameToInstanceMap, AirbyteConnection.class))
         .build();
   }
 
-  private static ActionSyncConnection getActionSyncConnection(int order, ScenarioConfigAction config, Map<String, Instance> scenarioInstanceNameToInstanceMap) {
+  private static ActionSyncConnection getActionSyncConnection(int order, ScenarioConfigAction config,
+      Map<String, Instance> scenarioInstanceNameToInstanceMap) {
     return ActionSyncConnection
         .builder()
         .order(order)
@@ -79,7 +88,8 @@ public class ActionFactory {
         .build();
   }
 
-  private static ActionResetConnection getActionResetConnection(int order, ScenarioConfigAction config, Map<String, Instance> scenarioInstanceNameToInstanceMap) {
+  private static ActionResetConnection getActionResetConnection(int order, ScenarioConfigAction config,
+      Map<String, Instance> scenarioInstanceNameToInstanceMap) {
     return ActionResetConnection
         .builder()
         .order(order)
