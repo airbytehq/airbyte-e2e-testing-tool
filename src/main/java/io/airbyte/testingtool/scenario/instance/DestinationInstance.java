@@ -1,7 +1,6 @@
 package io.airbyte.testingtool.scenario.instance;
 
 import io.airbyte.testingtool.scenario.config.CredentialConfig;
-import io.airbyte.testingtool.scenario.config.CredentialConfig.InstanceCredTypes;
 import lombok.Builder;
 
 public class DestinationInstance extends InstanceWithCredentials {

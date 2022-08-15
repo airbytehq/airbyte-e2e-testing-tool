@@ -1,11 +1,19 @@
 package io.airbyte.testingtool.scenario.action;
 
+import static io.airbyte.testingtool.scenario.instance.InstanceTypes.AIRBYTE;
+import static io.airbyte.testingtool.scenario.instance.InstanceTypes.CONNECTION;
+import static io.airbyte.testingtool.scenario.instance.InstanceTypes.DESTINATION;
+import static io.airbyte.testingtool.scenario.instance.InstanceTypes.SOURCE;
+
 import io.airbyte.testingtool.scenario.config.ScenarioConfigAction;
+import io.airbyte.testingtool.scenario.config.ScenarioConfigInstance;
 import io.airbyte.testingtool.scenario.instance.AirbyteConnection;
 import io.airbyte.testingtool.scenario.instance.AirbyteInstance;
 import io.airbyte.testingtool.scenario.instance.DestinationInstance;
 import io.airbyte.testingtool.scenario.instance.Instance;
+import io.airbyte.testingtool.scenario.instance.InstanceTypes;
 import io.airbyte.testingtool.scenario.instance.SourceInstance;
+import java.util.List;
 import java.util.Map;
 
 public class ActionFactory {
@@ -20,66 +28,64 @@ public class ActionFactory {
     };
   }
 
-  private static ActionCreateSource getActionCreateSource(int order, ScenarioConfigAction config, Map<String, Instance> scenarioInstanceNameToInstanceMap) {
-    var builder = ActionCreateSource.builder().order(order);
-    config.getRequiredInstances().forEach(scenarioConfigInstance -> {
-      switch (scenarioConfigInstance.getInstanceType()) {
-        case SOURCE -> builder.sourceInstance((SourceInstance) scenarioInstanceNameToInstanceMap.get(scenarioConfigInstance.getInstanceName()));
-        case AIRBYTE -> builder.airbyteInstance((AirbyteInstance) scenarioInstanceNameToInstanceMap.get(scenarioConfigInstance.getInstanceName()));
-      }
-    });
+  private static <T extends Instance> T getInstanceByType(InstanceTypes type, List<ScenarioConfigInstance> scenarioConfigInstances, Map<String, Instance> scenarioInstanceNameToInstanceMap, Class<T> clazz) {
+    var filteredList = scenarioConfigInstances.stream().filter(scenarioConfigInstance -> scenarioConfigInstance.getInstanceType().equals(type)).toList();
+    if (filteredList.size() == 1) {
+      return getInstance(filteredList.get(0), scenarioInstanceNameToInstanceMap, clazz);
+    } else {
+      throw new RuntimeException("Found " + (filteredList.size()>1?"multiply("+filteredList.size()+") values ": "zero values ") + "for type " + type );
+    }
+  }
 
-    return builder.build();
+  private static <T extends Instance> T getInstance(ScenarioConfigInstance scenarioConfigInstance, Map<String, Instance> scenarioInstanceNameToInstanceMap, Class<T> clazz)  {
+    return clazz.cast(scenarioInstanceNameToInstanceMap.get(scenarioConfigInstance.getInstanceName()));
+  }
+
+  private static ActionCreateSource getActionCreateSource(int order, ScenarioConfigAction config, Map<String, Instance> scenarioInstanceNameToInstanceMap) {
+    return ActionCreateSource
+        .builder()
+        .order(order)
+        .airbyteInstance(getInstanceByType(AIRBYTE, config.getRequiredInstances(), scenarioInstanceNameToInstanceMap, AirbyteInstance.class))
+        .sourceInstance(getInstance(config.getResultInstance(), scenarioInstanceNameToInstanceMap, SourceInstance.class))
+        .build();
   }
 
   private static ActionCreateDestination getActionCreateDestination(int order, ScenarioConfigAction config, Map<String, Instance> scenarioInstanceNameToInstanceMap) {
-    var builder = ActionCreateDestination.builder().order(order);
-    config.getRequiredInstances().forEach(scenarioConfigInstance -> {
-      switch (scenarioConfigInstance.getInstanceType()) {
-        case DESTINATION -> builder.destinationInstance((DestinationInstance) scenarioInstanceNameToInstanceMap.get(scenarioConfigInstance.getInstanceName()));
-        case AIRBYTE -> builder.airbyteInstance((AirbyteInstance) scenarioInstanceNameToInstanceMap.get(scenarioConfigInstance.getInstanceName()));
-      }
-    });
-
-    return builder.build();
+    return ActionCreateDestination
+        .builder()
+        .order(order)
+        .airbyteInstance(getInstanceByType(AIRBYTE, config.getRequiredInstances(), scenarioInstanceNameToInstanceMap, AirbyteInstance.class))
+        .destinationInstance(getInstance(config.getResultInstance(), scenarioInstanceNameToInstanceMap, DestinationInstance.class))
+        .build();
   }
 
   private static ActionCreateConnection getActionCreateConnection(int order, ScenarioConfigAction config, Map<String, Instance> scenarioInstanceNameToInstanceMap) {
-    var builder = ActionCreateConnection.builder().order(order);
-    config.getRequiredInstances().forEach(scenarioConfigInstance -> {
-      switch (scenarioConfigInstance.getInstanceType()) {
-        case DESTINATION -> builder.destinationInstance((DestinationInstance) scenarioInstanceNameToInstanceMap.get(scenarioConfigInstance.getInstanceName()));
-        case SOURCE -> builder.sourceInstance((SourceInstance) scenarioInstanceNameToInstanceMap.get(scenarioConfigInstance.getInstanceName()));
-        case CONNECTION -> builder.connection((AirbyteConnection) scenarioInstanceNameToInstanceMap.get(scenarioConfigInstance.getInstanceName()));
-        case AIRBYTE -> builder.airbyteInstance((AirbyteInstance) scenarioInstanceNameToInstanceMap.get(scenarioConfigInstance.getInstanceName()));
-      }
-    });
-
-    return builder.build();
+    return ActionCreateConnection
+        .builder()
+        .order(order)
+        .airbyteInstance(getInstanceByType(AIRBYTE, config.getRequiredInstances(), scenarioInstanceNameToInstanceMap, AirbyteInstance.class))
+        .destinationInstance(getInstanceByType(DESTINATION, config.getRequiredInstances(), scenarioInstanceNameToInstanceMap, DestinationInstance.class))
+        .sourceInstance(getInstanceByType(SOURCE, config.getRequiredInstances(), scenarioInstanceNameToInstanceMap, SourceInstance.class))
+        .connection(getInstance(config.getResultInstance(), scenarioInstanceNameToInstanceMap, AirbyteConnection.class))
+        .build();
   }
 
   private static ActionSyncConnection getActionSyncConnection(int order, ScenarioConfigAction config, Map<String, Instance> scenarioInstanceNameToInstanceMap) {
-    var builder = ActionSyncConnection.builder().order(order);
-    config.getRequiredInstances().forEach(scenarioConfigInstance -> {
-      switch (scenarioConfigInstance.getInstanceType()) {
-        case CONNECTION -> builder.connection((AirbyteConnection) scenarioInstanceNameToInstanceMap.get(scenarioConfigInstance.getInstanceName()));
-        case AIRBYTE -> builder.airbyteInstance((AirbyteInstance) scenarioInstanceNameToInstanceMap.get(scenarioConfigInstance.getInstanceName()));
-      }
-    });
-
-    return builder.build();
+    return ActionSyncConnection
+        .builder()
+        .order(order)
+        .airbyteInstance(getInstanceByType(AIRBYTE, config.getRequiredInstances(), scenarioInstanceNameToInstanceMap, AirbyteInstance.class))
+        .connection(getInstanceByType(CONNECTION, config.getRequiredInstances(), scenarioInstanceNameToInstanceMap, AirbyteConnection.class))
+        .build();
   }
 
   private static ActionResetConnection getActionResetConnection(int order, ScenarioConfigAction config, Map<String, Instance> scenarioInstanceNameToInstanceMap) {
-    var builder = ActionResetConnection.builder().order(order);
-    config.getRequiredInstances().forEach(scenarioConfigInstance -> {
-      switch (scenarioConfigInstance.getInstanceType()) {
-        case CONNECTION -> builder.connection((AirbyteConnection) scenarioInstanceNameToInstanceMap.get(scenarioConfigInstance.getInstanceName()));
-        case AIRBYTE -> builder.airbyteInstance((AirbyteInstance) scenarioInstanceNameToInstanceMap.get(scenarioConfigInstance.getInstanceName()));
-      }
-    });
-
-    return builder.build();
+    return ActionResetConnection
+        .builder()
+        .order(order)
+        .airbyteInstance(getInstanceByType(AIRBYTE, config.getRequiredInstances(), scenarioInstanceNameToInstanceMap, AirbyteInstance.class))
+        .connection(getInstanceByType(CONNECTION, config.getRequiredInstances(), scenarioInstanceNameToInstanceMap, AirbyteConnection.class))
+        .build();
   }
 
 }

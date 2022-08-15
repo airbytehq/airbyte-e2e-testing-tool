@@ -29,5 +29,6 @@ public class ActionCreateDestination extends ScenarioAction {
   }
 
   private void createDestination() {
+
   }
 }

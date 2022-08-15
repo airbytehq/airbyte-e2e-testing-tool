@@ -43,7 +43,7 @@
           "instanceType": "DESTINATION"
         }
       ],
-      "resultInstanceName" : {
+      "resultInstance" : {
         "instanceName": "connection_1",
         "instanceType": "CONNECTION"
       }
