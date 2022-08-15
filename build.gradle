@@ -13,7 +13,6 @@ buildscript {
     }
 
     dependencies {
-        // this plugin
         classpath 'org.jsonschema2pojo:jsonschema2pojo-gradle-plugin:latest.integration'
     }
 }
@@ -28,6 +27,9 @@ version '1.0.0'
 
 repositories {
     mavenCentral()
+    maven {
+        url "https://airbyte.mycloudrepo.io/public/repositories/airbyte-public-jars/"
+    }
 }
 
 dependencies {
@@ -38,7 +40,7 @@ dependencies {
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.3'
     implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.13.3'
     implementation 'org.apache.commons:commons-lang3:3.12.0'
-
+    implementation 'io.airbyte:airbyte-api:0.40.0-alpha'
 }
 
 jsonSchema2Pojo {
