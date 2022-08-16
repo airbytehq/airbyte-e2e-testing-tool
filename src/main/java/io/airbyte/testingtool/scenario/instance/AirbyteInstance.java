@@ -13,21 +13,33 @@ import org.slf4j.LoggerFactory;
 
 public class AirbyteInstance extends InstanceWithCredentials {
   private static final Logger LOGGER = LoggerFactory.getLogger(AirbyteInstance.class);
-  private static final String CLOUD_API_USER = "cloud-api";
+  private static final String API_USER = "cloud-api";
+  private static final String API_HOST_NODE = "apiHost";
+  private static final String API_PORT_NODE = "apiPort";
+  private static final String API_PATH_NODE = "apiPath";
+  private static final String API_SCHEME_NODE = "apiScheme";
+
   @Getter
   private AirbyteApiClient airbyteApi;
 
   @Builder
-  public AirbyteInstance(String instanceName, CredentialConfig credentialConfig, String apiServerHost, int apiServerPort) {
+  public AirbyteInstance(String instanceName, CredentialConfig credentialConfig) {
     super(instanceName, credentialConfig);
+    String apiServerHost = credentialConfig.getCredentialJson().get(API_HOST_NODE).textValue();
+    int apiServerPort = Integer.valueOf(credentialConfig.getCredentialJson().get(API_PORT_NODE).textValue());
+    String apiPath = credentialConfig.getCredentialJson().get(API_PATH_NODE).textValue();
+    apiPath = apiPath == null ? "/api" : apiPath;
+    String apiScheme = credentialConfig.getCredentialJson().get(API_SCHEME_NODE).textValue();
+    apiScheme = apiScheme == null ? "http" : apiScheme;
+
     LOGGER.info("Creating Airbyte Config Api Client <" + instanceName + ">");
     airbyteApi = new AirbyteApiClient(new ApiClient()
-        .setScheme("http")
+        .setScheme(apiScheme)
         .setHost(apiServerHost)
         .setPort(apiServerPort)
-        .setBasePath("/api")
+        .setBasePath(apiPath)
         .setRequestInterceptor(builder -> {
-          builder.setHeader("X-Endpoint-API-UserInfo", getAuthHeader(CLOUD_API_USER, true));
+          builder.setHeader("X-Endpoint-API-UserInfo", getAuthHeader(API_USER, true));
           builder.setHeader("User-Agent", "Airbyte-E2E-Testing-Tool");
         }));
   }
