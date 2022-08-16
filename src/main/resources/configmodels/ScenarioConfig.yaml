@@ -2,7 +2,8 @@
 "$schema": http://json-schema.org/draft-07/schema#
 "$id": https://github.com/airbytehq/airbyte/blob/master/airbyte-config/models/src/main/resources/types/State.yaml
 title: ScenarioConfig
-description: Test scenario action settings
+description: The test scenario contains a list of actions required for preparation and execution. Scenario has no credentials and can be reused 
+  with different credentials.
 type: object
 required:
   - scenarioName
@@ -11,15 +12,15 @@ required:
 additionalProperties: false
 properties:
   scenarioName:
-    description: tbd
+    description: Scenario name. Recommend to keep it unique to understand which scenario is executed from logs.
     type: string
   preparationActions:
-    description: tbd
+    description: List of actions required to prepare all conditions before the test run.
     type: array
     items:
       "$ref": ScenarioConfigAction.yaml
   scenarioActions:
-    description: tbd
+    description: Test actions.
     type: array
     items:
       "$ref": ScenarioConfigAction.yaml
