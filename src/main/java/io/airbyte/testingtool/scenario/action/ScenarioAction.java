@@ -46,7 +46,7 @@ public abstract class ScenarioAction implements Comparable<ScenarioAction> {
     return "Ok";
   }
 
-  protected abstract void doActionInternal();
+  protected abstract void doActionInternal() throws Exception;
 
   public abstract String getActionName();
 
