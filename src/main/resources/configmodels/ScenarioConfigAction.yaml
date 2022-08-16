@@ -2,21 +2,21 @@
 "$schema": http://json-schema.org/draft-07/schema#
 "$id": https://github.com/airbytehq/airbyte/blob/master/airbyte-config/models/src/main/resources/types/State.yaml
 title: ScenarioConfigAction
-description: Test scenario action settings
+description: The scenario action is an atomic operation. It can be operated inside Airbyte like `Connection creation` or manipulation with source data.
 type: object
 required:
   - action
 additionalProperties: false
 properties:
   action:
-    description: tbd
+    description: Action implementation.
     type: object
     existingJavaType: io.airbyte.testingtool.scenario.action.Actions
   resultInstance:
-    description: tbd
-    "$ref": ScenarioConfigInstance.yaml
+    description: The instance name will be initialized during action execution. The instance should be defined in the ScenarioConfig.usedInstances
+    type: string
   requiredInstances:
-    description: tbd
+    description: The list of instance name required for the action execution. The instances should be defined in the ScenarioConfig.usedInstances
     type: array
     items:
-      "$ref": ScenarioConfigInstance.yaml
+      type: string

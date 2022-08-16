@@ -2,7 +2,8 @@
 "$schema": http://json-schema.org/draft-07/schema#
 "$id": https://github.com/airbytehq/airbyte/blob/master/airbyte-config/models/src/main/resources/types/State.yaml
 title: ScenarioConfigInstance
-description: Test scenario action settings
+description: A logical object instance provides all required data for action execution. For example, the action `Connection creation` requires
+  `Source instance`, `Destination instance`, and `Airbyte instance. The result of such action will be a `Connection instance`.
 type: object
 required:
   - instanceName
@@ -10,8 +11,8 @@ required:
 additionalProperties: false
 properties:
   instanceName:
-    description: tbd
+    description: Instance name. Notice that name is the way to work with the same instance in different actions.
     type: string
   instanceType:
-    description: tbd
+    description: Instance type.
     existingJavaType: io.airbyte.testingtool.scenario.instance.InstanceTypes

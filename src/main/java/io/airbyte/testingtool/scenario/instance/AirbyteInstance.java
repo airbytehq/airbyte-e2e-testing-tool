@@ -10,6 +10,7 @@ import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import lombok.Setter;
 
 public class AirbyteInstance extends InstanceWithCredentials {
   private static final Logger LOGGER = LoggerFactory.getLogger(AirbyteInstance.class);
@@ -20,6 +21,7 @@ public class AirbyteInstance extends InstanceWithCredentials {
   private static final String API_SCHEME_NODE = "apiScheme";
 
   @Getter
+  @Setter
   private AirbyteApiClient airbyteApi;
 
   @Builder
