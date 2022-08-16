@@ -17,14 +17,15 @@ public class ValidationService {
   public static boolean validateScenarioConfig(ScenarioConfig scenarioConfig) {
     var results = Arrays.asList(validateUsedInstances(scenarioConfig), validateAllActionInstancesInUsedInstances(scenarioConfig),
         validateAllRequiredInstancesInitiated(scenarioConfig));
-    printResults(results);
+    printResults(scenarioConfig.getScenarioName(), results);
     return results.stream().noneMatch(ValidationResult::isFailed);
   }
 
-  private static void printResults(List<ValidationResult> results) {
+  private static void printResults(String scenarioName, List<ValidationResult> results) {
     var longestName = results.stream().map(validationResult -> validationResult.getValidationName().length())
         .max(Integer::compareTo).get();
-    LOGGER.info("Scenario {} validation result : \n" + results.stream().map(validationResult -> validationResult.getFormattedSummary(longestName))
+    LOGGER.info("Scenario `" + scenarioName + "` validation result : \n" + results.stream()
+        .map(validationResult -> validationResult.getFormattedSummary(longestName))
         .collect(Collectors.joining("\n")));
   }
 
