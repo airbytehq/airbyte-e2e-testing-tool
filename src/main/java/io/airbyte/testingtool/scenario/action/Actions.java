@@ -4,6 +4,7 @@ import io.airbyte.testingtool.scenario.config.CredentialConfig.InstanceCredTypes
 
 public enum Actions {
 
+  CONNECT_AIRBYTE_API(InstanceCredTypes.AIRBYTE_CREDS),
   RESET_CONNECTION(null),
   SYNC_CONNECTION(null),
   CREATE_SOURCE(InstanceCredTypes.SOURCE_CREDS),

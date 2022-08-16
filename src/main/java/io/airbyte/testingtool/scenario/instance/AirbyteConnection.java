@@ -2,7 +2,7 @@ package io.airbyte.testingtool.scenario.instance;
 
 import lombok.Builder;
 
-public class AirbyteConnection extends Instance {
+public class AirbyteConnection extends Instance implements InstanceRequireInitialization {
 
   @Builder
   public AirbyteConnection(String instanceName) {
