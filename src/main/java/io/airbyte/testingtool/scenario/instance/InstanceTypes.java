@@ -5,25 +5,27 @@ import static io.airbyte.testingtool.scenario.config.CredentialConfig.InstanceCr
 import static io.airbyte.testingtool.scenario.config.CredentialConfig.InstanceCredTypes.SOURCE_CREDS;
 
 import io.airbyte.testingtool.scenario.config.CredentialConfig.InstanceCredTypes;
+import lombok.Getter;
 
 public enum InstanceTypes {
 
-  AIRBYTE(AIRBYTE_CREDS),
-  SOURCE(SOURCE_CREDS),
-  DESTINATION(DESTINATION_CREDS),
-  CONNECTION(null);
+  AIRBYTE(AIRBYTE_CREDS, true),
+  SOURCE(SOURCE_CREDS, true),
+  DESTINATION(DESTINATION_CREDS, true),
+  CONNECTION(null, true);
 
+  @Getter
   private final InstanceCredTypes requiredCredentials;
+  @Getter
+  private final boolean initializationIsRequired;
 
-  InstanceTypes(InstanceCredTypes requiredCredentials) {
+  InstanceTypes(InstanceCredTypes requiredCredentials, boolean initializationIsRequired) {
     this.requiredCredentials = requiredCredentials;
+    this.initializationIsRequired = initializationIsRequired;
   }
 
   public boolean isCredentialsRequired() {
     return requiredCredentials != null;
   }
 
-  public InstanceCredTypes getRequiredCredentials() {
-    return requiredCredentials;
-  }
 }

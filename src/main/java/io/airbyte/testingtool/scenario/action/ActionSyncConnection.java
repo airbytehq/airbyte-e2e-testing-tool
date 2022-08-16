@@ -9,7 +9,9 @@ import io.airbyte.api.client.model.generated.ConnectionIdRequestBody;
 import io.airbyte.api.client.model.generated.JobInfoRead;
 import io.airbyte.testingtool.scenario.instance.AirbyteConnection;
 import io.airbyte.testingtool.scenario.instance.AirbyteInstance;
+import io.airbyte.testingtool.scenario.instance.Instance;
 import java.util.Arrays;
+import java.util.List;
 import lombok.Builder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,8 +24,9 @@ public class ActionSyncConnection extends ScenarioAction {
   private final AirbyteInstance airbyteInstance;
 
   @Builder
-  public ActionSyncConnection(int order, AirbyteConnection connection, AirbyteInstance airbyteInstance) {
-    super(order);
+  public ActionSyncConnection(int order, List<Instance> requiredInstances, Instance resultInstance, AirbyteConnection connection,
+      AirbyteInstance airbyteInstance) {
+    super(order, requiredInstances, resultInstance);
     this.connection = connection;
     this.airbyteInstance = airbyteInstance;
   }

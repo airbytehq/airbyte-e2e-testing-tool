@@ -5,7 +5,7 @@ import io.airbyte.testingtool.scenario.config.CredentialConfig.InstanceCredTypes
 import lombok.Getter;
 
 @Getter
-public abstract class InstanceWithCredentials extends Instance implements InstanceRequireInitialization {
+public abstract class InstanceWithCredentials extends Instance {
 
   protected CredentialConfig credentialConfig;
 

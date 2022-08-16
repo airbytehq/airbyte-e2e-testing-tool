@@ -53,7 +53,9 @@ public class ScenarioFactory {
   }
 
   private static Set<ScenarioConfigInstance> getScenarioInstances(ScenarioConfig config) {
-    ValidationService.validateScenarioConfig(config);
+    if (!ValidationService.validateScenarioConfig(config)) {
+      throw new RuntimeException("Scenario validation failed! Check the log for more details.");
+    }
     return new HashSet<>(config.getUsedInstances());
   }
 

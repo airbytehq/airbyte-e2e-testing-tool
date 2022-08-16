@@ -3,13 +3,16 @@ package io.airbyte.testingtool.scenario.action;
 import io.airbyte.api.client.AirbyteApiClient;
 import io.airbyte.api.client.invoker.generated.ApiClient;
 import io.airbyte.testingtool.scenario.instance.AirbyteInstance;
+import io.airbyte.testingtool.scenario.instance.Instance;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
+import java.util.List;
 import lombok.Builder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class ActionConnectToAirbyteAPI extends ScenarioAction {
+
   private static final Logger LOGGER = LoggerFactory.getLogger(ActionConnectToAirbyteAPI.class);
 
   private static final String API_USER = "cloud-api";
@@ -21,8 +24,8 @@ public class ActionConnectToAirbyteAPI extends ScenarioAction {
   private final AirbyteInstance airbyteInstance;
 
   @Builder
-  public ActionConnectToAirbyteAPI(int order, AirbyteInstance airbyteInstance) {
-    super(order);
+  public ActionConnectToAirbyteAPI(int order, List<Instance> requiredInstances, Instance resultInstance, AirbyteInstance airbyteInstance) {
+    super(order, requiredInstances, resultInstance);
     this.airbyteInstance = airbyteInstance;
   }
 

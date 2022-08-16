@@ -5,7 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
-public class AirbyteConnection extends Instance implements InstanceRequireInitialization {
+public class AirbyteConnection extends Instance {
 
   @Getter
   @Setter
