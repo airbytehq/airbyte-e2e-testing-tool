@@ -13,10 +13,10 @@ properties:
     type: object
     existingJavaType: io.airbyte.testingtool.scenario.action.Actions
   resultInstance:
-    description: The instance will be initialized during action execution.
-    "$ref": ScenarioConfigInstance.yaml
+    description: The instance name will be initialized during action execution. The instance should be defined in the ScenarioConfig.usedInstances
+    type: string
   requiredInstances:
-    description: The list of instances required for the action execution.
+    description: The list of instance name required for the action execution. The instances should be defined in the ScenarioConfig.usedInstances
     type: array
     items:
-      "$ref": ScenarioConfigInstance.yaml
+      type: string

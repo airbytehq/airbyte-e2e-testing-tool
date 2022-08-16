@@ -7,6 +7,7 @@ description: The test scenario contains a list of actions required for preparati
 type: object
 required:
   - scenarioName
+  - usedInstances
   - preparationActions
   - scenarioActions
 additionalProperties: false
@@ -14,6 +15,11 @@ properties:
   scenarioName:
     description: Scenario name. Recommend to keep it unique to understand which scenario is executed from logs.
     type: string
+  usedInstances:
+    description: List of instance that can be used inside the scenario.
+    type: array
+    items:
+      "$ref": ScenarioConfigInstance.yaml
   preparationActions:
     description: List of actions required to prepare all conditions before the test run.
     type: array

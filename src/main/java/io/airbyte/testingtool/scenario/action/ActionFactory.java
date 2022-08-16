@@ -20,6 +20,7 @@ public class ActionFactory {
 
   public static ScenarioAction getScenarioAction(int order, ScenarioConfigAction config, Map<String, Instance> scenarioInstanceNameToInstanceMap) {
     return switch (config.getAction()) {
+      case CONNECT_AIRBYTE_API -> getActionConnectToAirbyteAPI(order, config, scenarioInstanceNameToInstanceMap);
       case RESET_CONNECTION -> getActionResetConnection(order, config, scenarioInstanceNameToInstanceMap);
       case SYNC_CONNECTION -> getActionSyncConnection(order, config, scenarioInstanceNameToInstanceMap);
       case CREATE_SOURCE -> getActionCreateSource(order, config, scenarioInstanceNameToInstanceMap);
@@ -28,21 +29,31 @@ public class ActionFactory {
     };
   }
 
-  private static <T extends Instance> T getInstanceByType(InstanceTypes type, List<ScenarioConfigInstance> scenarioConfigInstances,
+  private static <T extends Instance> T getInstanceByType(InstanceTypes type, List<String> scenarioConfigInstanceNames,
       Map<String, Instance> scenarioInstanceNameToInstanceMap, Class<T> clazz) {
-    var filteredList = scenarioConfigInstances.stream().filter(scenarioConfigInstance -> scenarioConfigInstance.getInstanceType().equals(type))
+
+    var filteredList = scenarioConfigInstanceNames.stream().map(scenarioInstanceNameToInstanceMap::get).filter(instance -> instance.getInstanceType().equals(type))
         .toList();
     if (filteredList.size() == 1) {
-      return getInstance(filteredList.get(0), scenarioInstanceNameToInstanceMap, clazz);
+      return clazz.cast(filteredList.get(0));
     } else {
       throw new RuntimeException(
           "Found " + (filteredList.size() > 1 ? "multiply(" + filteredList.size() + ") values " : "zero values ") + "for type " + type);
     }
   }
 
-  private static <T extends Instance> T getInstance(ScenarioConfigInstance scenarioConfigInstance,
+  private static <T extends Instance> T getInstance(String instanceName,
       Map<String, Instance> scenarioInstanceNameToInstanceMap, Class<T> clazz) {
-    return clazz.cast(scenarioInstanceNameToInstanceMap.get(scenarioConfigInstance.getInstanceName()));
+    return clazz.cast(scenarioInstanceNameToInstanceMap.get(instanceName));
+  }
+
+  private static ActionConnectToAirbyteAPI getActionConnectToAirbyteAPI(int order, ScenarioConfigAction config,
+      Map<String, Instance> scenarioInstanceNameToInstanceMap) {
+    return ActionConnectToAirbyteAPI
+        .builder()
+        .order(order)
+        .airbyteInstance(getInstance(config.getResultInstance(), scenarioInstanceNameToInstanceMap, AirbyteInstance.class))
+        .build();
   }
 
   private static ActionCreateSource getActionCreateSource(int order, ScenarioConfigAction config,

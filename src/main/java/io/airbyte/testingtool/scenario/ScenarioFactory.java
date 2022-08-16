@@ -4,14 +4,13 @@ import io.airbyte.testingtool.json.Jsons;
 import io.airbyte.testingtool.scenario.action.ActionFactory;
 import io.airbyte.testingtool.scenario.action.ScenarioAction;
 import io.airbyte.testingtool.scenario.config.CredentialConfig;
-import io.airbyte.testingtool.scenario.config.CredentialConfig.InstanceCredTypes;
 import io.airbyte.testingtool.scenario.config.ScenarioConfig;
 import io.airbyte.testingtool.scenario.config.ScenarioConfigAction;
 import io.airbyte.testingtool.scenario.config.ScenarioConfigInstance;
 import io.airbyte.testingtool.scenario.config.ScenarioConfigService;
-import io.airbyte.testingtool.scenario.instance.AirbyteInstance;
 import io.airbyte.testingtool.scenario.instance.Instance;
 import io.airbyte.testingtool.scenario.instance.InstanceFactory;
+import io.airbyte.testingtool.scenario.validator.ValidationService;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -24,7 +23,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
-import java.util.stream.Stream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -55,16 +53,8 @@ public class ScenarioFactory {
   }
 
   private static Set<ScenarioConfigInstance> getScenarioInstances(ScenarioConfig config) {
-    Set<ScenarioConfigInstance> instances = new HashSet<>();
-    Stream.concat(config.getPreparationActions().stream(), config.getScenarioActions().stream()).forEach(scenarioConfigAction -> {
-      if (scenarioConfigAction.getResultInstance() != null) {
-        instances.add(scenarioConfigAction.getResultInstance());
-      }
-      if (scenarioConfigAction.getRequiredInstances() != null) {
-        instances.addAll(scenarioConfigAction.getRequiredInstances());
-      }
-    });
-    return instances;
+    ValidationService.validateScenarioConfig(config);
+    return new HashSet<>(config.getUsedInstances());
   }
 
   private static CredentialConfig getCorrespondingConfigAndRemove(ScenarioConfigInstance instanceConfig, List<CredentialConfig> credentialConfigs) {
@@ -89,22 +79,6 @@ public class ScenarioFactory {
         actions.add(ActionFactory.getScenarioAction(actions.size(), scenarioConfigAction, scenarioInstanceNameToInstanceMap))
     );
     return actions;
-  }
-
-  private static CredentialConfig getAirbyteCreds(List<CredentialConfig> credentialConfigs) {
-    List<CredentialConfig> airbyteCreds = credentialConfigs.stream()
-        .filter(credentialConfig -> credentialConfig.getCredentialType().equals(InstanceCredTypes.AIRBYTE_CREDS)).toList();
-    if (airbyteCreds.size() == 0) {
-      throw new RuntimeException("There should be at least one Airbyte credential config!");
-    } else if (airbyteCreds.size() > 1) {
-      throw new RuntimeException("Multiply Airbyte instances are not supported so far!");
-    } else {
-      return airbyteCreds.get(0);
-    }
-  }
-
-  private static AirbyteInstance getAirbyteInstance(CredentialConfig airbyteCreds) {
-    return null;
   }
 
   private static List<CredentialConfig> getCreds(String[] args) throws IOException {
