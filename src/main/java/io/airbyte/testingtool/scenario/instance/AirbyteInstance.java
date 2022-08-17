@@ -63,6 +63,7 @@ public class AirbyteInstance extends InstanceWithCredentials {
 
   private UUID getWorkspaceIdFromAirbyteApi() {
     try {
+      // todo: Now, we use the first workspace from the list. In the future, it should be replaced, and get workspace by slug name.
       var optionalWorkspaceReader = airbyteApi.getWorkspaceApi()
               .listWorkspaces()
               .getWorkspaces()
