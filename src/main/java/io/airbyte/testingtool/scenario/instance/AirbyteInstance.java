@@ -1,7 +1,6 @@
 package io.airbyte.testingtool.scenario.instance;
 
 import io.airbyte.api.client.AirbyteApiClient;
-import io.airbyte.api.client.invoker.generated.ApiException;
 import io.airbyte.testingtool.scenario.config.CredentialConfig;
 import lombok.Builder;
 import lombok.Getter;

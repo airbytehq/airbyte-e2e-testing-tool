@@ -3,13 +3,16 @@ package io.airbyte.testingtool.scenario.action;
 import io.airbyte.api.client.AirbyteApiClient;
 import io.airbyte.api.client.invoker.generated.ApiClient;
 import io.airbyte.testingtool.scenario.instance.AirbyteInstance;
+import io.airbyte.testingtool.scenario.instance.Instance;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
+import java.util.List;
 import lombok.Builder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class ActionConnectToAirbyteAPI extends ScenarioAction {
+
   private static final Logger LOGGER = LoggerFactory.getLogger(ActionConnectToAirbyteAPI.class);
 
   private static final String API_USER = "cloud-api";
@@ -21,8 +24,8 @@ public class ActionConnectToAirbyteAPI extends ScenarioAction {
   private final AirbyteInstance airbyteInstance;
 
   @Builder
-  public ActionConnectToAirbyteAPI(int order, AirbyteInstance airbyteInstance) {
-    super(order);
+  public ActionConnectToAirbyteAPI(int order, List<Instance> requiredInstances, Instance resultInstance, AirbyteInstance airbyteInstance) {
+    super(order, requiredInstances, resultInstance);
     this.airbyteInstance = airbyteInstance;
   }
 
@@ -39,18 +42,16 @@ public class ActionConnectToAirbyteAPI extends ScenarioAction {
   private void connectToApi() {
     var creds = airbyteInstance.getCredentialConfig();
     String apiServerHost = creds.getCredentialJson().get(API_HOST_NODE).textValue();
-    int apiServerPort = Integer.valueOf(creds.getCredentialJson().get(API_PORT_NODE).textValue());
-    String apiPath = creds.getCredentialJson().get(API_PATH_NODE).textValue();
-    apiPath = apiPath == null ? "/api" : apiPath;
-    String apiScheme = creds.getCredentialJson().get(API_SCHEME_NODE).textValue();
-    apiScheme = apiScheme == null ? "http" : apiScheme;
+    int apiServerPort = Integer.parseInt(creds.getCredentialJson().get(API_PORT_NODE).textValue());
+    var apiPath = creds.getCredentialJson().get(API_PATH_NODE);
+    var apiScheme = creds.getCredentialJson().get(API_SCHEME_NODE);
 
     LOGGER.info("Creating Airbyte Config Api Client");
     AirbyteApiClient airbyteApi = new AirbyteApiClient(new ApiClient()
-        .setScheme(apiScheme)
+        .setScheme(apiScheme == null ? "http" : apiScheme.textValue())
         .setHost(apiServerHost)
         .setPort(apiServerPort)
-        .setBasePath(apiPath)
+        .setBasePath(apiPath == null ? "/api" : apiPath.textValue())
         .setRequestInterceptor(builder -> {
           builder.setHeader("X-Endpoint-API-UserInfo", getAuthHeader(API_USER, true));
           builder.setHeader("User-Agent", "Airbyte-E2E-Testing-Tool");

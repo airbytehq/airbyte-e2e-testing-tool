@@ -3,7 +3,9 @@ package io.airbyte.testingtool.scenario.action;
 import io.airbyte.api.client.invoker.generated.ApiException;
 import io.airbyte.api.client.model.generated.SourceCreate;
 import io.airbyte.testingtool.scenario.instance.AirbyteInstance;
+import io.airbyte.testingtool.scenario.instance.Instance;
 import io.airbyte.testingtool.scenario.instance.SourceInstance;
+import java.util.List;
 import lombok.Builder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,8 +17,9 @@ public class ActionCreateSource extends ScenarioAction {
   private final SourceInstance sourceInstance;
 
   @Builder
-  public ActionCreateSource(int order, AirbyteInstance airbyteInstance, SourceInstance sourceInstance) {
-    super(order);
+  public ActionCreateSource(int order, List<Instance> requiredInstances, Instance resultInstance, AirbyteInstance airbyteInstance,
+      SourceInstance sourceInstance) {
+    super(order, requiredInstances, resultInstance);
     this.airbyteInstance = airbyteInstance;
     this.sourceInstance = sourceInstance;
   }
