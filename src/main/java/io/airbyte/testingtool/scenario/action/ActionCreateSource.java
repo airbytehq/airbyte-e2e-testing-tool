@@ -1,10 +1,15 @@
 package io.airbyte.testingtool.scenario.action;
 
+import io.airbyte.api.client.invoker.generated.ApiException;
+import io.airbyte.api.client.model.generated.SourceCreate;
 import io.airbyte.testingtool.scenario.instance.AirbyteInstance;
 import io.airbyte.testingtool.scenario.instance.SourceInstance;
 import lombok.Builder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ActionCreateSource extends ScenarioAction {
+  private static final Logger LOGGER = LoggerFactory.getLogger(ActionCreateSource.class);
 
   private final AirbyteInstance airbyteInstance;
   private final SourceInstance sourceInstance;
@@ -27,5 +32,17 @@ public class ActionCreateSource extends ScenarioAction {
   }
 
   private void createSource() {
+    SourceCreate createSource = new SourceCreate();
+    createSource.setConnectionConfiguration(sourceInstance.getCredentialConfig().getCredentialJson());
+    createSource.setName(sourceInstance.getInstanceName());
+    createSource.setWorkspaceId(airbyteInstance.getWorkspaceId());
+    var definitionName = sourceInstance.getCredentialConfig().getInstanceType();
+    createSource.setSourceDefinitionId(airbyteInstance.getSourceDefinitionId(definitionName));
+    try {
+      airbyteInstance.getAirbyteApi().getSourceApi().createSource(createSource);
+      LOGGER.info("New source \"{}\" successfully created.", definitionName);
+    } catch (ApiException e) {
+      throw new RuntimeException("Fail to create new source", e);
+    }
   }
 }
