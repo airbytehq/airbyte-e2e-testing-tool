@@ -59,6 +59,27 @@ public class AirbyteInstance extends InstanceWithCredentials {
     }
   }
 
+  public UUID getDestinationDefinitionId(String definitionName) {
+    try {
+      var destinationDefinitionsList = airbyteApi.getDestinationDefinitionApi()
+              .listDestinationDefinitions()
+              .getDestinationDefinitions();
+      var optionalDestinationDefinition = destinationDefinitionsList
+              .stream()
+              .filter(destinationDefinition -> definitionName.equals(destinationDefinition.getName()))
+              .findFirst();
+      if (optionalDestinationDefinition.isPresent()) {
+        return optionalDestinationDefinition.get().getDestinationDefinitionId();
+      } else {
+        LOGGER.error("There are no destination definition available with name \"{}\"", definitionName);
+        throw new RuntimeException(String.format("There are no destination definition available with name \"%s\"", definitionName));
+      }
+    } catch (ApiException e) {
+      LOGGER.error("Fail to airbyte client connect");
+      throw new RuntimeException("Fail to airbyte client connect", e);
+    }
+  }
+
   /* Helpers */
 
   private UUID getWorkspaceIdFromAirbyteApi() {
