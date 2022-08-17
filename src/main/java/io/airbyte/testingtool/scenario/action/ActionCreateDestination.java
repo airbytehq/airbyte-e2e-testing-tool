@@ -1,12 +1,18 @@
 package io.airbyte.testingtool.scenario.action;
 
+import io.airbyte.api.client.invoker.generated.ApiException;
+import io.airbyte.api.client.model.generated.DestinationCreate;
 import io.airbyte.testingtool.scenario.instance.AirbyteInstance;
 import io.airbyte.testingtool.scenario.instance.DestinationInstance;
 import io.airbyte.testingtool.scenario.instance.Instance;
-import java.util.List;
 import lombok.Builder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.List;
 
 public class ActionCreateDestination extends ScenarioAction {
+  private static final Logger LOGGER = LoggerFactory.getLogger(ActionCreateDestination.class);
 
   private final AirbyteInstance airbyteInstance;
   private final DestinationInstance destinationInstance;
@@ -30,6 +36,17 @@ public class ActionCreateDestination extends ScenarioAction {
   }
 
   private void createDestination() {
-
+    DestinationCreate createDestination = new DestinationCreate();
+    createDestination.setConnectionConfiguration(destinationInstance.getCredentialConfig().getCredentialJson());
+    createDestination.setName(destinationInstance.getInstanceName());
+    createDestination.setWorkspaceId(airbyteInstance.getWorkspaceId());
+    var definitionName = destinationInstance.getCredentialConfig().getInstanceType();
+    createDestination.setDestinationDefinitionId(airbyteInstance.getDestinationDefinitionId(definitionName));
+    try {
+      airbyteInstance.getAirbyteApi().getDestinationApi().createDestination(createDestination);
+      LOGGER.info("New destination \"{}\" successfully created.", definitionName);
+    } catch (ApiException e) {
+      throw new RuntimeException("Fail to create new destination", e);
+    }
   }
 }
