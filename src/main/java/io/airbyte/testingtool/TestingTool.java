@@ -11,25 +11,19 @@ public class TestingTool {
 
   public static void main(String[] args) throws IOException {
 
-    LOGGER.warn("Testing tool started!");
+    LOGGER.info("Testing tool started!");
 
     var scenario = ScenarioFactory.getScenario(args);
     LOGGER.info("Scenario [{}] is selected for execution.", scenario.getScenarioName());
 
-    var preparationSummary = scenario.prepareScenario();
-    LOGGER.info("""
-        Scenario preparation is finished.\s
-        Summary :\s
-        {}""", preparationSummary);
-    LOGGER.info("Scenario preparation is finished.");
+    scenario.prepareScenario();
+    LOGGER.info("Scenario preparation finished.");
+    scenario.runScenario();
+    LOGGER.info("Scenario execution finished.");
 
-    var executionSummary = scenario.runScenario();
-    LOGGER.info("""
-        Scenario execution is finished.\s
-        Summary :\s
-        {}""", executionSummary);
+    scenario.printSummary();
 
-    LOGGER.warn("Testing tool finished!");
+    LOGGER.info("Testing tool execution finished!");
   }
 
 }

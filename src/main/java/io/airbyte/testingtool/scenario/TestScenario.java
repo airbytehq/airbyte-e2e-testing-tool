@@ -2,7 +2,6 @@ package io.airbyte.testingtool.scenario;
 
 import io.airbyte.testingtool.scenario.action.ScenarioAction;
 import java.util.SortedSet;
-import java.util.stream.Collectors;
 import lombok.Builder;
 import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
@@ -16,36 +15,51 @@ public class TestScenario {
 
   @Getter
   protected String scenarioName;
+  @Getter
   protected boolean isFailed;
   protected SortedSet<ScenarioAction> preparationActions;
   protected SortedSet<ScenarioAction> scenarioActions;
 
-  public String prepareScenario() {
-    return executeActions(preparationActions);
+  public void prepareScenario() {
+    executeActions(preparationActions);
   }
 
-  public String runScenario() {
-    return executeActions(scenarioActions);
+  public void runScenario() {
+    executeActions(scenarioActions);
   }
 
-  private String executeActions(SortedSet<ScenarioAction> actions) {
-    if (isFailed) {
-      return "Skip execution of actions " + actions.stream().map(ScenarioAction::getActionName).collect(Collectors.joining(", "))
-          + " due to previous failure.";
-    } else {
-      StringBuilder summary = new StringBuilder();
+  private void executeActions(SortedSet<ScenarioAction> actions) {
+    if (!isFailed) {
       for (ScenarioAction action : actions) {
-        boolean isActionSuccessful = action.doAction();
-        summary.append(StringUtils.rightPad("  [" + action.getActionName() + "]", 30)).append(" : ").append(action.getResultSummary()).append("\n");
-        if (!isActionSuccessful) {
+        action.doAction();
+        if (action.getStatus().isFailure()) {
           LOGGER.error("Scenario execution stops due to action [{}] failure.", action.getActionName());
           isFailed = true;
           break;
         }
       }
-
-      return summary.toString();
     }
+  }
+
+  public void printSummary() {
+    LOGGER.info("""
+            Scenario `{}` execution is finished {}.
+            Preparation actions :
+            {}
+            Scenario actions    :
+            {}
+            """, scenarioName, (isFailed ? " with errors!" : "successfully"), getActionSummaryText(preparationActions),
+        getActionSummaryText(scenarioActions));
+  }
+
+  private String getActionSummaryText(SortedSet<ScenarioAction> actions) {
+    StringBuilder summary = new StringBuilder();
+    actions.forEach(action -> {
+      summary.append(StringUtils.rightPad("  [" + action.getActionName() + "]", 30)).append(" : ").append(action.getStatus().name());
+      var actionText = action.getResultSummary();
+      summary.append((StringUtils.isNotEmpty(actionText) ? " - " + actionText : "")).append("\n");
+    });
+    return summary.toString();
   }
 
 }

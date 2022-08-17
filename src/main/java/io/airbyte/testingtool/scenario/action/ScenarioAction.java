@@ -2,6 +2,7 @@ package io.airbyte.testingtool.scenario.action;
 
 import io.airbyte.testingtool.scenario.instance.Instance;
 import java.util.List;
+import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,13 +13,17 @@ public abstract class ScenarioAction implements Comparable<ScenarioAction> {
   protected final int order;
   private final List<Instance> requiredInstances;
   private final Instance resultInstance;
-  private String resultSummary = "Not executed";
+  @Getter
+  private String resultSummary = "";
+  @Getter
+  private ActionStatuses status;
   private boolean isExecuted = false;
 
   public ScenarioAction(int order, List<Instance> requiredInstances, Instance resultInstance) {
     this.order = order;
     this.requiredInstances = requiredInstances;
     this.resultInstance = resultInstance;
+    this.status = ActionStatuses.NOT_EXECUTED;
   }
 
   public int getOrder() {
@@ -30,24 +35,28 @@ public abstract class ScenarioAction implements Comparable<ScenarioAction> {
     return Integer.compare(order, o.getOrder());
   }
 
-  public boolean doAction() {
-    boolean result = true;
+  public void doAction() {
     if (isRepeatable() || !isExecuted) {
       try {
         checkAllRequiredInstancesInitialized();
         doActionInternal();
-        resultSummary = getSuccessfulExecutionSummary();
-        resultInstance.setInitialized(true);
+        status = ActionStatuses.OK;
+        markResultInstanceAsInitialized();
+
       } catch (Exception e) {
+        status = ActionStatuses.FAILED;
         resultSummary = "Execution failed with exception : " + e.getMessage();
-        result = false;
       }
       isExecuted = true;
     } else {
       LOGGER.error("Action {} can't be executed one more time!", getActionName());
-      result = false;
     }
-    return result;
+  }
+
+  private void markResultInstanceAsInitialized() {
+    if (resultInstance != null) {
+      resultInstance.setInitialized(true);
+    }
   }
 
   private void checkAllRequiredInstancesInitialized() {
@@ -59,10 +68,6 @@ public abstract class ScenarioAction implements Comparable<ScenarioAction> {
     }
   }
 
-  protected String getSuccessfulExecutionSummary() {
-    return "Ok";
-  }
-
   protected abstract void doActionInternal() throws Exception;
 
   public abstract String getActionName();
@@ -71,8 +76,5 @@ public abstract class ScenarioAction implements Comparable<ScenarioAction> {
     return true;
   }
 
-  public String getResultSummary() {
-    return resultSummary;
-  }
 
 }
