@@ -59,7 +59,6 @@ public class ActionConnectToAirbyteAPI extends ScenarioAction {
         }));
 
     airbyteInstance.setAirbyteApi(airbyteApi);
-    ConnectionApi con = airbyteApi.getConnectionApi();
   }
 
   private static String getAuthHeader(String userId, final boolean verified) {
