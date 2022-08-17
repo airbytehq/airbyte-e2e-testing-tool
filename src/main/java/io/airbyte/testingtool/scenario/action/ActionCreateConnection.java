@@ -54,12 +54,11 @@ public class ActionCreateConnection extends ScenarioAction {
 //          .syncCatalog(connection.getSyncCatalog())
 //          .schedule(connection.getSchedule())
 //          .operationIds(connection.getOperationIds())
-          .name(connection.getName())
           .namespaceDefinition(NamespaceDefinitionType.CUSTOMFORMAT)
           .namespaceFormat("output_namespace_${SOURCE_NAMESPACE}")
           .prefix("output_table_");
       ConnectionRead connectionRead = airbyteInstance.getAirbyteApi().getConnectionApi().createConnection(connectionConfig);
-      connection.setConnection(connectionRead);
+      connection.getConnectionId(connectionRead.connectionId());
     }
     catch (ApiException e) {
       LOGGER.error("Error creating connection", e);

@@ -13,23 +13,7 @@ public class AirbyteConnection extends Instance {
 
   @Getter
   @Setter
-  private ConnectionRead connection;
-
-  @Getter
-  @Setter
-  private String name;
-
-  @Getter
-  @Setter
-  private AirbyteCatalog syncCatalog;
-
-  @Getter
-  @Setter
-  private ConnectionSchedule schedule;
-
-  @Getter
-  @Setter
-  private List<UUID> operationIds;
+  private UUID connectionId;
 
   @Builder
   public AirbyteConnection(String instanceName) {
