@@ -43,7 +43,8 @@ public class ActionCreateDestination extends ScenarioAction {
     var definitionName = destinationInstance.getCredentialConfig().getInstanceType();
     createDestination.setDestinationDefinitionId(airbyteInstance.getDestinationDefinitionId(definitionName));
     try {
-      airbyteInstance.getAirbyteApi().getDestinationApi().createDestination(createDestination);
+      var createdDestination = airbyteInstance.getAirbyteApi().getDestinationApi().createDestination(createDestination);
+      destinationInstance.setId(createdDestination.getDestinationId());
       LOGGER.info("New destination \"{}\" successfully created.", definitionName);
     } catch (ApiException e) {
       throw new RuntimeException("Fail to create new destination", e);

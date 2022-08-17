@@ -1,13 +1,10 @@
 package io.airbyte.testingtool.scenario.instance;
 
-import io.airbyte.api.client.model.generated.AirbyteCatalog;
-import io.airbyte.api.client.model.generated.ConnectionRead;
-import io.airbyte.api.client.model.generated.ConnectionSchedule;
-import java.util.List;
-import java.util.UUID;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.UUID;
 
 public class AirbyteConnection extends Instance {
 
