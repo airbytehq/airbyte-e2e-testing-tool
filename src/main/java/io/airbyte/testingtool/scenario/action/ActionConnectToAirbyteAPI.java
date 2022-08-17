@@ -1,6 +1,7 @@
 package io.airbyte.testingtool.scenario.action;
 
 import io.airbyte.api.client.AirbyteApiClient;
+import io.airbyte.api.client.generated.ConnectionApi;
 import io.airbyte.api.client.invoker.generated.ApiClient;
 import io.airbyte.testingtool.scenario.instance.AirbyteInstance;
 import io.airbyte.testingtool.scenario.instance.Instance;
@@ -42,15 +43,15 @@ public class ActionConnectToAirbyteAPI extends ScenarioAction {
   private void connectToApi() {
     var creds = airbyteInstance.getCredentialConfig();
     String apiServerHost = creds.getCredentialJson().get(API_HOST_NODE).textValue();
-    int apiServerPort = Integer.parseInt(creds.getCredentialJson().get(API_PORT_NODE).textValue());
+    var apiServerPort = creds.getCredentialJson().get(API_PORT_NODE);
     var apiPath = creds.getCredentialJson().get(API_PATH_NODE);
     var apiScheme = creds.getCredentialJson().get(API_SCHEME_NODE);
 
-    LOGGER.info("Creating Airbyte Config Api Client");
+    LOGGER.info("Creating Airbyte Config Api Client...");
     AirbyteApiClient airbyteApi = new AirbyteApiClient(new ApiClient()
         .setScheme(apiScheme == null ? "http" : apiScheme.textValue())
         .setHost(apiServerHost)
-        .setPort(apiServerPort)
+        .setPort(apiServerPort == null ? 80 : Integer.parseInt(apiServerPort.textValue()))
         .setBasePath(apiPath == null ? "/api" : apiPath.textValue())
         .setRequestInterceptor(builder -> {
           builder.setHeader("X-Endpoint-API-UserInfo", getAuthHeader(API_USER, true));

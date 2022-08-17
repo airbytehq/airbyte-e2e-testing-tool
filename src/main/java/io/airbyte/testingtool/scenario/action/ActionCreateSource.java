@@ -42,7 +42,8 @@ public class ActionCreateSource extends ScenarioAction {
     var definitionName = sourceInstance.getCredentialConfig().getInstanceType();
     createSource.setSourceDefinitionId(airbyteInstance.getSourceDefinitionId(definitionName));
     try {
-      airbyteInstance.getAirbyteApi().getSourceApi().createSource(createSource);
+      var createdSource = airbyteInstance.getAirbyteApi().getSourceApi().createSource(createSource);
+      sourceInstance.setId(createdSource.getSourceId());
       LOGGER.info("New source \"{}\" successfully created.", definitionName);
     } catch (ApiException e) {
       throw new RuntimeException("Fail to create new source", e);

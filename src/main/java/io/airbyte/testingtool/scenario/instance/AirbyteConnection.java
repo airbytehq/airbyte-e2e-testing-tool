@@ -1,9 +1,10 @@
 package io.airbyte.testingtool.scenario.instance;
 
-import java.util.UUID;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.UUID;
 
 public class AirbyteConnection extends Instance {
 
