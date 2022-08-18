@@ -16,6 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class ActionCreateConnection extends ScenarioAction {
+
   private static final Logger LOGGER = LoggerFactory.getLogger(ActionCreateConnection.class);
 
   private final AirbyteInstance airbyteInstance;
@@ -39,27 +40,22 @@ public class ActionCreateConnection extends ScenarioAction {
   }
 
   @Override
-  public void doActionInternal() {
+  public void doActionInternal() throws ApiException {
     createConnection();
   }
 
-  private void createConnection() {
-    try {
-      ConnectionCreate connectionConfig = new ConnectionCreate()
-          .status(ConnectionStatus.ACTIVE)
-          .sourceId(sourceInstance.getId())
-          .destinationId(destinationInstance.getId())
-//          .syncCatalog(connection.getSyncCatalog())
-//          .schedule(connection.getSchedule())
-//          .operationIds(connection.getOperationIds())
-          .namespaceDefinition(NamespaceDefinitionType.CUSTOMFORMAT)
-          .namespaceFormat("output_namespace_${SOURCE_NAMESPACE}")
-          .prefix("output_table_");
-      ConnectionRead connectionRead = airbyteInstance.getAirbyteApi().getConnectionApi().createConnection(connectionConfig);
-      connection.setConnectionId(connectionRead.getConnectionId());
-    }
-    catch (ApiException e) {
-      LOGGER.error("Error creating connection", e);
-    }
+  private void createConnection() throws ApiException {
+
+    ConnectionCreate connectionConfig = new ConnectionCreate()
+        .status(ConnectionStatus.ACTIVE)
+        .sourceId(sourceInstance.getId())
+        .destinationId(destinationInstance.getId())
+        .syncCatalog(sourceInstance.discoverSourceSchema())
+        .namespaceDefinition(NamespaceDefinitionType.CUSTOMFORMAT)
+        .namespaceFormat("output_namespace_${SOURCE_NAMESPACE}")
+        .prefix("output_table_");
+    ConnectionRead connectionRead = airbyteInstance.getAirbyteApi().getConnectionApi().createConnection(connectionConfig);
+    connection.setConnectionId(connectionRead.getConnectionId());
+
   }
 }

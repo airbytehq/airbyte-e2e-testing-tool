@@ -5,13 +5,13 @@ import io.airbyte.api.client.model.generated.DestinationCreate;
 import io.airbyte.testingtool.scenario.instance.AirbyteInstance;
 import io.airbyte.testingtool.scenario.instance.DestinationInstance;
 import io.airbyte.testingtool.scenario.instance.Instance;
+import java.util.List;
 import lombok.Builder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.List;
-
 public class ActionCreateDestination extends ScenarioAction {
+
   private static final Logger LOGGER = LoggerFactory.getLogger(ActionCreateDestination.class);
 
   private final AirbyteInstance airbyteInstance;
@@ -31,23 +31,20 @@ public class ActionCreateDestination extends ScenarioAction {
   }
 
   @Override
-  public void doActionInternal() {
+  public void doActionInternal() throws ApiException {
     createDestination();
   }
 
-  private void createDestination() {
+  private void createDestination() throws ApiException {
     DestinationCreate createDestination = new DestinationCreate();
     createDestination.setConnectionConfiguration(destinationInstance.getCredentialConfig().getCredentialJson());
     createDestination.setName(destinationInstance.getInstanceName());
     createDestination.setWorkspaceId(airbyteInstance.getWorkspaceId());
     var definitionName = destinationInstance.getCredentialConfig().getInstanceType();
     createDestination.setDestinationDefinitionId(airbyteInstance.getDestinationDefinitionId(definitionName));
-    try {
-      var createdDestination = airbyteInstance.getAirbyteApi().getDestinationApi().createDestination(createDestination);
-      destinationInstance.setId(createdDestination.getDestinationId());
-      LOGGER.info("New destination \"{}\" successfully created.", definitionName);
-    } catch (ApiException e) {
-      throw new RuntimeException("Fail to create new destination", e);
-    }
+
+    var createdDestination = airbyteInstance.getAirbyteApi().getDestinationApi().createDestination(createDestination);
+    destinationInstance.setId(createdDestination.getDestinationId());
+    LOGGER.info("New destination \"{}\" successfully created.", definitionName);
   }
 }

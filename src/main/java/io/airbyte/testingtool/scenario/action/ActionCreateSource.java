@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class ActionCreateSource extends ScenarioAction {
+
   private static final Logger LOGGER = LoggerFactory.getLogger(ActionCreateSource.class);
 
   private final AirbyteInstance airbyteInstance;
@@ -44,6 +45,7 @@ public class ActionCreateSource extends ScenarioAction {
     try {
       var createdSource = airbyteInstance.getAirbyteApi().getSourceApi().createSource(createSource);
       sourceInstance.setId(createdSource.getSourceId());
+      sourceInstance.setAirbyteInstance(airbyteInstance);
       LOGGER.info("New source \"{}\" successfully created.", definitionName);
     } catch (ApiException e) {
       throw new RuntimeException("Fail to create new source", e);

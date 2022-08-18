@@ -1,5 +1,8 @@
 package io.airbyte.testingtool.scenario.instance;
 
+import io.airbyte.api.client.invoker.generated.ApiException;
+import io.airbyte.api.client.model.generated.AirbyteCatalog;
+import io.airbyte.api.client.model.generated.SourceDiscoverSchemaRequestBody;
 import io.airbyte.testingtool.scenario.config.CredentialConfig;
 import java.util.UUID;
 import lombok.Builder;
@@ -12,6 +15,10 @@ public class SourceInstance extends InstanceWithCredentials {
   @Setter
   private UUID id;
 
+  @Getter
+  @Setter
+  private AirbyteInstance airbyteInstance;
+
   @Builder
   public SourceInstance(String instanceName, CredentialConfig credentialConfig) {
     super(instanceName, credentialConfig);
@@ -22,8 +29,12 @@ public class SourceInstance extends InstanceWithCredentials {
     return InstanceTypes.SOURCE;
   }
 
-
-  public void configureDestination(AirbyteInstance airbyteInstance) {
-
+  public AirbyteCatalog discoverSourceSchema() throws ApiException {
+    if (isInitialized()) {
+      return airbyteInstance.getAirbyteApi().getSourceApi().discoverSchemaForSource(new SourceDiscoverSchemaRequestBody().sourceId(id)).getCatalog();
+    } else {
+      throw new RuntimeException("The source should be initialized by an action first!");
+    }
   }
+
 }
