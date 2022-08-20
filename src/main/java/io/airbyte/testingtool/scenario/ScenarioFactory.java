@@ -30,8 +30,8 @@ public class ScenarioFactory {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(ScenarioFactory.class);
 
-  public static TestScenario getScenario(ScenarioConfig config, List<CredentialConfig> credentialConfigs) {
-    Map<String, Instance> scenarioInstanceNameToInstanceMap = mapInstancesAndCredentials(config, credentialConfigs);
+  public static TestScenario getScenario(final ScenarioConfig config, final List<CredentialConfig> credentialConfigs) {
+    final Map<String, Instance> scenarioInstanceNameToInstanceMap = mapInstancesAndCredentials(config, credentialConfigs);
 
     return TestScenario.builder()
         .scenarioName(config.getScenarioName())
@@ -40,27 +40,27 @@ public class ScenarioFactory {
         .build();
   }
 
-  private static Map<String, Instance> mapInstancesAndCredentials(ScenarioConfig config, List<CredentialConfig> credentialConfigs) {
-    Map<String, Instance> resultMap = new HashMap<>();
+  private static Map<String, Instance> mapInstancesAndCredentials(final ScenarioConfig config, final List<CredentialConfig> credentialConfigs) {
+    final Map<String, Instance> resultMap = new HashMap<>();
 
-    Set<ScenarioConfigInstance> allInstances = getScenarioInstances(config);
+    final Set<ScenarioConfigInstance> allInstances = getScenarioInstances(config);
     allInstances.forEach(scenarioConfigInstance -> {
-      var instance = InstanceFactory.getInstance(scenarioConfigInstance, getCorrespondingConfigAndRemove(scenarioConfigInstance, credentialConfigs));
+      final var instance = InstanceFactory.getInstance(scenarioConfigInstance, getCorrespondingConfigAndRemove(scenarioConfigInstance, credentialConfigs));
       resultMap.put(instance.getInstanceName(), instance);
     });
 
     return resultMap;
   }
 
-  private static Set<ScenarioConfigInstance> getScenarioInstances(ScenarioConfig config) {
+  private static Set<ScenarioConfigInstance> getScenarioInstances(final ScenarioConfig config) {
     if (!ValidationService.validateScenarioConfig(config)) {
       throw new RuntimeException("Scenario validation failed! Check the log for more details.");
     }
     return new HashSet<>(config.getUsedInstances());
   }
 
-  private static CredentialConfig getCorrespondingConfigAndRemove(ScenarioConfigInstance instanceConfig, List<CredentialConfig> credentialConfigs) {
-    var cred = credentialConfigs.stream()
+  private static CredentialConfig getCorrespondingConfigAndRemove(final ScenarioConfigInstance instanceConfig, final List<CredentialConfig> credentialConfigs) {
+    final var cred = credentialConfigs.stream()
         .filter(credentialConfig -> credentialConfig.getCredentialType().equals(instanceConfig.getInstanceType().getRequiredCredentials()))
         .findFirst().orElse(null);
     if (cred != null) {
@@ -70,23 +70,23 @@ public class ScenarioFactory {
     return cred;
   }
 
-  public static TestScenario getScenario(String[] args) throws IOException {
+  public static TestScenario getScenario(final String[] args) throws IOException {
     return getScenario(ScenarioConfigService.getConfig(args), getCreds(args));
   }
 
-  private static SortedSet<ScenarioAction> getActions(List<ScenarioConfigAction> actionConfigs,
-      Map<String, Instance> scenarioInstanceNameToInstanceMap) {
-    SortedSet<ScenarioAction> actions = new TreeSet<>();
+  private static SortedSet<ScenarioAction> getActions(final List<ScenarioConfigAction> actionConfigs,
+      final Map<String, Instance> scenarioInstanceNameToInstanceMap) {
+    final SortedSet<ScenarioAction> actions = new TreeSet<>();
     actionConfigs.forEach(scenarioConfigAction ->
         actions.add(ActionFactory.getScenarioAction(actions.size(), scenarioConfigAction, scenarioInstanceNameToInstanceMap))
     );
     return actions;
   }
 
-  private static List<CredentialConfig> getCreds(String[] args) throws IOException {
-    final String airbyte = Files.readString(Path.of("secrets/airbyte_local_creds.json"));
-    final String source = Files.readString(Path.of("secrets/postgres_test_source_creds.json"));
-    final String dest = Files.readString(Path.of("secrets/postgres_test_dest_creds.json"));
+  private static List<CredentialConfig> getCreds(final String[] args) throws IOException {
+    final String airbyte = Files.readString(Path.of("secrets/airbyte_creds.json"));
+    final String source = Files.readString(Path.of("secrets/source_creds.json"));
+    final String dest = Files.readString(Path.of("secrets/destination_creds.json"));
 
     return new ArrayList<>(
         Arrays.asList(Jsons.deserialize(source, CredentialConfig.class), Jsons.deserialize(dest, CredentialConfig.class),

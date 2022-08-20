@@ -114,11 +114,11 @@ The tool is on the very early state and can be executed with local hardcoded cre
 
 1. Clone the repository
 2. Build the project
-3. Create three files with credential configs (`airbyte_local_creds.json`, `postgres_test_dest_creds.json`, `postgres_test_source_creds.json`) in the folder `secrets`.
+3. Create three files with credential configs (`airbyte_creds.json`, `destination_creds.json`, `source_creds.json`) in the folder `secrets`.
 
-     ![image](https://user-images.githubusercontent.com/30464745/185108683-8aeb3adb-5a5d-4560-8ed4-8ea6bbf2fb28.png)
+     ![image](https://user-images.githubusercontent.com/1310940/185700802-b6a75916-efdf-4b22-bafb-19fc23f0c9d7.png)
 
-4. Run `TestingTool.main`
+4. Run `TestingTool::main`
 
 
 ## CHANGELOG
