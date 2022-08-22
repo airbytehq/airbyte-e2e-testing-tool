@@ -23,6 +23,9 @@ plugins {
     id 'jsonschema2pojo'
 }
 
+sourceCompatibility = 17
+targetCompatibility = 17
+
 version '0.1.0'
 
 repositories {
