@@ -5,6 +5,8 @@ import java.io.IOException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import static io.airbyte.testingtool.argument_parser.ArgumentParser.argumentParser;
+
 public class TestingTool {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(TestingTool.class);
@@ -12,6 +14,10 @@ public class TestingTool {
   public static void main(String[] args) throws IOException {
 
     LOGGER.info("Testing tool started!");
+
+    LOGGER.info("-> Start parsing arguments!");
+    var arguments = argumentParser(args);
+    LOGGER.info("-> Finish parsing arguments!");
 
     var scenario = ScenarioFactory.getScenario(args);
     LOGGER.info("Scenario [{}] is selected for execution.", scenario.getScenarioName());
