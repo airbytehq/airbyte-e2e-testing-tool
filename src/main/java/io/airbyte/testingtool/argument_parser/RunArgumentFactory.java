@@ -52,7 +52,7 @@ public class RunArgumentFactory {
   private static RunArguments getDefault() throws IOException {
     return RunArguments.builder()
         .runCommand(Command.RUN_SCENARIO)
-        .scenarioConfig(ScenarioConfigService.getConfig(""))
+        .scenarioConfig(ScenarioConfigService.getConfig("Simple sync scenario"))
         .credentials(CredentialsService.getCreds(Collections.EMPTY_MAP))
         .params(Collections.EMPTY_MAP)
         .build();

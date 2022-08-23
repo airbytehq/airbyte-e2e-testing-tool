@@ -60,7 +60,7 @@ _Note! The instance name is a way to use the same instance in different actions_
 **Scenario config example:**
 ```json
 {
-  "scenarioName" : "Poc Scenario",
+  "scenarioName" : "Simple sync scenario",
   "usedInstances" : [
     {
       "instanceName" : "airbyte_1",
@@ -127,17 +127,17 @@ You can get generated doc for a scenario by passing specific arguments to the ma
 
 1. Clone the repository
 2. Build the project
-3. Create the `Run/Debug` configuration with argument line `/help name="Poc Scenario"` (For getting extended help use `/help-full` instead of `/help`)
+3. Create the `Run/Debug` configuration with argument line `/help name="Simple sync scenario"` (For getting extended help use `/help-full` instead of `/help`)
 
-     ![image](https://user-images.githubusercontent.com/30464745/186145784-28ae37b9-4e4e-49ab-9361-777ae9433cbf.png)
+     ![image](https://user-images.githubusercontent.com/30464745/186178683-55c29578-44c4-47fb-b4d2-5e2b4da99149.png)
 
 4. Run the configuration
 
 The result you can find in the execution log.
-![Screenshot from 2022-08-23 14-19-37](https://user-images.githubusercontent.com/30464745/186145920-9034b544-a87d-4df8-92d9-6ab9eebb4a11.png)
+![Screenshot from 2022-08-23 17-04-44](https://user-images.githubusercontent.com/30464745/186179197-68b8c932-c483-4da1-9e0f-91169c335a8d.png)
 
 _Note! The help text is formatted for GitHub. You can put it there to get a more readable view._
-![Screenshot from 2022-08-23 14-22-00](https://user-images.githubusercontent.com/30464745/186145943-ea720dba-1b7f-4782-891a-5914e57d2d64.png)
+![Screenshot from 2022-08-23 17-05-03](https://user-images.githubusercontent.com/30464745/186179206-a8193142-5278-434b-8ddd-d7bc666725b3.png)
 
 ## CHANGELOG
 
