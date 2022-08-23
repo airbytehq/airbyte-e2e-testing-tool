@@ -3,7 +3,9 @@ package io.airbyte.testingtool.scenario.helper;
 import static io.airbyte.testingtool.argument_parser.Command.RUN_FULL_HELP;
 import static io.airbyte.testingtool.argument_parser.Command.RUN_HELP;
 import static io.airbyte.testingtool.argument_parser.Command.RUN_SCENARIO;
+import static io.airbyte.testingtool.argument_parser.RunArgumentFactory.SCENARIO_NAME_ARGUMENT;
 
+import io.airbyte.testingtool.argument_parser.Command;
 import io.airbyte.testingtool.scenario.config.ScenarioConfig;
 import io.airbyte.testingtool.scenario.config.ScenarioConfigAction;
 import io.airbyte.testingtool.scenario.config.ScenarioConfigInstance;
@@ -32,17 +34,22 @@ public class HelpService {
     return helpTextBuilder.toString();
   }
 
+  public static String getHelpLine(Command helpCommand, String scenarioName) {
+    return "`" + helpCommand.getCommand() + " " + SCENARIO_NAME_ARGUMENT + "=\"" + scenarioName + "\"`";
+  }
+
   private static void addCallExample(ScenarioConfig scenarioConfig, StringBuilder builder) {
     builder.append("#### Scenario `").append(scenarioConfig.getScenarioName()).append("` example call").append("\n");
-    builder.append("Run scenario   : `").append(RUN_SCENARIO.getCommand()).append(" name=\"").append(scenarioConfig.getScenarioName()).append("\" ").append(getCallArgs(scenarioConfig)).append("`").append("\n");
+    builder.append("Run scenario   : `").append(RUN_SCENARIO.getCommand()).append(" ").append(SCENARIO_NAME_ARGUMENT).append("=\"")
+        .append(scenarioConfig.getScenarioName()).append("\" ").append(getCallArgs(scenarioConfig)).append("`").append("\n");
   }
 
   private static void addShortHelpExample(ScenarioConfig scenarioConfig, StringBuilder builder) {
-    builder.append("Get short help : `").append(RUN_HELP.getCommand()).append(" name=\"").append(scenarioConfig.getScenarioName()).append("\"").append("`").append("\n");
+    builder.append("Get short help : ").append(getHelpLine(RUN_HELP, scenarioConfig.getScenarioName())).append("\n");
   }
 
   private static void addFullHelpExample(ScenarioConfig scenarioConfig, StringBuilder builder) {
-    builder.append("Get full help  : `").append(RUN_FULL_HELP.getCommand()).append(" name=\"").append(scenarioConfig.getScenarioName()).append("\"").append("`").append("\n");
+    builder.append("Get full help  : ").append(getHelpLine(RUN_FULL_HELP, scenarioConfig.getScenarioName())).append("\n");
   }
 
   private static String getCallArgs(ScenarioConfig scenarioConfig) {
@@ -66,7 +73,8 @@ public class HelpService {
   }
 
   private static String getInstanceCredentialLine(ScenarioConfigInstance instance) {
-    return (instance.getInstanceType().isCredentialsRequired() ? "\ncredentials : `" + instance.getInstanceType().getRequiredCredentials() + "`" : "");
+    return (instance.getInstanceType().isCredentialsRequired() ? "\ncredentials : `" + instance.getInstanceType().getRequiredCredentials() + "`"
+        : "");
   }
 
   private static void addScenarioActions(ScenarioConfig scenarioConfig, StringBuilder builder) {
@@ -79,8 +87,9 @@ public class HelpService {
 
   private static String getActions(List<ScenarioConfigAction> scenarioConfig) {
     return scenarioConfig.stream().map(scenarioConfigAction -> String.format("""
-        - action : `%s`%s%s
-        """, scenarioConfigAction.getAction().name(), getRequiredInstancesLine(scenarioConfigAction), getResultInstanceLine(scenarioConfigAction))).collect(Collectors.joining("\n"));
+            - action : `%s`%s%s
+            """, scenarioConfigAction.getAction().name(), getRequiredInstancesLine(scenarioConfigAction), getResultInstanceLine(scenarioConfigAction)))
+        .collect(Collectors.joining("\n"));
   }
 
   private static String getRequiredInstancesLine(ScenarioConfigAction action) {

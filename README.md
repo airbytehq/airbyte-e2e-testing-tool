@@ -120,9 +120,28 @@ The tool is on the very early state and can be executed with local hardcoded cre
 
 4. Run `TestingTool::main`
 
+_Note! By default, you run it using the hardcoded configuration!_
+
+## How to run /help for a scenario
+You can get generated doc for a scenario by passing specific arguments to the main method `TestingTool::main`.
+
+1. Clone the repository
+2. Build the project
+3. Create the `Run/Debug` configuration with argument line `/help name="Poc Scenario"` (For getting extended help use `/help-full` instead of `/help`)
+
+     ![image](https://user-images.githubusercontent.com/30464745/186145784-28ae37b9-4e4e-49ab-9361-777ae9433cbf.png)
+
+4. Run the configuration
+
+The result you can find in the execution log.
+![Screenshot from 2022-08-23 14-19-37](https://user-images.githubusercontent.com/30464745/186145920-9034b544-a87d-4df8-92d9-6ab9eebb4a11.png)
+
+_Note! The help text is formatted for GitHub. You can put it there to get a more readable view._
+![Screenshot from 2022-08-23 14-22-00](https://user-images.githubusercontent.com/30464745/186145943-ea720dba-1b7f-4782-891a-5914e57d2d64.png)
 
 ## CHANGELOG
 
-| Version | Description   |
-|---------|---------------|
-| 0.1.0   | Stage 1. POC  |
+| Version | Description                                                                            |
+|---------|----------------------------------------------------------------------------------------|
+| 0.1.1   | Implement HelpService. Now you can get short description with examples for a scenario. |
+| 0.1.0   | Stage 1. POC                                                                           |
