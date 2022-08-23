@@ -8,7 +8,8 @@ import java.util.EnumSet;
 
 public enum Command {
     RUN_SCENARIO("/run-scenario"),
-    RUN_HELP("/run-help");
+    RUN_HELP("/help"),
+    RUN_FULL_HELP("/help-full"),;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Command.class);
 
