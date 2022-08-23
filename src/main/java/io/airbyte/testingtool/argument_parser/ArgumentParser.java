@@ -8,6 +8,8 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static io.airbyte.testingtool.argument_parser.Command.getCommandName;
+
 public class ArgumentParser {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ArgumentParser.class);
@@ -15,11 +17,14 @@ public class ArgumentParser {
     private static final String COMMAND_START_CHAR = "/";
 
     public static Map<String, String> argumentParser(String[] args) {
-        return Stream.of(args).collect(Collectors.toMap(ArgumentParser::getArgumentKey, ArgumentParser::getArgumentValue));
+        LOGGER.info("Parsed arguments:");
+        var argumentsMap = Stream.of(args).collect(Collectors.toMap(ArgumentParser::getArgumentKey, ArgumentParser::getArgumentValue));
+        argumentsMap.forEach((key, value) -> LOGGER.info(key + " : " + value));
+        return argumentsMap;
     }
 
     private static String getArgumentKey(String arg) {
-        return arg.startsWith(COMMAND_START_CHAR) ? arg : splitAndGetArgumentPart(arg, true);
+        return arg.startsWith(COMMAND_START_CHAR) ? getCommandName(arg) : splitAndGetArgumentPart(arg, true);
     }
 
     private static String getArgumentValue(String arg) {

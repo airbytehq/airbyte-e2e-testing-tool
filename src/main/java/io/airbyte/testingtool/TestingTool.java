@@ -15,9 +15,7 @@ public class TestingTool {
 
     LOGGER.info("Testing tool started!");
 
-    LOGGER.info("-> Start parsing arguments!");
     var arguments = argumentParser(args);
-    LOGGER.info("-> Finish parsing arguments!");
 
     var scenario = ScenarioFactory.getScenario(args);
     LOGGER.info("Scenario [{}] is selected for execution.", scenario.getScenarioName());
