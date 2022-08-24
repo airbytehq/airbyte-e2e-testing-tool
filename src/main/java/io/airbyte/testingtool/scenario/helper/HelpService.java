@@ -8,9 +8,13 @@ import static io.airbyte.testingtool.argument_parser.RunArgumentFactory.SCENARIO
 import io.airbyte.testingtool.argument_parser.Command;
 import io.airbyte.testingtool.scenario.config.ScenarioConfig;
 import io.airbyte.testingtool.scenario.config.ScenarioConfigAction;
+import io.airbyte.testingtool.scenario.config.ScenarioConfigActionParameter;
 import io.airbyte.testingtool.scenario.config.ScenarioConfigInstance;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.apache.commons.lang3.StringUtils;
 
 public class HelpService {
@@ -40,8 +44,12 @@ public class HelpService {
 
   private static void addCallExample(ScenarioConfig scenarioConfig, StringBuilder builder) {
     builder.append("#### Scenario `").append(scenarioConfig.getScenarioName()).append("` example call").append("\n");
-    builder.append("Run scenario   : `").append(RUN_SCENARIO.getCommand()).append(" ").append(SCENARIO_NAME_ARGUMENT).append("=\"")
-        .append(scenarioConfig.getScenarioName()).append("\" ").append(getCallArgs(scenarioConfig)).append("`").append("\n");
+    builder.append("Run scenario   : `")
+        .append(RUN_SCENARIO.getCommand())
+        .append(" ").append(SCENARIO_NAME_ARGUMENT).append("=\"").append(scenarioConfig.getScenarioName()).append("\" ")
+        .append(getCallInstanceArgs(scenarioConfig))
+        .append(getCallParamArgs(scenarioConfig))
+        .append("`").append("\n");
   }
 
   private static void addShortHelpExample(ScenarioConfig scenarioConfig, StringBuilder builder) {
@@ -52,12 +60,24 @@ public class HelpService {
     builder.append("Get full help  : ").append(getHelpLine(RUN_FULL_HELP, scenarioConfig.getScenarioName())).append("\n");
   }
 
-  private static String getCallArgs(ScenarioConfig scenarioConfig) {
+  private static String getCallInstanceArgs(ScenarioConfig scenarioConfig) {
     return StringUtils.trim(scenarioConfig.getUsedInstances().stream().map(HelpService::getCredArgLine).collect(Collectors.joining(" ")));
+  }
+
+  private static String getCallParamArgs(ScenarioConfig scenarioConfig) {
+    var allActions = Stream.concat(scenarioConfig.getPreparationActions().stream(), scenarioConfig.getScenarioActions().stream());
+    Set<String> allParamNames = new HashSet<>();
+    allActions.forEach(action -> allParamNames.addAll(action.getRequiredParameters().stream().map(ScenarioConfigActionParameter::getName).collect(
+        Collectors.toSet())));
+    return " " + StringUtils.trim(allParamNames.stream().map(HelpService::getParamArgLine).collect(Collectors.joining(" ")));
   }
 
   private static String getCredArgLine(ScenarioConfigInstance instance) {
     return (instance.getInstanceType().isCredentialsRequired() ? instance.getInstanceName() + "=<put_credential_name>" : "");
+  }
+
+  private static String getParamArgLine(String parameterName) {
+    return parameterName + "=<parameter_value>";
   }
 
   private static void addRequiredInstances(ScenarioConfig scenarioConfig, StringBuilder builder) {

@@ -3,7 +3,6 @@ package io.airbyte.testingtool.argument_parser;
 import static io.airbyte.testingtool.argument_parser.ArgumentParser.argumentParser;
 
 import io.airbyte.testingtool.credentials.CredentialsService;
-import io.airbyte.testingtool.scenario.config.ScenarioConfig;
 import io.airbyte.testingtool.scenario.config.ScenarioConfigInstance;
 import io.airbyte.testingtool.scenario.config.ScenarioConfigService;
 import java.io.IOException;
@@ -53,8 +52,8 @@ public class RunArgumentFactory {
     return RunArguments.builder()
         .runCommand(Command.RUN_SCENARIO)
         .scenarioConfig(ScenarioConfigService.getConfig("Simple sync scenario"))
-        .credentials(CredentialsService.getCreds(Collections.EMPTY_MAP))
-        .params(Collections.EMPTY_MAP)
+        .credentials(CredentialsService.getCreds(Collections.emptyMap()))
+        .params(Collections.emptyMap())
         .build();
   }
 
@@ -64,10 +63,6 @@ public class RunArgumentFactory {
     } else {
       throw new RuntimeException("The parameter " + key + " is mandatory and should be in the arguments! Arguments : " + map);
     }
-  }
-
-  private static Map<String, String> getParams(ScenarioConfig scenarioConfig, Map<String, String> allArgs) {
-    return null;
   }
 
 }

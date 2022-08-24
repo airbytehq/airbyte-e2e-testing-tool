@@ -18,7 +18,8 @@ import java.util.Map.Entry;
 
 public class ActionFactory {
 
-  public static ScenarioAction getScenarioAction(int order, ScenarioConfigAction config, Map<String, Instance> scenarioInstanceNameToInstanceMap) {
+  public static ScenarioAction getScenarioAction(int order, ScenarioConfigAction config, Map<String, Instance> scenarioInstanceNameToInstanceMap,
+      final Map<String, String> params) {
     return switch (config.getAction()) {
       case CONNECT_AIRBYTE_API -> getActionConnectToAirbyteAPI(order, config, scenarioInstanceNameToInstanceMap);
       case RESET_CONNECTION -> getActionResetConnection(order, config, scenarioInstanceNameToInstanceMap);

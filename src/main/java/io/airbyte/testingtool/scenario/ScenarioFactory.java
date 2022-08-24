@@ -12,7 +12,6 @@ import io.airbyte.testingtool.scenario.helper.HelpService;
 import io.airbyte.testingtool.scenario.instance.Instance;
 import io.airbyte.testingtool.scenario.instance.InstanceFactory;
 import io.airbyte.testingtool.scenario.validator.ValidationService;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -35,8 +34,8 @@ public class ScenarioFactory {
 
     return TestScenario.builder()
         .scenarioName(config.getScenarioName())
-        .preparationActions(getActions(config.getPreparationActions(), scenarioInstanceNameToInstanceMap))
-        .scenarioActions(getActions(config.getScenarioActions(), scenarioInstanceNameToInstanceMap))
+        .preparationActions(getActions(config.getPreparationActions(), scenarioInstanceNameToInstanceMap, params))
+        .scenarioActions(getActions(config.getScenarioActions(), scenarioInstanceNameToInstanceMap, params))
         .build();
   }
 
@@ -77,15 +76,15 @@ public class ScenarioFactory {
     return new HashSet<>(config.getUsedInstances());
   }
 
-  public static TestScenario getScenario(final RunArguments runArguments) throws IOException {
+  public static TestScenario getScenario(final RunArguments runArguments) {
     return buildScenario(runArguments.getScenarioConfig(), runArguments.getCredentials(), runArguments.getParams());
   }
 
   private static SortedSet<ScenarioAction> getActions(final List<ScenarioConfigAction> actionConfigs,
-      final Map<String, Instance> scenarioInstanceNameToInstanceMap) {
+      final Map<String, Instance> scenarioInstanceNameToInstanceMap, final Map<String, String> params) {
     final SortedSet<ScenarioAction> actions = new TreeSet<>();
     actionConfigs.forEach(scenarioConfigAction ->
-        actions.add(ActionFactory.getScenarioAction(actions.size(), scenarioConfigAction, scenarioInstanceNameToInstanceMap))
+        actions.add(ActionFactory.getScenarioAction(actions.size(), scenarioConfigAction, scenarioInstanceNameToInstanceMap, params))
     );
     return actions;
   }

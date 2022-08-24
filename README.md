@@ -143,5 +143,6 @@ _Note! The help text is formatted for GitHub. You can put it there to get a more
 
 | Version | Description                                                                            |
 |---------|----------------------------------------------------------------------------------------|
+| 0.1.2   | Action parameters.                                                                     |
 | 0.1.1   | Implement HelpService. Now you can get short description with examples for a scenario. |
 | 0.1.0   | Stage 1. POC                                                                           |
