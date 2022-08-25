@@ -19,15 +19,16 @@ public class TestingTool {
     LOGGER.info("Run arguments : \n{}", runArguments.toString());
 
     switch (runArguments.getRunCommand()) {
-      case RUN_SCENARIO -> runScenario(runArguments);
+      case RUN_SCENARIO, RUN_SCENARIO_LOCAL -> runScenario(runArguments);
       case RUN_HELP -> runHelp(runArguments);
       case RUN_FULL_HELP -> runFullHelp(runArguments);
+      case RUN_LIST_SCENARIOS -> runScenarioListHelp();
     }
 
     LOGGER.info("Testing tool execution finished!");
   }
 
-  private static void runScenario(RunArguments arguments) throws IOException {
+  private static void runScenario(final RunArguments arguments) {
     var scenario = ScenarioFactory.getScenario(arguments);
     LOGGER.info("Scenario [{}] is selected for execution.", scenario.getScenarioName());
 
@@ -39,12 +40,16 @@ public class TestingTool {
     scenario.printSummary();
   }
 
-  private static void runHelp(RunArguments arguments) {
+  private static void runHelp(final RunArguments arguments) {
     LOGGER.info(HelpService.getHelp(arguments.getScenarioConfig()));
   }
 
-  private static void runFullHelp(RunArguments arguments) {
+  private static void runFullHelp(final RunArguments arguments) {
     LOGGER.info(HelpService.getFullHelp(arguments.getScenarioConfig()));
+  }
+
+  private static void runScenarioListHelp() {
+    LOGGER.info(HelpService.getScenarioListHelp());
   }
 
 }

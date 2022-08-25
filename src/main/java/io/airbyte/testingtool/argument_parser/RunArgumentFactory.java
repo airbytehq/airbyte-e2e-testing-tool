@@ -7,6 +7,7 @@ import io.airbyte.testingtool.scenario.config.ScenarioConfigInstance;
 import io.airbyte.testingtool.scenario.config.ScenarioConfigService;
 import java.io.IOException;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
@@ -24,6 +25,16 @@ public class RunArgumentFactory {
     }
 
     var runCommand = Command.getCommand(getMandatoryValue(RUN_COMMAND_ARGUMENT, arguments));
+    if (runCommand.equals(Command.RUN_LIST_SCENARIOS)) {
+      return RunArguments.builder()
+          .runCommand(runCommand)
+          .build();
+    } else {
+      return getScenarioBasedRun(runCommand, arguments);
+    }
+  }
+
+  private static RunArguments getScenarioBasedRun(Command runCommand, Map<String, String> arguments) throws IOException {
     var scenarioName = getMandatoryValue(SCENARIO_NAME_ARGUMENT, arguments);
     var scenarioConfig = ScenarioConfigService.getConfig(scenarioName);
 
@@ -31,7 +42,7 @@ public class RunArgumentFactory {
         .map(
             ScenarioConfigInstance::getInstanceName).collect(
             Collectors.toSet());
-    var creds = CredentialsService.getCreds(
+    var creds = CredentialsService.getCredentials(runCommand,
         arguments.entrySet().stream().filter(x -> instanceWithCredentials.contains(x.getKey())).collect(Collectors.toMap(Entry::getKey,
             Entry::getValue)));
     var params = arguments.entrySet().stream().filter(
@@ -49,10 +60,15 @@ public class RunArgumentFactory {
 
   // @TODO remove when we stop using hardcoded inputs
   private static RunArguments getDefault() throws IOException {
+    Map<String, String> localCredentials = new HashMap<>();
+    localCredentials.put("airbyte_1", "airbyte_creds.json");
+    localCredentials.put("source_1", "source_creds.json");
+    localCredentials.put("destination_1", "destination_creds.json");
+
     return RunArguments.builder()
-        .runCommand(Command.RUN_SCENARIO)
+        .runCommand(Command.RUN_SCENARIO_LOCAL)
         .scenarioConfig(ScenarioConfigService.getConfig("Simple sync scenario"))
-        .credentials(CredentialsService.getCreds(Collections.emptyMap()))
+        .credentials(CredentialsService.getCredentials(Command.RUN_SCENARIO_LOCAL, localCredentials))
         .params(Collections.emptyMap())
         .build();
   }

@@ -6,6 +6,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
+import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,6 +14,7 @@ public class ScenarioConfigService {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(ScenarioConfigService.class);
 
+  @Getter
   private final static Map<String, ScenarioConfig> scenarioConfigs;
 
   public static ScenarioConfig getConfig(String scenarioName) {

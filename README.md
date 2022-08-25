@@ -112,15 +112,24 @@ _Note! The instance name is a way to use the same instance in different actions_
 ## How to run
 The tool is on the very early state and can be executed with local hardcoded credential files.
 
+### Run default (test) configuration
 1. Clone the repository
 2. Build the project
-3. Create three files with credential configs (`airbyte_creds.json`, `destination_creds.json`, `source_creds.json`) in the folder `secrets`.
+3. Create three files with credential configs (`airbyte_creds.json`, `destination_creds.json`, `source_creds.json`) in the folder `secrets`
 
      ![image](https://user-images.githubusercontent.com/1310940/185700802-b6a75916-efdf-4b22-bafb-19fc23f0c9d7.png)
 
 4. Run `TestingTool::main`
 
-_Note! By default, you run it using the hardcoded configuration!_
+_Note! This is a hardcoded default configuration for testing purposes._
+
+### Run scenario with local credentials
+1. Clone the repository
+2. Build the project
+3. (Optional) Run the `TestingTool::main` with the argument `/list-scenarios` to get list of available scenarios
+4. (Optional) Run the `TestingTool::main` with the argument `/help name="<scenario_name>"` to get scenario call example and required credentials
+5. Put your credential files in the `secrets` folder in the project root
+6. Run the scenario (get from step 3) by passing the required arguments (get from step 4) to the method `TestingTool::main`
 
 ## How to run /help for a scenario
 You can get generated doc for a scenario by passing specific arguments to the main method `TestingTool::main`.
@@ -141,8 +150,9 @@ _Note! The help text is formatted for GitHub. You can put it there to get a more
 
 ## CHANGELOG
 
-| Version | Description                                                                            |
-|---------|----------------------------------------------------------------------------------------|
-| 0.1.2   | Action parameters.                                                                     |
-| 0.1.1   | Implement HelpService. Now you can get short description with examples for a scenario. |
-| 0.1.0   | Stage 1. POC                                                                           |
+| Version | Description                                                                             |
+|---------|-----------------------------------------------------------------------------------------|
+| 0.1.3   | Run scenario using local files                                                          |
+| 0.1.2   | Action parameters.                                                                      |
+| 0.1.1   | Implement HelpService. Now you can get short description with examples for a scenario.  |
+| 0.1.0   | Stage 1. POC                                                                            |

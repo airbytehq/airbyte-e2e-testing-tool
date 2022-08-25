@@ -3,6 +3,7 @@ package io.airbyte.testingtool.scenario.helper;
 import static io.airbyte.testingtool.argument_parser.Command.RUN_FULL_HELP;
 import static io.airbyte.testingtool.argument_parser.Command.RUN_HELP;
 import static io.airbyte.testingtool.argument_parser.Command.RUN_SCENARIO;
+import static io.airbyte.testingtool.argument_parser.Command.RUN_SCENARIO_LOCAL;
 import static io.airbyte.testingtool.argument_parser.RunArgumentFactory.SCENARIO_NAME_ARGUMENT;
 
 import io.airbyte.testingtool.argument_parser.Command;
@@ -10,6 +11,7 @@ import io.airbyte.testingtool.scenario.config.ScenarioConfig;
 import io.airbyte.testingtool.scenario.config.ScenarioConfigAction;
 import io.airbyte.testingtool.scenario.config.ScenarioConfigActionParameter;
 import io.airbyte.testingtool.scenario.config.ScenarioConfigInstance;
+import io.airbyte.testingtool.scenario.config.ScenarioConfigService;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -22,7 +24,7 @@ public class HelpService {
   public static String getHelp(ScenarioConfig scenarioConfig) {
     var helpTextBuilder = new StringBuilder();
     addCallExample(scenarioConfig, helpTextBuilder);
-    addFullHelpExample(scenarioConfig, helpTextBuilder);
+    addFullHelpExample(scenarioConfig.getScenarioName(), helpTextBuilder);
     addRequiredInstances(scenarioConfig, helpTextBuilder);
 
     return helpTextBuilder.toString();
@@ -31,9 +33,24 @@ public class HelpService {
   public static String getFullHelp(ScenarioConfig scenarioConfig) {
     var helpTextBuilder = new StringBuilder();
     addCallExample(scenarioConfig, helpTextBuilder);
-    addShortHelpExample(scenarioConfig, helpTextBuilder);
+    addShortHelpExample(scenarioConfig.getScenarioName(), helpTextBuilder);
     addRequiredInstances(scenarioConfig, helpTextBuilder);
     addScenarioActions(scenarioConfig, helpTextBuilder);
+
+    return helpTextBuilder.toString();
+  }
+
+  public static String getScenarioListHelp() {
+    var helpTextBuilder = new StringBuilder();
+
+    helpTextBuilder.append("#### Call help examples :\n");
+
+    String putScenarioName = "<scenario_name>";
+    addShortHelpExample(putScenarioName, helpTextBuilder);
+    addFullHelpExample(putScenarioName, helpTextBuilder);
+
+    helpTextBuilder.append("#### Available scenarios :\n");
+    ScenarioConfigService.getScenarioConfigs().keySet().forEach(scenarioName -> helpTextBuilder.append("- ").append(scenarioName).append("\n"));
 
     return helpTextBuilder.toString();
   }
@@ -44,20 +61,27 @@ public class HelpService {
 
   private static void addCallExample(ScenarioConfig scenarioConfig, StringBuilder builder) {
     builder.append("#### Scenario `").append(scenarioConfig.getScenarioName()).append("` example call").append("\n");
-    builder.append("Run scenario   : `")
-        .append(RUN_SCENARIO.getCommand())
+    builder.append("- **Run scenario**   : ");
+    addCallLine(RUN_SCENARIO, scenarioConfig, builder);
+    builder.append("- **Run scenario with local creds**  : ");
+    addCallLine(RUN_SCENARIO_LOCAL, scenarioConfig, builder);
+    builder.append("_Note! The local scenario run requires file names in the folder `secrets\\`. For example, `some_cred_1=local_file.json`_\n");
+  }
+
+  private static void addCallLine(Command runCommand, ScenarioConfig scenarioConfig, StringBuilder builder) {
+    builder.append("`").append(runCommand.getCommand())
         .append(" ").append(SCENARIO_NAME_ARGUMENT).append("=\"").append(scenarioConfig.getScenarioName()).append("\" ")
         .append(getCallInstanceArgs(scenarioConfig))
         .append(getCallParamArgs(scenarioConfig))
         .append("`").append("\n");
   }
 
-  private static void addShortHelpExample(ScenarioConfig scenarioConfig, StringBuilder builder) {
-    builder.append("Get short help : ").append(getHelpLine(RUN_HELP, scenarioConfig.getScenarioName())).append("\n");
+  private static void addShortHelpExample(String scenarioName, StringBuilder builder) {
+    builder.append("- **Get short help** : ").append(getHelpLine(RUN_HELP, scenarioName)).append("\n");
   }
 
-  private static void addFullHelpExample(ScenarioConfig scenarioConfig, StringBuilder builder) {
-    builder.append("Get full help  : ").append(getHelpLine(RUN_FULL_HELP, scenarioConfig.getScenarioName())).append("\n");
+  private static void addFullHelpExample(String scenarioName, StringBuilder builder) {
+    builder.append("- **Get full help**  : ").append(getHelpLine(RUN_FULL_HELP, scenarioName)).append("\n");
   }
 
   private static String getCallInstanceArgs(ScenarioConfig scenarioConfig) {

@@ -21,12 +21,13 @@ public class RunArguments {
   @Override
   public String toString() {
     return String.format(""" 
-        Run arguments:
-          Run command          : %s
-          Scenario config name : %s
-          Credentials          : %s
-          Parameters           : %s
-        """, runCommand.name(), scenarioConfig.getScenarioName(), credentials.entrySet().stream().collect(Collectors.toMap(
-        Entry::getKey, x -> x.getValue().getCredentialName())), params);
+            Run arguments:
+              Run command          : %s
+              Scenario config name : %s
+              Credentials          : %s
+              Parameters           : %s
+            """, runCommand.name(), (scenarioConfig == null ? null : scenarioConfig.getScenarioName()),
+        (credentials == null ? null : credentials.entrySet().stream().collect(Collectors.toMap(
+            Entry::getKey, x -> x.getValue().getCredentialName()))), params);
   }
 }
