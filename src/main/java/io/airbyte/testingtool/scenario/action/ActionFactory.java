@@ -1,34 +1,32 @@
 package io.airbyte.testingtool.scenario.action;
 
-import static io.airbyte.testingtool.scenario.instance.InstanceTypes.AIRBYTE;
-import static io.airbyte.testingtool.scenario.instance.InstanceTypes.CONNECTION;
-import static io.airbyte.testingtool.scenario.instance.InstanceTypes.DESTINATION;
-import static io.airbyte.testingtool.scenario.instance.InstanceTypes.SOURCE;
-
+import io.airbyte.testingtool.scenario.config.ActionParameterTypes;
 import io.airbyte.testingtool.scenario.config.ScenarioConfigAction;
-import io.airbyte.testingtool.scenario.instance.AirbyteConnection;
-import io.airbyte.testingtool.scenario.instance.AirbyteInstance;
-import io.airbyte.testingtool.scenario.instance.DestinationInstance;
-import io.airbyte.testingtool.scenario.instance.Instance;
-import io.airbyte.testingtool.scenario.instance.InstanceTypes;
-import io.airbyte.testingtool.scenario.instance.SourceInstance;
+import io.airbyte.testingtool.scenario.instance.*;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import static io.airbyte.testingtool.scenario.config.ActionParameterTypes.DESTINATION_VERSION;
+import static io.airbyte.testingtool.scenario.config.ActionParameterTypes.SOURCE_VERSION;
+import static io.airbyte.testingtool.scenario.instance.InstanceTypes.*;
+
 public class ActionFactory {
 
-  public static ScenarioAction getScenarioAction(int order, ScenarioConfigAction config, Map<String, Instance> scenarioInstanceNameToInstanceMap,
-      final Map<String, String> params) {
-    return switch (config.getAction()) {
-      case CONNECT_AIRBYTE_API -> getActionConnectToAirbyteAPI(order, config, scenarioInstanceNameToInstanceMap);
-      case RESET_CONNECTION -> getActionResetConnection(order, config, scenarioInstanceNameToInstanceMap);
-      case SYNC_CONNECTION -> getActionSyncConnection(order, config, scenarioInstanceNameToInstanceMap);
-      case CREATE_SOURCE -> getActionCreateSource(order, config, scenarioInstanceNameToInstanceMap);
-      case CREATE_DESTINATION -> getActionCreateDestination(order, config, scenarioInstanceNameToInstanceMap);
-      case CREATE_CONNECTION -> getActionCreateConnection(order, config, scenarioInstanceNameToInstanceMap);
-    };
-  }
+    public static ScenarioAction getScenarioAction(int order, ScenarioConfigAction config, Map<String, Instance> scenarioInstanceNameToInstanceMap,
+                                                   final Map<String, String> params) {
+        return switch (config.getAction()) {
+            case CONNECT_AIRBYTE_API -> getActionConnectToAirbyteAPI(order, config, scenarioInstanceNameToInstanceMap);
+            case RESET_CONNECTION -> getActionResetConnection(order, config, scenarioInstanceNameToInstanceMap);
+            case SYNC_CONNECTION -> getActionSyncConnection(order, config, scenarioInstanceNameToInstanceMap);
+            case CREATE_SOURCE -> getActionCreateSource(order, config, scenarioInstanceNameToInstanceMap);
+            case CREATE_DESTINATION -> getActionCreateDestination(order, config, scenarioInstanceNameToInstanceMap);
+            case CREATE_CONNECTION -> getActionCreateConnection(order, config, scenarioInstanceNameToInstanceMap);
+            case UPDATE_SOURCE_VERSION -> getActionUpdateSourceVersion(order, config, scenarioInstanceNameToInstanceMap, params);
+            case UPDATE_DESTINATION_VERSION -> getActionUpdateDestinationVersion(order, config, scenarioInstanceNameToInstanceMap, params);
+        };
+    }
 
   private static <T extends Instance> T getInstanceByType(InstanceTypes type, List<String> scenarioConfigInstanceNames,
       Map<String, Instance> scenarioInstanceNameToInstanceMap, Class<T> clazz) {
@@ -59,6 +57,14 @@ public class ActionFactory {
         .filter(nameInstanceEntry -> config.getRequiredInstances().contains(nameInstanceEntry.getKey())).map(
             Entry::getValue).toList();
   }
+
+    private static String getParamByType(ScenarioConfigAction config, final Map<String, String> params, ActionParameterTypes types) {
+        String name = config.getRequiredParameters().stream()
+                .filter(parameter -> types.equals(parameter.getType()))
+                .findFirst().get().getName();
+
+        return params.get(name);
+    }
 
   private static ActionConnectToAirbyteAPI getActionConnectToAirbyteAPI(int order, ScenarioConfigAction config,
       Map<String, Instance> scenarioInstanceNameToInstanceMap) {
@@ -133,5 +139,31 @@ public class ActionFactory {
         .connection(getInstanceByType(CONNECTION, config.getRequiredInstances(), scenarioInstanceNameToInstanceMap, AirbyteConnection.class))
         .build();
   }
+
+
+    private static ScenarioAction getActionUpdateSourceVersion(int order, ScenarioConfigAction config, Map<String, Instance> scenarioInstanceNameToInstanceMap, final Map<String, String> params) {
+          return ActionUpdateSourceVersion
+                .builder()
+                .order(order)
+                .requiredInstances(getRequiredInstances(config, scenarioInstanceNameToInstanceMap))
+                .resultInstance(getInstance(config.getResultInstance(), scenarioInstanceNameToInstanceMap))
+                .airbyteInstance(getInstanceByType(AIRBYTE, config.getRequiredInstances(), scenarioInstanceNameToInstanceMap, AirbyteInstance.class))
+                .sourceInstance(getInstanceByType(SOURCE, config.getRequiredInstances(), scenarioInstanceNameToInstanceMap, SourceInstance.class))
+                .version(getParamByType(config, params, SOURCE_VERSION))
+                .build();
+    }
+
+    private static ScenarioAction getActionUpdateDestinationVersion(int order, ScenarioConfigAction config, Map<String, Instance> scenarioInstanceNameToInstanceMap, final Map<String, String> params) {
+         return ActionUpdateDestinationVersion
+                .builder()
+                .order(order)
+                .requiredInstances(getRequiredInstances(config, scenarioInstanceNameToInstanceMap))
+                .resultInstance(getInstance(config.getResultInstance(), scenarioInstanceNameToInstanceMap))
+                .airbyteInstance(getInstanceByType(AIRBYTE, config.getRequiredInstances(), scenarioInstanceNameToInstanceMap, AirbyteInstance.class))
+                .destinationInstance(
+                        getInstanceByType(DESTINATION, config.getRequiredInstances(), scenarioInstanceNameToInstanceMap, DestinationInstance.class))
+                .version(getParamByType(config, params, DESTINATION_VERSION))
+                .build();
+    }
 
 }
