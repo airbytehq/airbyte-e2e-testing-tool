@@ -26,6 +26,7 @@ public class HelpService {
     addCallExample(scenarioConfig, helpTextBuilder);
     addFullHelpExample(scenarioConfig.getScenarioName(), helpTextBuilder);
     addRequiredInstances(scenarioConfig, helpTextBuilder);
+    addRequiredParameters(scenarioConfig, helpTextBuilder);
 
     return helpTextBuilder.toString();
   }
@@ -35,6 +36,7 @@ public class HelpService {
     addCallExample(scenarioConfig, helpTextBuilder);
     addShortHelpExample(scenarioConfig.getScenarioName(), helpTextBuilder);
     addRequiredInstances(scenarioConfig, helpTextBuilder);
+    addRequiredParameters(scenarioConfig, helpTextBuilder);
     addScenarioActions(scenarioConfig, helpTextBuilder);
 
     return helpTextBuilder.toString();
@@ -121,6 +123,27 @@ public class HelpService {
         : "");
   }
 
+  private static void addRequiredParameters(ScenarioConfig scenarioConfig, StringBuilder builder) {
+    var allActions = Stream.concat(scenarioConfig.getPreparationActions().stream(), scenarioConfig.getScenarioActions().stream());
+    Set<ScenarioConfigActionParameter> requiredParams = new HashSet<>();
+    allActions.forEach(action -> {
+      if (!action.getRequiredParameters().isEmpty()) {
+        requiredParams.addAll(action.getRequiredParameters());
+      }
+    });
+    if (!requiredParams.isEmpty()) {
+      builder.append("#### Parameters in the scenario").append("\n");
+      requiredParams.forEach(parameter -> builder.append(getParameterText(parameter)).append("\n"));
+    }
+  }
+
+  private static String getParameterText(ScenarioConfigActionParameter parameter) {
+    return String.format("""
+        - name : `%s`
+        type : `%s`
+        """, parameter.getName(), parameter.getType().value());
+  }
+
   private static void addScenarioActions(ScenarioConfig scenarioConfig, StringBuilder builder) {
     builder.append("#### Scenario actions").append("\n")
         .append("##### Preparation actions :").append("\n")
@@ -131,8 +154,8 @@ public class HelpService {
 
   private static String getActions(List<ScenarioConfigAction> scenarioConfig) {
     return scenarioConfig.stream().map(scenarioConfigAction -> String.format("""
-            - action : `%s`%s%s
-            """, scenarioConfigAction.getAction().name(), getRequiredInstancesLine(scenarioConfigAction), getResultInstanceLine(scenarioConfigAction)))
+            - action : `%s`%s%s%s
+            """, scenarioConfigAction.getAction().name(), getRequiredInstancesLine(scenarioConfigAction), getResultInstanceLine(scenarioConfigAction), getRequiredParameters(scenarioConfigAction)))
         .collect(Collectors.joining("\n"));
   }
 
@@ -142,6 +165,11 @@ public class HelpService {
 
   private static String getResultInstanceLine(ScenarioConfigAction action) {
     return (StringUtils.isNotEmpty(action.getResultInstance()) ? "\nresultInstance : `" + action.getResultInstance() + "`" : "");
+  }
+
+  private static String getRequiredParameters(ScenarioConfigAction action) {
+    return (!action.getRequiredParameters().isEmpty() ? "\nrequiredParameters : `[" + action.getRequiredParameters().stream().map(parameter -> parameter.getName()).collect(
+        Collectors.joining(", ")) + "]`" : "");
   }
 
 }
