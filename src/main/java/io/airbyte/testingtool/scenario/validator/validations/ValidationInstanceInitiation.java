@@ -30,11 +30,10 @@ public class ValidationInstanceInitiation extends AbstractValidation {
         .map(ScenarioConfigInstance::getInstanceName).collect(
             Collectors.toSet());
 
-    String errorText = null;
     var notInitializedInstances = requiredInitializationInstanceNames.stream().filter(s -> !initiatedInstanceNames.contains(s))
         .collect(Collectors.joining(", "));
     if (StringUtils.isNotEmpty(notInitializedInstances)) {
-      errorText = "Instance(s) that should be initialized by an action : " + notInitializedInstances;
+      errors.add("Instance(s) that should be initialized by an action : " + notInitializedInstances);
     }
   }
 }

@@ -65,7 +65,7 @@ public class ValidationActionInstanceRequirements extends AbstractValidation {
     var actionType = action.getAction();
     if (actionType.isParameterRequired()) {
       var definedParameters = getParamTypes(action);
-      if (!definedParameters.containsAll(action.getRequiredParameters())) {
+      if (!definedParameters.containsAll(action.getRequiredParameters().stream().map(ScenarioConfigActionParameter::getType).toList())) {
         errors.add("The action " + action.getAction().name() + " should have result parameters : " + action.getRequiredParameters() + " but have : "
             + definedParameters);
       }
