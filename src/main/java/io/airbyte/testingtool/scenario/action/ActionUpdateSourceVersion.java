@@ -12,6 +12,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
+/**
+ * Scenario action.
+ * The action changes source version to a specific value.
+ */
 public class ActionUpdateSourceVersion extends ScenarioAction {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(ActionUpdateSourceVersion.class);
@@ -32,7 +36,7 @@ public class ActionUpdateSourceVersion extends ScenarioAction {
 
   @Override
   protected void doActionInternal() throws Exception {
-    createUpdateSourceVersion();
+    updateSourceVersion();
   }
 
   @Override
@@ -40,7 +44,7 @@ public class ActionUpdateSourceVersion extends ScenarioAction {
     return "Update Source version";
   }
 
-  private void createUpdateSourceVersion() throws ApiException {
+  private void updateSourceVersion() throws ApiException {
     LOGGER.info("Start updating Source version to  \"{}\"", version);
 
     SourceDefinitionApi sourceDefinitionApi = airbyteInstance.getAirbyteApi()

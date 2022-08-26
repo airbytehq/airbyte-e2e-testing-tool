@@ -11,6 +11,10 @@ import lombok.Builder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Scenario action.
+ * The action changes destination version to a specific value.
+ */
 public class ActionUpdateDestinationVersion extends ScenarioAction {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(
@@ -32,7 +36,7 @@ public class ActionUpdateDestinationVersion extends ScenarioAction {
 
   @Override
   protected void doActionInternal() throws Exception {
-    createUpdateDestinationVersion();
+    updateDestinationVersion();
   }
 
   @Override
@@ -40,7 +44,7 @@ public class ActionUpdateDestinationVersion extends ScenarioAction {
     return "Update Destination version";
   }
 
-  private void createUpdateDestinationVersion() throws ApiException {
+  private void updateDestinationVersion() throws ApiException {
     LOGGER.info("Start updating Source version to  \"{}\"", version);
 
     DestinationDefinitionApi destinationDefinitionApi = airbyteInstance.getAirbyteApi()

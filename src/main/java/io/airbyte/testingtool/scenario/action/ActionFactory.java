@@ -23,6 +23,14 @@ import java.util.Optional;
 
 public class ActionFactory {
 
+  /**
+   * Builds a scenario action using scenario config, provided credentials and parameters.
+   * @param order                             sequence is very important for actions.
+   * @param config                            scenario config file describes all logical instances and actions without any credentials.
+   * @param scenarioInstanceNameToInstanceMap mapping of instances built using provided credentials.
+   * @param params                            action special parameters.
+   * @return                                  scenario action with all required instances.
+   */
   public static ScenarioAction getScenarioAction(int order, ScenarioConfigAction config,
       Map<String, Instance> scenarioInstanceNameToInstanceMap,
       final Map<String, String> params) {
@@ -81,17 +89,14 @@ public class ActionFactory {
             Entry::getValue).toList();
   }
 
-  private static String getParamByType(ScenarioConfigAction config,
-      final Map<String, String> params, ActionParameterTypes types) {
+  private static String getParamByType(ActionParameterTypes types, ScenarioConfigAction config,
+      final Map<String, String> params) {
     Optional<ScenarioConfigActionParameter> scenarioParameter = config.getRequiredParameters()
         .stream()
         .filter(parameter -> types.equals(parameter.getType()))
         .findFirst();
 
-    if (scenarioParameter.isPresent()) {
-      return params.get(scenarioParameter.get().getName());
-    }
-    return null;
+    return scenarioParameter.map(parameter -> params.get(parameter.getName())).orElse(null);
 
   }
 
@@ -200,7 +205,7 @@ public class ActionFactory {
             scenarioInstanceNameToInstanceMap, AirbyteInstance.class))
         .sourceInstance(getInstanceByType(SOURCE, config.getRequiredInstances(),
             scenarioInstanceNameToInstanceMap, SourceInstance.class))
-        .version(getParamByType(config, params, SOURCE_VERSION))
+        .version(getParamByType(SOURCE_VERSION, config, params))
         .build();
   }
 
@@ -217,7 +222,7 @@ public class ActionFactory {
         .destinationInstance(
             getInstanceByType(DESTINATION, config.getRequiredInstances(),
                 scenarioInstanceNameToInstanceMap, DestinationInstance.class))
-        .version(getParamByType(config, params, DESTINATION_VERSION))
+        .version(getParamByType(DESTINATION_VERSION, config, params))
         .build();
   }
 
