@@ -1,5 +1,7 @@
 package io.airbyte.testingtool.scenario.action;
 
+import static io.airbyte.testingtool.scenario.config.ActionParameterTypes.DESTINATION_VERSION;
+import static io.airbyte.testingtool.scenario.config.ActionParameterTypes.SOURCE_VERSION;
 import static io.airbyte.testingtool.scenario.instance.InstanceTypes.AIRBYTE;
 import static io.airbyte.testingtool.scenario.instance.InstanceTypes.CONNECTION;
 import static io.airbyte.testingtool.scenario.instance.InstanceTypes.DESTINATION;
@@ -18,6 +20,8 @@ public enum Actions {
   SYNC_CONNECTION(List.of(AIRBYTE, CONNECTION), null, null),
   CREATE_SOURCE(List.of(AIRBYTE), SOURCE, null),
   CREATE_DESTINATION(List.of(AIRBYTE), DESTINATION, null),
+  UPDATE_SOURCE_VERSION(List.of(AIRBYTE, SOURCE), null, List.of(SOURCE_VERSION)),
+  UPDATE_DESTINATION_VERSION(List.of(AIRBYTE, DESTINATION), null, List.of(DESTINATION_VERSION)),
   CREATE_CONNECTION(List.of(AIRBYTE, SOURCE, DESTINATION), CONNECTION, null);
 
   @Getter
@@ -27,10 +31,13 @@ public enum Actions {
   @Getter
   private final List<ActionParameterTypes> requiredParameters;
 
-  Actions(List<InstanceTypes> requiredInstances, InstanceTypes resultInstance, List<ActionParameterTypes> requiredParameters) {
-    this.requiredInstances = (requiredInstances == null ? Collections.emptyList() : requiredInstances);
+  Actions(List<InstanceTypes> requiredInstances, InstanceTypes resultInstance,
+      List<ActionParameterTypes> requiredParameters) {
+    this.requiredInstances = (requiredInstances == null ? Collections.emptyList()
+        : requiredInstances);
     this.resultInstance = resultInstance;
-    this.requiredParameters = (requiredParameters == null ? Collections.emptyList() : requiredParameters);
+    this.requiredParameters = (requiredParameters == null ? Collections.emptyList()
+        : requiredParameters);
   }
 
   public boolean isInstanceRequired() {
