@@ -1,15 +1,17 @@
 package io.airbyte.testingtool.scenario.action;
 
-import io.airbyte.testingtool.scenario.config.ActionParameterTypes;
-import io.airbyte.testingtool.scenario.instance.InstanceTypes;
-import lombok.Getter;
-
-import java.util.Collections;
-import java.util.List;
-
 import static io.airbyte.testingtool.scenario.config.ActionParameterTypes.DESTINATION_VERSION;
 import static io.airbyte.testingtool.scenario.config.ActionParameterTypes.SOURCE_VERSION;
-import static io.airbyte.testingtool.scenario.instance.InstanceTypes.*;
+import static io.airbyte.testingtool.scenario.instance.InstanceTypes.AIRBYTE;
+import static io.airbyte.testingtool.scenario.instance.InstanceTypes.CONNECTION;
+import static io.airbyte.testingtool.scenario.instance.InstanceTypes.DESTINATION;
+import static io.airbyte.testingtool.scenario.instance.InstanceTypes.SOURCE;
+
+import io.airbyte.testingtool.scenario.config.ActionParameterTypes;
+import io.airbyte.testingtool.scenario.instance.InstanceTypes;
+import java.util.Collections;
+import java.util.List;
+import lombok.Getter;
 
 public enum Actions {
 
@@ -29,10 +31,13 @@ public enum Actions {
   @Getter
   private final List<ActionParameterTypes> requiredParameters;
 
-  Actions(List<InstanceTypes> requiredInstances, InstanceTypes resultInstance, List<ActionParameterTypes> requiredParameters) {
-    this.requiredInstances = (requiredInstances == null ? Collections.emptyList() : requiredInstances);
+  Actions(List<InstanceTypes> requiredInstances, InstanceTypes resultInstance,
+      List<ActionParameterTypes> requiredParameters) {
+    this.requiredInstances = (requiredInstances == null ? Collections.emptyList()
+        : requiredInstances);
     this.resultInstance = resultInstance;
-    this.requiredParameters = (requiredParameters == null ? Collections.emptyList() : requiredParameters);
+    this.requiredParameters = (requiredParameters == null ? Collections.emptyList()
+        : requiredParameters);
   }
 
   public boolean isInstanceRequired() {

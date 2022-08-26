@@ -6,49 +6,54 @@ import io.airbyte.api.client.model.generated.DestinationDefinitionUpdate;
 import io.airbyte.testingtool.scenario.instance.AirbyteInstance;
 import io.airbyte.testingtool.scenario.instance.DestinationInstance;
 import io.airbyte.testingtool.scenario.instance.Instance;
+import java.util.List;
 import lombok.Builder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.List;
+public class ActionUpdateDestinationVersion extends ScenarioAction {
 
-public class ActionUpdateDestinationVersion extends ScenarioAction{
-    private static final Logger LOGGER = LoggerFactory.getLogger(ActionUpdateDestinationVersion.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(
+      ActionUpdateDestinationVersion.class);
 
-    private final AirbyteInstance airbyteInstance;
-    private final DestinationInstance destinationInstance;
-    private final String version;
+  private final AirbyteInstance airbyteInstance;
+  private final DestinationInstance destinationInstance;
+  private final String version;
 
-    @Builder
-    public ActionUpdateDestinationVersion(int order, List<Instance> requiredInstances, Instance resultInstance, AirbyteInstance airbyteInstance, DestinationInstance destinationInstance, String version) {
-        super(order, requiredInstances, resultInstance);
-        this.airbyteInstance = airbyteInstance;
-        this.destinationInstance = destinationInstance;
-        this.version = version;
-    }
+  @Builder
+  public ActionUpdateDestinationVersion(int order, List<Instance> requiredInstances,
+      Instance resultInstance, AirbyteInstance airbyteInstance,
+      DestinationInstance destinationInstance, String version) {
+    super(order, requiredInstances, resultInstance);
+    this.airbyteInstance = airbyteInstance;
+    this.destinationInstance = destinationInstance;
+    this.version = version;
+  }
 
-    @Override
-    protected void doActionInternal() throws Exception {
-        createUpdateDestinationVersion();
-    }
+  @Override
+  protected void doActionInternal() throws Exception {
+    createUpdateDestinationVersion();
+  }
 
-    @Override
-    public String getActionName() {
-        return "Update Destination version";
-    }
+  @Override
+  public String getActionName() {
+    return "Update Destination version";
+  }
 
-    private void createUpdateDestinationVersion() throws ApiException {
-        LOGGER.info("Start updating Source version to  \"{}\"", version);
+  private void createUpdateDestinationVersion() throws ApiException {
+    LOGGER.info("Start updating Source version to  \"{}\"", version);
 
-        DestinationDefinitionApi destinationDefinitionApi = airbyteInstance.getAirbyteApi().getDestinationDefinitionApi();
-        var definitionName = destinationInstance.getCredentialConfig().getInstanceType();
+    DestinationDefinitionApi destinationDefinitionApi = airbyteInstance.getAirbyteApi()
+        .getDestinationDefinitionApi();
+    var definitionName = destinationInstance.getCredentialConfig().getInstanceType();
 
-        DestinationDefinitionUpdate destinationDefinitionUpdate = new DestinationDefinitionUpdate();
-        destinationDefinitionUpdate.setDestinationDefinitionId(airbyteInstance.getDestinationDefinitionId(definitionName));
-        destinationDefinitionUpdate.setDockerImageTag(version);
+    DestinationDefinitionUpdate destinationDefinitionUpdate = new DestinationDefinitionUpdate();
+    destinationDefinitionUpdate.setDestinationDefinitionId(
+        airbyteInstance.getDestinationDefinitionId(definitionName));
+    destinationDefinitionUpdate.setDockerImageTag(version);
 
-        destinationDefinitionApi.updateDestinationDefinition(destinationDefinitionUpdate);
+    destinationDefinitionApi.updateDestinationDefinition(destinationDefinitionUpdate);
 
-        LOGGER.info("Destination version \"{}\" was updated", version);
-    }
+    LOGGER.info("Destination version \"{}\" was updated", version);
+  }
 }

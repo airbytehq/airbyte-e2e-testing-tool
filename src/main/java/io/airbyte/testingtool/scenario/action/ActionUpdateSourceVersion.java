@@ -6,50 +6,54 @@ import io.airbyte.api.client.model.generated.SourceDefinitionUpdate;
 import io.airbyte.testingtool.scenario.instance.AirbyteInstance;
 import io.airbyte.testingtool.scenario.instance.Instance;
 import io.airbyte.testingtool.scenario.instance.SourceInstance;
+import java.util.List;
 import lombok.Builder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.List;
-
 
 public class ActionUpdateSourceVersion extends ScenarioAction {
-    private static final Logger LOGGER = LoggerFactory.getLogger(ActionUpdateSourceVersion.class);
 
-    private final AirbyteInstance airbyteInstance;
-    private final SourceInstance sourceInstance;
-    private final String version;
+  private static final Logger LOGGER = LoggerFactory.getLogger(ActionUpdateSourceVersion.class);
 
-    @Builder
-    public ActionUpdateSourceVersion(int order, List<Instance> requiredInstances, Instance resultInstance, AirbyteInstance airbyteInstance, SourceInstance sourceInstance, String version) {
-        super(order, requiredInstances, resultInstance);
-        this.airbyteInstance = airbyteInstance;
-        this.sourceInstance = sourceInstance;
-        this.version = version;
-    }
+  private final AirbyteInstance airbyteInstance;
+  private final SourceInstance sourceInstance;
+  private final String version;
 
-    @Override
-    protected void doActionInternal() throws Exception {
-        createUpdateSourceVersion();
-    }
+  @Builder
+  public ActionUpdateSourceVersion(int order, List<Instance> requiredInstances,
+      Instance resultInstance, AirbyteInstance airbyteInstance, SourceInstance sourceInstance,
+      String version) {
+    super(order, requiredInstances, resultInstance);
+    this.airbyteInstance = airbyteInstance;
+    this.sourceInstance = sourceInstance;
+    this.version = version;
+  }
 
-    @Override
-    public String getActionName() {
-        return "Update Source version";
-    }
+  @Override
+  protected void doActionInternal() throws Exception {
+    createUpdateSourceVersion();
+  }
 
-    private void createUpdateSourceVersion() throws ApiException {
-        LOGGER.info("Start updating Source version to  \"{}\"", version);
+  @Override
+  public String getActionName() {
+    return "Update Source version";
+  }
 
-        SourceDefinitionApi sourceDefinitionApi = airbyteInstance.getAirbyteApi().getSourceDefinitionApi();
-        var definitionName = sourceInstance.getCredentialConfig().getInstanceType();
+  private void createUpdateSourceVersion() throws ApiException {
+    LOGGER.info("Start updating Source version to  \"{}\"", version);
 
-        SourceDefinitionUpdate sourceDefinitionUpdate = new SourceDefinitionUpdate();
-        sourceDefinitionUpdate.setSourceDefinitionId(airbyteInstance.getSourceDefinitionId(definitionName));
-        sourceDefinitionUpdate.setDockerImageTag(version);
+    SourceDefinitionApi sourceDefinitionApi = airbyteInstance.getAirbyteApi()
+        .getSourceDefinitionApi();
+    var definitionName = sourceInstance.getCredentialConfig().getInstanceType();
 
-        sourceDefinitionApi.updateSourceDefinition(sourceDefinitionUpdate);
-        
-        LOGGER.info("Source version \"{}\" was updated", version);
-    }
+    SourceDefinitionUpdate sourceDefinitionUpdate = new SourceDefinitionUpdate();
+    sourceDefinitionUpdate.setSourceDefinitionId(
+        airbyteInstance.getSourceDefinitionId(definitionName));
+    sourceDefinitionUpdate.setDockerImageTag(version);
+
+    sourceDefinitionApi.updateSourceDefinition(sourceDefinitionUpdate);
+
+    LOGGER.info("Source version \"{}\" was updated", version);
+  }
 }
