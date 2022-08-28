@@ -8,16 +8,12 @@ import java.io.IOException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static io.airbyte.testingtool.credentials.CredentialsService.getSecrets;
-
 public class TestingTool {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(TestingTool.class);
 
   public static void main(String[] args) throws IOException {
     LOGGER.info("Testing tool started!");
-
-    getSecrets("aaa");
 
     var runArguments = RunArgumentFactory.getArguments(args);
     LOGGER.info("Run arguments : \n{}", runArguments.toString());

@@ -1,24 +1,27 @@
 package io.airbyte.testingtool.credentials;
 
-import io.airbyte.testingtool.argument_parser.Command;
-import com.google.cloud.secretmanager.v1.ProjectName;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.cloud.secretmanager.v1.AccessSecretVersionResponse;
 import com.google.cloud.secretmanager.v1.SecretManagerServiceClient;
+import com.google.cloud.secretmanager.v1.SecretName;
+import com.google.cloud.secretmanager.v1.SecretVersion;
+import io.airbyte.testingtool.argument_parser.Command;
 import io.airbyte.testingtool.json.Jsons;
 import io.airbyte.testingtool.scenario.config.CredentialConfig;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.StreamSupport;
 import java.util.Map.Entry;
+import java.util.stream.StreamSupport;
 
 public class CredentialsService {
 
   private static final String LOCAL_SECRET_FOLDER = "secrets/";
+  private static final ObjectMapper MAPPER = new ObjectMapper();
 
   public static Map<String, CredentialConfig> getCredentials(final Command runCommand, final Map<String, String> args) throws IOException {
     return switch (runCommand) {
@@ -50,22 +53,27 @@ public class CredentialsService {
     }
   }
 
-  public static void getSecrets(String secretName) throws IOException {
+  public static JsonNode getSecrets(String secretId) throws IOException {
     var projectId = getProjectIdForSecretManager();
     try (SecretManagerServiceClient client = SecretManagerServiceClient.create()) {
-      ProjectName projectName = ProjectName.of(projectId);
-      SecretManagerServiceClient.ListSecretsPagedResponse pagedResponse = client.listSecrets(projectName);
-//      var optionalSecret = StreamSupport.stream(pagedResponse.iterateAll().spliterator(), false)
-//              .filter(secret -> secretName.equals(secret.getName()))
-//              .findFirst();
-      var a = StreamSupport.stream(pagedResponse.iterateAll().spliterator(), false).toList();
-      LOGGER.error("aaa");
+      SecretName secretNameForGetActiveVersion = SecretName.of(projectId, secretId);
+      SecretManagerServiceClient.ListSecretVersionsPagedResponse versionList = client.listSecretVersions(secretNameForGetActiveVersion);
+      var optionSecretWithVersion = StreamSupport.stream(versionList.iterateAll().spliterator(), false)
+              .filter(secretVersion -> secretVersion.getState().equals(SecretVersion.State.ENABLED))
+              .findFirst();
+
+      if (optionSecretWithVersion.isEmpty()) {
+        throw new RuntimeException(String.format("Driver could not find active version of \"%s\" secret.", secretId));
+      }
+      var secretNameWithVersion = optionSecretWithVersion.get().getName();
+      AccessSecretVersionResponse response = client.accessSecretVersion(secretNameWithVersion);
+      return MAPPER.readTree(response.getPayload().getData().toStringUtf8());
     }
   }
 
   private static String getProjectIdForSecretManager() throws IOException {
-      final String secrets = Files.readString(Path.of("secrets/config.json"));
-      var secretsNode = Jsons.deserialize(secrets);
-      return secretsNode.get(PROJECT_ID).asText();
+    final String secrets = Files.readString(Path.of("secrets/config.json"));
+    var secretsNode = Jsons.deserialize(secrets);
+    return secretsNode.get("projectId").asText();
   }
 }
