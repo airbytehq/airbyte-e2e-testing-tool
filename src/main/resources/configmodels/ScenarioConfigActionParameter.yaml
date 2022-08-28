@@ -1,0 +1,17 @@
+---
+"$schema": http://json-schema.org/draft-07/schema#
+"$id": https://github.com/airbytehq/airbyte/blob/master/airbyte-config/models/src/main/resources/types/State.yaml
+title: ScenarioConfigActionParameter
+description: Action parameter, which we can use inside.
+type: object
+required:
+  - name
+  - type
+additionalProperties: false
+properties:
+  name:
+    description: Parameter name. If you put a parameter in the multiply actions with the same name and type, you need to specify it only once.
+    type: string
+  type:
+    description: Parameter type.
+    "$ref": ActionParameterTypes.yaml

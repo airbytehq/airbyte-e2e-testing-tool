@@ -7,8 +7,10 @@ import org.slf4j.LoggerFactory;
 
 public enum Command {
   RUN_SCENARIO("/run-scenario"),
+  RUN_SCENARIO_LOCAL("/run-scenario-local"),
   RUN_HELP("/help"),
   RUN_FULL_HELP("/help-full"),
+  RUN_LIST_SCENARIOS("/list-scenarios")
   ;
 
   private static final Logger LOGGER = LoggerFactory.getLogger(Command.class);

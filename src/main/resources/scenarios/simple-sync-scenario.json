@@ -1,5 +1,5 @@
 {
-  "scenarioName" : "Poc Scenario",
+  "scenarioName" : "Simple sync scenario",
   "usedInstances" : [
     {
       "instanceName" : "airbyte_1",

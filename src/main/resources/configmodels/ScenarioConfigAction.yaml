@@ -20,3 +20,8 @@ properties:
     type: array
     items:
       type: string
+  requiredParameters:
+    description: The list of parameter names required for the action execution.
+    type: array
+    items:
+      "$ref": ScenarioConfigActionParameter.yaml

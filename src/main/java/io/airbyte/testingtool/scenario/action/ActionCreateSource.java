@@ -5,10 +5,11 @@ import io.airbyte.api.client.model.generated.SourceCreate;
 import io.airbyte.testingtool.scenario.instance.AirbyteInstance;
 import io.airbyte.testingtool.scenario.instance.Instance;
 import io.airbyte.testingtool.scenario.instance.SourceInstance;
-import java.util.List;
 import lombok.Builder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.List;
 
 public class ActionCreateSource extends ScenarioAction {
 

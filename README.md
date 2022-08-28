@@ -60,7 +60,7 @@ _Note! The instance name is a way to use the same instance in different actions_
 **Scenario config example:**
 ```json
 {
-  "scenarioName" : "Poc Scenario",
+  "scenarioName" : "Simple sync scenario",
   "usedInstances" : [
     {
       "instanceName" : "airbyte_1",
@@ -112,36 +112,47 @@ _Note! The instance name is a way to use the same instance in different actions_
 ## How to run
 The tool is on the very early state and can be executed with local hardcoded credential files.
 
+### Run default (test) configuration
 1. Clone the repository
 2. Build the project
-3. Create three files with credential configs (`airbyte_creds.json`, `destination_creds.json`, `source_creds.json`) in the folder `secrets`.
+3. Create three files with credential configs (`airbyte_creds.json`, `destination_creds.json`, `source_creds.json`) in the folder `secrets`
 
      ![image](https://user-images.githubusercontent.com/1310940/185700802-b6a75916-efdf-4b22-bafb-19fc23f0c9d7.png)
 
 4. Run `TestingTool::main`
 
-_Note! By default, you run it using the hardcoded configuration!_
+_Note! This is a hardcoded default configuration for testing purposes._
+
+### Run scenario with local credentials
+1. Clone the repository
+2. Build the project
+3. (Optional) Run the `TestingTool::main` with the argument `/list-scenarios` to get list of available scenarios
+4. (Optional) Run the `TestingTool::main` with the argument `/help name="<scenario_name>"` to get scenario call example and required credentials
+5. Put your credential files in the `secrets` folder in the project root
+6. Run the scenario (get from step 3) by passing the required arguments (get from step 4) to the method `TestingTool::main`
 
 ## How to run /help for a scenario
 You can get generated doc for a scenario by passing specific arguments to the main method `TestingTool::main`.
 
 1. Clone the repository
 2. Build the project
-3. Create the `Run/Debug` configuration with argument line `/help name="Poc Scenario"` (For getting extended help use `/help-full` instead of `/help`)
+3. Create the `Run/Debug` configuration with argument line `/help name="Simple sync scenario"` (For getting extended help use `/help-full` instead of `/help`)
 
-     ![image](https://user-images.githubusercontent.com/30464745/186145784-28ae37b9-4e4e-49ab-9361-777ae9433cbf.png)
+     ![image](https://user-images.githubusercontent.com/30464745/186178683-55c29578-44c4-47fb-b4d2-5e2b4da99149.png)
 
 4. Run the configuration
 
 The result you can find in the execution log.
-![Screenshot from 2022-08-23 14-19-37](https://user-images.githubusercontent.com/30464745/186145920-9034b544-a87d-4df8-92d9-6ab9eebb4a11.png)
+![Screenshot from 2022-08-23 17-04-44](https://user-images.githubusercontent.com/30464745/186179197-68b8c932-c483-4da1-9e0f-91169c335a8d.png)
 
 _Note! The help text is formatted for GitHub. You can put it there to get a more readable view._
-![Screenshot from 2022-08-23 14-22-00](https://user-images.githubusercontent.com/30464745/186145943-ea720dba-1b7f-4782-891a-5914e57d2d64.png)
+![Screenshot from 2022-08-23 17-05-03](https://user-images.githubusercontent.com/30464745/186179206-a8193142-5278-434b-8ddd-d7bc666725b3.png)
 
 ## CHANGELOG
 
-| Version | Description                                                                            |
-|---------|----------------------------------------------------------------------------------------|
-| 0.1.1   | Implement HelpService. Now you can get short description with examples for a scenario. |
-| 0.1.0   | Stage 1. POC                                                                           |
+| Version | Description                                                                             |
+|---------|-----------------------------------------------------------------------------------------|
+| 0.1.3   | Run scenario using local files                                                          |
+| 0.1.2   | Action parameters.                                                                      |
+| 0.1.1   | Implement HelpService. Now you can get short description with examples for a scenario.  |
+| 0.1.0   | Stage 1. POC                                                                            |
