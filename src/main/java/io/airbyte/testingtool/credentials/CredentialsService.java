@@ -23,6 +23,7 @@ public class CredentialsService {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(CredentialsService.class);
   private static final String LOCAL_SECRET_FOLDER = "secrets/";
+  private static final String SERVICE_ACCOUNT_CREDENTIAL_FILE = "service_account_credentials.json";
 
   private static ServiceAccountConfig serviceAccountConfig;
 
@@ -81,10 +82,10 @@ public class CredentialsService {
 
   static {
     try {
-      String fullConfigAsString = Files.readString(Path.of("/secrets/service_account_credentials.json"));
+      String fullConfigAsString = Files.readString(Path.of(LOCAL_SECRET_FOLDER + SERVICE_ACCOUNT_CREDENTIAL_FILE));
       serviceAccountConfig = Jsons.deserialize(fullConfigAsString, ServiceAccountConfig.class);
     } catch (IOException e) {
-      LOGGER.error("Fail to parse \"service_account_credentials.json\" config file!");
+      LOGGER.error("Fail to parse \"{}\" config file!", SERVICE_ACCOUNT_CREDENTIAL_FILE);
     }
   }
 
