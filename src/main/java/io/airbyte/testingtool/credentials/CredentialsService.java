@@ -17,6 +17,7 @@ import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.stream.StreamSupport;
 
 public class CredentialsService {
@@ -63,7 +64,7 @@ public class CredentialsService {
   }
 
   private static CredentialConfig readSecretManagerCredential(final String secretName) throws IOException {
-    var projectName = serviceAccountConfig.getProjectId();
+    var projectName = getServiceAccountConfig().getProjectId();
     try (SecretManagerServiceClient client = SecretManagerServiceClient.create()) {
       SecretName secretNameForGetActiveVersion = SecretName.of(projectName, secretName);
       SecretManagerServiceClient.ListSecretVersionsPagedResponse versionList = client.listSecretVersions(secretNameForGetActiveVersion);
@@ -80,12 +81,20 @@ public class CredentialsService {
     }
   }
 
-  static {
-    try {
-      String fullConfigAsString = Files.readString(Path.of(LOCAL_SECRET_FOLDER + SERVICE_ACCOUNT_CREDENTIAL_FILE));
-      serviceAccountConfig = Jsons.deserialize(fullConfigAsString, ServiceAccountConfig.class);
-    } catch (IOException e) {
-      LOGGER.error("Fail to parse \"{}\" config file!", SERVICE_ACCOUNT_CREDENTIAL_FILE);
+  private static ServiceAccountConfig getServiceAccountConfig() {
+    if (Objects.isNull(serviceAccountConfig)) {
+      Path pathToServiceAccountCredentialFile = Path.of(LOCAL_SECRET_FOLDER + SERVICE_ACCOUNT_CREDENTIAL_FILE);
+      try {
+        String fullConfigAsString = Files.readString(pathToServiceAccountCredentialFile);
+        serviceAccountConfig = Jsons.deserialize(fullConfigAsString, ServiceAccountConfig.class);
+        return serviceAccountConfig;
+      } catch (IOException e) {
+        String errorMessage = String.format("Fail to parse \"%s\" config file!", pathToServiceAccountCredentialFile);
+        LOGGER.error(errorMessage);
+        throw new RuntimeException(errorMessage);
+      }
+    } else {
+      return serviceAccountConfig;
     }
   }
 
