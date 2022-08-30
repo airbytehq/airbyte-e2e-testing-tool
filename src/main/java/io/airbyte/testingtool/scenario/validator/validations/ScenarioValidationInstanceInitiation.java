@@ -8,9 +8,9 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.apache.commons.lang3.StringUtils;
 
-public class ValidationInstanceInitiation extends AbstractValidation {
+public class ScenarioValidationInstanceInitiation extends AbstractScenarioValidation {
 
-  public ValidationInstanceInitiation(ScenarioConfig scenarioConfig) {
+  public ScenarioValidationInstanceInitiation(ScenarioConfig scenarioConfig) {
     super(scenarioConfig);
   }
 
