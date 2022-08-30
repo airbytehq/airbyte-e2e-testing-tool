@@ -1,7 +1,11 @@
 package io.airbyte.testingtool.credentials;
 
+import com.google.api.gax.core.FixedCredentialsProvider;
+import com.google.auth.Credentials;
+import com.google.auth.oauth2.ServiceAccountCredentials;
 import com.google.cloud.secretmanager.v1.AccessSecretVersionResponse;
 import com.google.cloud.secretmanager.v1.SecretManagerServiceClient;
+import com.google.cloud.secretmanager.v1.SecretManagerServiceSettings;
 import com.google.cloud.secretmanager.v1.SecretName;
 import com.google.cloud.secretmanager.v1.SecretVersion;
 import io.airbyte.testingtool.argument_parser.Command;
@@ -11,6 +15,7 @@ import io.airbyte.testingtool.scenario.config.ServiceAccountConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -65,7 +70,13 @@ public class CredentialsService {
 
   private static CredentialConfig readSecretManagerCredential(final String secretName) throws IOException {
     var projectName = getServiceAccountConfig().getProjectId();
-    try (SecretManagerServiceClient client = SecretManagerServiceClient.create()) {
+    Credentials myCredentials = ServiceAccountCredentials.fromStream(
+            new FileInputStream(LOCAL_SECRET_FOLDER + SERVICE_ACCOUNT_CREDENTIAL_FILE));
+    SecretManagerServiceSettings secretManagerServiceSettings =
+            SecretManagerServiceSettings.newBuilder()
+                    .setCredentialsProvider(FixedCredentialsProvider.create(myCredentials))
+                    .build();
+    try (SecretManagerServiceClient client = SecretManagerServiceClient.create(secretManagerServiceSettings)) {
       SecretName secretNameForGetActiveVersion = SecretName.of(projectName, secretName);
       SecretManagerServiceClient.ListSecretVersionsPagedResponse versionList = client.listSecretVersions(secretNameForGetActiveVersion);
       var optionSecretWithVersion = StreamSupport.stream(versionList.iterateAll().spliterator(), false)
