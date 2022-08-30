@@ -149,7 +149,8 @@ _Note! The help text is formatted for GitHub. You can put it there to get a more
 the ServiceAccountConfig.yaml)
 4. Run the scenario by passing the required arguments to the method `TestingTool::main` with the command `/run-scenario`
 
-Example:
+#### Example:
+
 ![Screenshot from 2022-08-30 12-54-42](https://user-images.githubusercontent.com/30464745/187407611-1eeefdff-2417-41a7-8b8b-4467dc4f885a.png)
 
 _Note! Credential parameters should have secret name like `tt_airbyte_dev2`_
@@ -161,7 +162,8 @@ _Note! Credential parameters should have secret name like `tt_airbyte_dev2`_
 3. Put your credential files in the `secrets` folder in the project root
 4. Run the scenario by passing the required arguments to the method `TestingTool::main` with the command `/run-scenario-local`
 
-Example:
+#### Example:
+
 ![Screenshot from 2022-08-30 12-56-21](https://user-images.githubusercontent.com/30464745/187407955-7b0be9af-de38-427d-b037-c077fdf2673d.png)
 
 _Note! Credential parameters should have file name with extension like `some_cred_file.json`_
