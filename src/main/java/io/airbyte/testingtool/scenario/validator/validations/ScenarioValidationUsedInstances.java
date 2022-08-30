@@ -6,9 +6,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class ValidationUsedInstances extends AbstractValidation {
+public class ScenarioValidationUsedInstances extends AbstractScenarioValidation {
 
-  public ValidationUsedInstances(ScenarioConfig scenarioConfig) {
+  public ScenarioValidationUsedInstances(ScenarioConfig scenarioConfig) {
     super(scenarioConfig);
   }
 

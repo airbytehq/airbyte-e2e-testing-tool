@@ -7,10 +7,11 @@ import io.airbyte.testingtool.scenario.config.ScenarioConfigActionParameter;
 import io.airbyte.testingtool.scenario.config.ScenarioConfigInstance;
 import io.airbyte.testingtool.scenario.instance.InstanceTypes;
 import java.util.List;
+import java.util.stream.Stream;
 
-public class ValidationActionInstanceRequirements extends AbstractValidation {
+public class ScenarioValidationActionInstanceRequirements extends AbstractScenarioValidation {
 
-  public ValidationActionInstanceRequirements(ScenarioConfig scenarioConfig) {
+  public ScenarioValidationActionInstanceRequirements(ScenarioConfig scenarioConfig) {
     super(scenarioConfig);
   }
 
@@ -21,7 +22,7 @@ public class ValidationActionInstanceRequirements extends AbstractValidation {
 
   @Override
   protected void validateInternal(List<String> errors) {
-    getScenarioConfig().getPreparationActions().forEach(action -> {
+    Stream.concat(getScenarioConfig().getPreparationActions().stream(), getScenarioConfig().getScenarioActions().stream()).forEach(action -> {
       checkRequiredInstances(action, errors);
       checkResultInstance(action, errors);
       checkParameters(action, errors);

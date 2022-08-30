@@ -1,6 +1,7 @@
 package io.airbyte.testingtool.scenario.config;
 
 import io.airbyte.testingtool.json.Jsons;
+import io.airbyte.testingtool.scenario.validator.ValidationService;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -19,7 +20,12 @@ public class ScenarioConfigService {
 
   public static ScenarioConfig getConfig(String scenarioName) {
     if (scenarioConfigs.containsKey(scenarioName)) {
-      return scenarioConfigs.get(scenarioName);
+      var scenarioConfig = scenarioConfigs.get(scenarioName);
+      if (ValidationService.validateScenarioConfig(scenarioConfig)) {
+        return scenarioConfig;
+      } else {
+        throw new RuntimeException("The scenario " + scenarioName + " is invalid!");
+      }
     } else {
       throw new RuntimeException("The scenario " + scenarioName + " not found!");
     }
