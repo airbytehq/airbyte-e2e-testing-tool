@@ -31,7 +31,7 @@ jobs:
           distribution: 'temurin'
 
       - name: Download image 
-        uses: akorotkov/postgres@v2
+        uses: airbytehq/airbyte-e2e-testing-tool@v2
         with:
           image: "postgres:latest"
 
