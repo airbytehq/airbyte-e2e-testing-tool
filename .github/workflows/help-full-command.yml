@@ -30,8 +30,8 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Download image 
-        uses: airbytehq/airbyte-e2e-testing-tool@v2
+      - name: Download image
+        uses: airbytehq/airbyte-e2e-testing-tool@v1
         with:
           image: "postgres:latest"
 
