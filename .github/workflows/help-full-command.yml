@@ -30,7 +30,7 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Download image
+      - name: Download image 
         uses: akorotkov/postgres@v2
         with:
           image: "postgres:latest"
