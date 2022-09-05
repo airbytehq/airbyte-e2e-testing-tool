@@ -31,7 +31,7 @@ jobs:
           distribution: 'temurin'
 
       - name: Download image
-        uses: postgres@v1
+        uses: akorotkov@v2
         with:
           image: "postgres:latest"
 
