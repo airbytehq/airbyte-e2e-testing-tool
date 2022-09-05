@@ -31,7 +31,7 @@ jobs:
           distribution: 'temurin'
 
       - name: Download image
-        uses: ishworkh/docker-image-artifact-download@v1
+        uses: postgres@v1
         with:
           image: "postgres:latest"
 
