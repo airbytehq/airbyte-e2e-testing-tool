@@ -36,7 +36,7 @@ jobs:
       - name: Pull Docker image 
         run : docker pull postgres
 
-      - name: Run docker container ${{ github.event.inputs.comment-id }}
+      - name: Run docker container ${{ github.event.inputs.comment-id }} 
         run: |
           ./tools/run_help_full.sh /help-full
 
