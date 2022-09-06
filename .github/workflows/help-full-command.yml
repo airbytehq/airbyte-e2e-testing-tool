@@ -36,17 +36,9 @@ jobs:
       - name: Pull Docker image 
         run : docker pull postgres
 
-      - name: Run docker container ${{ github.event.inputs.comment-id }} 
-        run: |
-          ./tools/run_help_full.sh /help-full
-
-      - name: Link comment to workflow run
-        if: github.event.inputs.comment-id
-        uses: peter-evans/create-or-update-comment@v1
-        with:
-          comment-id: ${{ github.event.inputs.comment-id }}
-          body: |
-            > :clock2: ${{github.event.inputs.connector}} https://github.com/${{github.repository}}/actions/runs/${{github.run_id}}
+      - name: Run docker container ${{ github.event.inputs.comment-id }}
+        shell: bash
+        run: ./.github/scripts/run_help_full.sh /help-full
 
       - name: Add Failure Comment
         if: github.event.inputs.comment-id && failure()
