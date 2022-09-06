@@ -11,9 +11,6 @@ on:
         description: "The git ref to check out from the specified repository."
         required: false
         default: master
-      command:
-        description: "The command for docker container."
-        required: true
       comment-id:
         description: "The comment-id of the slash command. Used to update the comment with the status."
         required: false
@@ -36,12 +33,12 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
 
-      - name: Pull Docker image
+      - name: Pull Docker image 
         run : docker pull postgres
 
-      - name: Run docker container with command ${{ github.event.inputs.command }}
+      - name: Run docker container ${{ github.event.inputs.comment-id }}
         run: |
-          ./tools/run_help_full.sh ${{ github.event.inputs.command }}
+          ./tools/run_help_full.sh /help-full
 
       - name: Link comment to workflow run
         if: github.event.inputs.comment-id
