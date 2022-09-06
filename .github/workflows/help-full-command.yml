@@ -33,7 +33,7 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
 
-      - name: Pull Docker image
+      - name: Pull Docker image 
         run : docker pull postgres
 
       - name: Change wrapper permissions
@@ -42,6 +42,14 @@ jobs:
       - name: Run docker container ${{ github.event.inputs.comment-id }}
         shell: bash
         run: ./.github/scripts/run_help_full.sh /help-full
+
+      - name: Add Success Comment
+        if: github.event.inputs.comment-id && success()
+        uses: peter-evans/create-or-update-comment@v1
+        with:
+          comment-id: ${{ github.event.inputs.comment-id }}
+          body: |
+            > :white_check_mark: ${{github.event.inputs.connector}} https://github.com/${{github.repository}}/actions/runs/${{github.run_id}}
 
       - name: Add Failure Comment
         if: github.event.inputs.comment-id && failure()
