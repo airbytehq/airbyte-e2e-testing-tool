@@ -18,7 +18,7 @@ buildscript {
 }
 
 plugins {
-    id 'java'
+    id 'application'
     id "io.freefair.lombok" version "6.5.0.3"
     id 'jsonschema2pojo'
 }
@@ -33,6 +33,10 @@ repositories {
     maven {
         url "https://airbyte.mycloudrepo.io/public/repositories/airbyte-public-jars/"
     }
+}
+application {
+    mainClass = 'io.airbyte.testingtool.TestingTool'
+    applicationDefaultJvmArgs = ['-XX:+ExitOnOutOfMemoryError', '-XX:MaxRAMPercentage=75.0']
 }
 
 dependencies {
@@ -65,9 +69,9 @@ jsonSchema2Pojo {
     includeSetters = true
     serializable = true
 }
-
 jar {
     manifest {
-        attributes 'Main-Class': "io.airbyte.testingtool.TestingTool"
+        attributes 'Main-Class': 'io.airbyte.testingtool.TestingTool'
+        attributes 'Class-Path': configurations.runtimeClasspath.files.collect { it.getName() }.join(' ')
     }
 }
