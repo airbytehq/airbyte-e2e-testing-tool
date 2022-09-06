@@ -4,6 +4,7 @@ import io.airbyte.testingtool.json.Jsons;
 import io.airbyte.testingtool.scenario.validator.ValidationService;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
@@ -33,7 +34,8 @@ public class ScenarioConfigService {
 
   static {
     scenarioConfigs = new HashMap<>();
-    try (var paths = Files.walk(Paths.get("src/main/resources/scenarios/"))) {
+    Path ScenarioPath =  Paths.get(ScenarioConfigService.class.getClassLoader().getResource("scenarios/").getPath());
+    try (var paths = Files.walk(ScenarioPath)) {
       paths.filter(Files::isRegularFile).forEach(path -> {
         try {
           String fullConfigAsString = Files.readString(path);
