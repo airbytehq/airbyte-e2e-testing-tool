@@ -11,6 +11,9 @@ on:
         description: "The git ref to check out from the specified repository."
         required: false
         default: master
+      command:
+        description: "The command for docker container."
+        required: true
       comment-id:
         description: "The comment-id of the slash command. Used to update the comment with the status."
         required: false
@@ -36,9 +39,9 @@ jobs:
       - name: Pull Docker image
         run : docker pull postgres
 
-      - name: Run docker container with command ${{ github.event.inputs.comment-id }}
+      - name: Run docker container with command ${{ github.event.inputs.command }}
         run: |
-          ./tools/run_help_full.sh ${{ github.event.inputs.comment-id }}
+          ./tools/run_help_full.sh ${{ github.event.inputs.command }}
 
       - name: Link comment to workflow run
         if: github.event.inputs.comment-id
@@ -48,7 +51,7 @@ jobs:
           body: |
             > :clock2: ${{github.event.inputs.connector}} https://github.com/${{github.repository}}/actions/runs/${{github.run_id}}
 
-      - name: Add Failure Comment 
+      - name: Add Failure Comment
         if: github.event.inputs.comment-id && failure()
         uses: peter-evans/create-or-update-comment@v1
         with:
