@@ -49,7 +49,7 @@ jobs:
         shell: bash
         run: ./.github/scripts/run_help_full.sh /help-full
 
-      - name: Add Success Comment
+      - name: Add Success Comment 
         if: github.event.inputs.comment-id && success()
         uses: peter-evans/create-or-update-comment@v1
         with:
