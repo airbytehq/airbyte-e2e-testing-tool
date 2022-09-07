@@ -14,6 +14,9 @@ on:
       comment-id:
         description: "The comment-id of the slash command. Used to update the comment with the status."
         required: false
+      comment-body:
+        description: "The comment-body."
+        required: false
 
 jobs:
   run-help:
@@ -35,6 +38,9 @@ jobs:
 
       - name: Pull Docker image
         run : docker pull postgres
+
+      - name: Echo comment body ${{ github.event.inputs.comment-id }}
+        run: echo ${{ github.event.inputs.comment-id }}
 
       - name: Change wrapper permissions
         run: chmod +x ./.github/scripts/run_help_full.sh
