@@ -27,7 +27,6 @@ jobs:
             repo=${{ steps.getref.outputs.repo }}
             gitref=${{ steps.getref.outputs.ref }}
             comment-id=${{ github.event.comment.id }}
-            comment-body=${{ github.event.comment.body }}
           dispatch-type: workflow
       - name: Edit comment with error message
         if: steps.scd.outputs.error-message
