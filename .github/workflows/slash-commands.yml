@@ -16,7 +16,7 @@ jobs:
           pr_info="$(curl ${{ github.event.issue.pull_request.url }})"
           echo ::set-output name=ref::"$(echo $pr_info | jq -r '.head.ref')"
           echo ::set-output name=repo::"$(echo $pr_info | jq -r '.head.repo.full_name')"
-      - name: Get comment info
+      - name: Get comment info 
         id: comment-info
         run: |
           echo ::set-output name=comment-id::"${{ github.event.comment.id }}"
