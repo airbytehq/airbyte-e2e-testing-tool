@@ -17,6 +17,9 @@ on:
       comment-body:
         description: "The comment-body of the slash command."
         required: false
+      name:
+        description: "Name."
+        required: false
 
 jobs:
   run-help:
