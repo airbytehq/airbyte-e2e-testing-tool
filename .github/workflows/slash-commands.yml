@@ -16,6 +16,23 @@ jobs:
           pr_info="$(curl ${{ github.event.issue.pull_request.url }})"
           echo ::set-output name=ref::"$(echo $pr_info | jq -r '.head.ref')"
           echo ::set-output name=repo::"$(echo $pr_info | jq -r '.head.repo.full_name')"
+      - name: Get comment info
+        id: comment-info
+        run: |
+          echo ::set-output name=comment-id::"${{ github.event.comment.id }}"
+          echo ::set-output name=comment-body::"${{ github.event.comment.body }}"
+      - name: Get command
+        id: regex
+        uses: AsasInnab/regex-action@v1
+        with:
+          regex_pattern: "^\/[a-zA-Z0-9_/-]+"
+          search_string: ${{ steps.comment-info.outputs.comment-body }}
+      - name: Update comment for processing
+        if: ${{ steps.regex.outputs.first_match }} != ""
+        uses: peter-evans/create-or-update-comment@v1
+        with:
+          comment-id: ${{ github.event.comment.id }}
+          body: ${{ steps.regex.outputs.first_match }}
       - name: Slash Command Dispatch
         id: scd
         uses: peter-evans/slash-command-dispatch@v2
@@ -26,7 +43,8 @@ jobs:
           static-args: |
             repo=${{ steps.getref.outputs.repo }}
             gitref=${{ steps.getref.outputs.ref }}
-            comment-id=${{ github.event.comment.id }}
+            comment-id=${{ steps.comment-info.outputs.comment-id }}
+            comment-body=${{ steps.comment-info.outputs.comment-body }}
           dispatch-type: workflow
       - name: Edit comment with error message
         if: steps.scd.outputs.error-message
