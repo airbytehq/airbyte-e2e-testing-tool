@@ -45,6 +45,8 @@ jobs:
     runs-on: ubuntu-latest
     needs: setParams
     steps:
+      - name: Get command ${{ needs.setParams.outputs.comment-body }}
+        run: echo ${{ needs.setParams.outputs.comment-body }}
       - name: Slash Command Dispatch
         id: scd
         uses: peter-evans/slash-command-dispatch@v2
