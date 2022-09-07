@@ -33,6 +33,7 @@ jobs:
         uses: peter-evans/create-or-update-comment@v1
         with:
           comment-id: ${{ github.event.comment.id }}
+          edit-mode: replace
           body: ${{ steps.regex.outputs.first_match }}
       - name: Slash Command Dispatch
         id: scd
