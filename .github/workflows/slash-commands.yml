@@ -29,10 +29,10 @@ jobs:
             comment-id=${{ github.event.comment.id }}
             comment-body=${{ github.event.comment.body }}
           dispatch-type: workflow
-#      - name: Edit comment with error message
-#        if: steps.scd.outputs.error-message && !includes(${{ steps.scd.outputs.error-message }}, "Unexpected inputs provided:")
-#        uses: peter-evans/create-or-update-comment@v1
-#        with:
-#          comment-id: ${{ github.event.comment.id }}
-#          body: |
-#            > Error: ${{ steps.scd.outputs.error-message }}
+      - name: Edit comment with error message
+        if: steps.scd.outputs.error-message
+        uses: peter-evans/create-or-update-comment@v1
+        with:
+          comment-id: ${{ github.event.comment.id }}
+          body: |
+            > Error: ${{ steps.scd.outputs.error-message }}
