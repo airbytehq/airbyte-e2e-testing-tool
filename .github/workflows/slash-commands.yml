@@ -25,7 +25,8 @@ jobs:
         id: regex
         uses: AsasInnab/regex-action@v1
         with:
-          regex_pattern: "^/[a-zA-Z0-9-_]+"
+          regex_pattern: "^/[a-zA-Z0-9_/-]+"
+          regex_flags: "i"
           search_string: ${{ steps.comment-info.outputs.comment-body }}
       - name: Update comment for processing
         if: ${{ steps.regex.outputs.first_match }} != ""
