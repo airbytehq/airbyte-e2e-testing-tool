@@ -12,9 +12,9 @@ jobs:
     outputs:
       repo: ${{ steps.getref.outputs.repo }}
       ref: ${{ steps.getref.outputs.ref }}
-      comment-id: ${{ steps.comment-id.outputs.comment-id }}
+      comment-id: ${{ steps.comment-info.outputs.comment-id }}
       comment-body: ${{ steps.comment-info.outputs.comment-body }}
-      command: ${{ steps.comment-info.outputs.first_match }}
+      command: ${{ steps.regex.outputs.first_match }}
     steps:
       - name: Get PR repo and ref
         id: getref
