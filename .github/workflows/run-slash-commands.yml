@@ -27,7 +27,9 @@ jobs:
         run: |
           body_modified=${{ github.event.comment.body }}
           echo ::set-output name=comment-id::"${{ github.event.comment.id }}"
-          echo ::set-output name=comment-body::"${body_modified//\"/\\\"}"
+          qqq=${body_modified//\"/\\\"}
+          echo qqq
+          echo ::set-output name=comment-body::"${qqq}"
       - name: Get command
         id: regex
         uses: AsasInnab/regex-action@v1
