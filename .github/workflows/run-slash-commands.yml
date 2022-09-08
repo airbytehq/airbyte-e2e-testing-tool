@@ -25,7 +25,7 @@ jobs:
       - name: Get comment id
         id: comment-info
         run: |
-          body_modified="${{ github.event.comment.body }}"
+          body_modified=${{ github.event.comment.body }}
           echo ::set-output name=comment-id::"${{ github.event.comment.id }}"
           echo ::set-output name=comment-body::"${body_modified//\"/\\\"}"
       - name: Get command
