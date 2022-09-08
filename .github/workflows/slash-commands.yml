@@ -27,9 +27,9 @@ jobs:
       - name: Get comment body
         id: comment-info
         run: |
-          a="${{ github.event.comment.body }}"
-          echo ::set-output name=comment-body::${a//\=/\|\|}
-#          с=${b// /\|\|\|}
+          full_comment="${{ github.event.comment.body }}"
+          comment_without_equal=${full_comment//\=/\|\|}
+          echo ::set-output name=comment-body::${comment_without_equal// /\|\|\|}
       - name: Show body ${{ steps.comment-info.outputs.comment-body }}
         run: echo ${{ steps.comment-info.outputs.comment-body }}
       - name: Get command
