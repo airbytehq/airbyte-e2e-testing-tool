@@ -28,9 +28,8 @@ jobs:
         id: comment-info
         run: |
           a="${{ github.event.comment.body }}"
-          b=${a//\=/\|\|}
-          с=${b// /\|\|\|}
-          echo ::set-output name=comment-body::echo $c
+          echo ::set-output name=comment-body::${a//\=/\|\|}
+#          с=${b// /\|\|\|}
       - name: Show body ${{ steps.comment-info.outputs.comment-body }}
         run: echo ${{ steps.comment-info.outputs.comment-body }}
       - name: Get command
