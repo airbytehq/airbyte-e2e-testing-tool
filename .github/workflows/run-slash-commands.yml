@@ -48,21 +48,23 @@ jobs:
         uses: docker/setup-buildx-action@v1
       - name: Pull Docker image
         run: docker pull postgres
+      - name: Ls
+        run: ls -al
       - name: Change wrapper permissions
         run: chmod +x ./.github/scripts/run_docker_with_params.sh
-      - name: Run docker container with params
-        run: ./.github/scripts/run_docker_with_params.sh ${{ needs.setParams.outputs.comment-body }}
-      - name: Add Success Comment
-        if: github.event.inputs.comment-id && success()
-        uses: peter-evans/create-or-update-comment@v1
-        with:
-          comment-id: ${{ github.event.inputs.comment-id }}
-          body: |
-            > :white_check_mark: https://github.com/${{github.repository}}/actions/runs/${{github.run_id}}
-      - name: Add Failure Comment
-        if: github.event.inputs.comment-id && failure()
-        uses: peter-evans/create-or-update-comment@v1
-        with:
-          comment-id: ${{ github.event.inputs.comment-id }}
-          body: |
-            > :x: https://github.com/${{github.repository}}/actions/runs/${{github.run_id}}
+#      - name: Run docker container with params
+#        run: ./.github/scripts/run_docker_with_params.sh ${{ needs.setParams.outputs.comment-body }}
+#      - name: Add Success Comment
+#        if: github.event.inputs.comment-id && success()
+#        uses: peter-evans/create-or-update-comment@v1
+#        with:
+#          comment-id: ${{ github.event.inputs.comment-id }}
+#          body: |
+#            > :white_check_mark: https://github.com/${{github.repository}}/actions/runs/${{github.run_id}}
+#      - name: Add Failure Comment
+#        if: github.event.inputs.comment-id && failure()
+#        uses: peter-evans/create-or-update-comment@v1
+#        with:
+#          comment-id: ${{ github.event.inputs.comment-id }}
+#          body: |
+#            > :x: https://github.com/${{github.repository}}/actions/runs/${{github.run_id}}
