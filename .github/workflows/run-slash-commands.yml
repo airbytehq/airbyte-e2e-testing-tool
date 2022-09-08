@@ -48,11 +48,11 @@ jobs:
         uses: docker/setup-buildx-action@v1
       - name: Pull Docker image
         run: docker pull postgres
-      - name: Change wrapper permissions
-        run: chmod +x ./scripts/run_docker_with_params.sh
+#      - name: Change wrapper permissions
+#        run: chmod +x ./.github/scripts/run_docker_with_params.sh
       - name: Run docker container with params ${{ needs.setParams.outputs.comment-body }}
         shell: bash
-        run: ./scripts/run_docker_with_params.sh ${{ needs.setParams.outputs.comment-body }}
+        run: ./.github/scripts/run_docker_with_params.sh ${{ needs.setParams.outputs.comment-body }}
       - name: Add Success Comment
         if: github.event.inputs.comment-id && success()
         uses: peter-evans/create-or-update-comment@v1
