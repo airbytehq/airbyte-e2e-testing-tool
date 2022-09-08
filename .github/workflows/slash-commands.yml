@@ -12,7 +12,7 @@ jobs:
     outputs:
       repo: ${{ steps.getref.outputs.repo }}
       ref: ${{ steps.getref.outputs.ref }}
-      comment-id: ${{ steps.comment-info.outputs.comment-id }}
+      comment-id: ${{ steps.comment-id.outputs.comment-id }}
       comment-body: ${{ steps.comment-info.outputs.comment-body }}
     steps:
       - name: Get PR repo and ref
@@ -21,18 +21,23 @@ jobs:
           pr_info="$(curl ${{ github.event.issue.pull_request.url }})"
           echo ::set-output name=ref::"$(echo $pr_info | jq -r '.head.ref')"
           echo ::set-output name=repo::"$(echo $pr_info | jq -r '.head.repo.full_name')"
-      - name: Get comment info 
-        id: comment-info
+      - name: Get comment id
+        id: comment-id
         run: |
           echo ::set-output name=comment-id::"${{ github.event.comment.id }}"
-          echo ::set-output name=comment-body::"${{ github.event.comment.body }}"
+      - name: Get comment body
+        id: comment-info
+        run: |
+          echo ::set-output name=comment-body::"${{ github.event.comment.body }}" | tr '=' '||' | tr ' ' '|||'
+      - name: Show body ${{ steps.comment-info.outputs.comment-body }}
+        run: echo ${{ steps.comment-info.outputs.comment-body }}
       - name: Get command
         id: regex
         uses: AsasInnab/regex-action@v1
         with:
           regex_pattern: "^/[a-zA-Z0-9_/-]+"
           regex_flags: "i"
-          search_string: ${{ steps.comment-info.outputs.comment-body }}
+          search_string: ${{ github.event.comment.body }}
       - name: Update comment for processing
         if: ${{ steps.regex.outputs.first_match }} != ""
         uses: peter-evans/create-or-update-comment@v1
