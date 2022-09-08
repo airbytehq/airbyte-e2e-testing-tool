@@ -28,7 +28,7 @@ jobs:
           body_modified=${{ github.event.comment.body }}
           echo ::set-output name=comment-id::"${{ github.event.comment.id }}"
           qqq=${body_modified//\"/\\\"}
-          echo ${qqq}
+          echo "${qqq}"
           echo ::set-output name=comment-body::"${qqq}"
       - name: Get command
         id: regex
