@@ -58,7 +58,7 @@ jobs:
       - name: Change wrapper permissions
         run: chmod +x ./.github/scripts/run_docker_with_params.sh
       - name: Run docker container with params
-        run: ./.github/scripts/run_docker_with_params.sh "${{ github.event.comment.body }}"
+        run: ./.github/scripts/run_docker_with_params.sh ${{ github.event.comment.body }}
       - name: Add Success Comment
         if: needs.setParams.outputs.comment-id && success()
         uses: peter-evans/create-or-update-comment@v1
