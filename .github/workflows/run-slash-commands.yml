@@ -58,13 +58,13 @@ jobs:
         if: github.event.inputs.comment-id && success()
         uses: peter-evans/create-or-update-comment@v1
         with:
-          comment-id: ${{ github.event.inputs.comment-id }}
+          comment-id: ${{ needs.setParams.outputs.comment-id }}
           body: |
             > :white_check_mark: https://github.com/${{github.repository}}/actions/runs/${{github.run_id}}
       - name: Add Failure Comment
         if: github.event.inputs.comment-id && failure()
         uses: peter-evans/create-or-update-comment@v1
         with:
-          comment-id: ${{ github.event.inputs.comment-id }}
+          comment-id: ${{ needs.setParams.outputs.comment-id }}
           body: |
             > :x: https://github.com/${{github.repository}}/actions/runs/${{github.run_id}}
