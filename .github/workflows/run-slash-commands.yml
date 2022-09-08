@@ -52,7 +52,7 @@ jobs:
 #        run: chmod +x ./.github/scripts/run_docker_with_params.sh
       - name: Run docker container with params ${{ needs.setParams.outputs.comment-body }}
         shell: bash
-        run: ./.github/scripts/run_docker_with_params.sh ${{ needs.setParams.outputs.comment-body }}
+        run: ../scripts/run_docker_with_params.sh ${{ needs.setParams.outputs.comment-body }}
       - name: Add Success Comment
         if: github.event.inputs.comment-id && success()
         uses: peter-evans/create-or-update-comment@v1
