@@ -30,7 +30,7 @@ jobs:
           a="${{ github.event.comment.body }}"
           b=${a//\=/\|\|}
           с=${b// /\|\|\|}
-          echo ::set-output name=comment-body::c
+          echo ::set-output name=comment-body::${c}
       - name: Show body ${{ steps.comment-info.outputs.comment-body }}
         run: echo ${{ steps.comment-info.outputs.comment-body }}
       - name: Get command
