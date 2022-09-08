@@ -38,12 +38,13 @@ jobs:
           regex_flags: "i"
           search_string: ${{ github.event.comment.body }}
       - name: Update comment for processing
-        if: ${{ steps.regex.outputs.first_match }} != ""
+        if: ${{ steps.regex.outputs.first_match }} == "/help-full"
         uses: peter-evans/create-or-update-comment@v1
         with:
           comment-id: ${{ github.event.comment.id }}
           edit-mode: replace
           body: ${{ steps.regex.outputs.first_match }}
+          reactions: eyes
   slashCommandDispatch:
     if: ${{ github.event.issue.pull_request }}
     runs-on: ubuntu-latest

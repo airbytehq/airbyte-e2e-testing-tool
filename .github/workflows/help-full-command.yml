@@ -27,6 +27,21 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v1
 
+      - name: Get comment body
+        id: comment-info
+        run: |
+          full_comment="${{ github.event.inputs.comment-body }}"
+          comment_without_spaces=${full_comment//\|\|\|/ }
+          echo ::set-output name=comment-body::${full_comment//\|\|/\=}
+
+      - name: Update comment for processing
+        uses: peter-evans/create-or-update-comment@v1
+        with:
+          comment-id: ${{ github.event.comment.id }}
+          edit-mode: replace
+          body: ${{ steps.regex.outputs.comment-body }}
+          reactions: eyes, rocket
+
       - name: Set up JDK 17
         uses: actions/setup-java@v3
         with:
