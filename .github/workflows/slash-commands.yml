@@ -23,12 +23,14 @@ jobs:
           echo ::set-output name=repo::"$(echo $pr_info | jq -r '.head.repo.full_name')"
       - name: Get comment id
         id: comment-id
-        run: |
-          echo ::set-output name=comment-id::"${{ github.event.comment.id }}"
+        run: echo ::set-output name=comment-id::"${{ github.event.comment.id }}"
       - name: Get comment body
         id: comment-info
         run: |
-          echo ::set-output name=comment-body::"${{ github.event.comment.body }}" | tr '=' '||' | tr ' ' '|||'
+          a=${{ github.event.comment.body }}
+          b=${a//\=/\|\|}
+          с=${b// /\|\|\|}
+          echo ::set-output name=comment-body::c
       - name: Show body ${{ steps.comment-info.outputs.comment-body }}
         run: echo ${{ steps.comment-info.outputs.comment-body }}
       - name: Get command
