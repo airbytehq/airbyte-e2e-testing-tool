@@ -10,4 +10,4 @@ WORKDIR /tmp
 
 RUN tar xf ${APPLICATION}.tar --strip-components=1
 
-ENTRYPOINT [ "java","-jar","/tmp/lib/airbyte-e2e-testing-tool-0.2.0.jar", "/help-full name=\"Update source version scenario\""]
+ENTRYPOINT ["java", "-jar", "/tmp/lib/airbyte-e2e-testing-tool-0.2.0.jar"]
