@@ -23,7 +23,7 @@ jobs:
           echo ::set-output name=ref::"$(echo $pr_info | jq -r '.head.ref')"
           echo ::set-output name=repo::"$(echo $pr_info | jq -r '.head.repo.full_name')"
       - name: Get comment id
-        id: comment-id
+        id: comment-info
         run: |
           echo ::set-output name=comment-id::"${{ github.event.comment.id }}"
           echo ::set-output name=comment-body::"${{ github.event.comment.body }}"
