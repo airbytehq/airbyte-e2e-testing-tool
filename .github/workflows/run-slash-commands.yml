@@ -55,14 +55,14 @@ jobs:
       - name: Run docker container with params
         run: ./.github/scripts/run_docker_with_params.sh "${{ needs.setParams.outputs.comment-body }}"
       - name: Add Success Comment
-        if: github.event.inputs.comment-id && success()
+        if: needs.setParams.outputs.comment-id && success()
         uses: peter-evans/create-or-update-comment@v1
         with:
           comment-id: ${{ needs.setParams.outputs.comment-id }}
           body: |
             > :white_check_mark: https://github.com/${{github.repository}}/actions/runs/${{github.run_id}}
       - name: Add Failure Comment
-        if: github.event.inputs.comment-id && failure()
+        if: needs.setParams.outputs.comment-id && failure()
         uses: peter-evans/create-or-update-comment@v1
         with:
           comment-id: ${{ needs.setParams.outputs.comment-id }}
