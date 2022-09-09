@@ -13,7 +13,6 @@ jobs:
       repo: ${{ steps.getref.outputs.repo }}
       ref: ${{ steps.getref.outputs.ref }}
       comment-id: ${{ steps.comment-info.outputs.comment-id }}
-      comment-body: ${{ steps.comment-info.outputs.comment-body }}
       command: ${{ steps.regex.outputs.first_match }}
     steps:
       - name: Get PR repo and ref
@@ -26,10 +25,6 @@ jobs:
         id: comment-info
         run: |
           echo ::set-output name=comment-id::"${{ github.event.comment.id }}"
-          echo ::set-output name=comment-body::"$(echo "${{ github.event.comment.body }}")"
-      - name: check
-        run: |
-          echo "${{ steps.comment-info.outputs.comment-body }}"
       - name: Get command
         id: regex
         uses: AsasInnab/regex-action@v1
@@ -62,7 +57,7 @@ jobs:
         run: chmod +x ./.github/scripts/run_docker_with_params.sh
       - name: Run docker container with params
         run: |
-          echo "${{ needs.setParams.outputs.comment-body }}"
+          echo "${{ github.event.comment.body }}"
           ./.github/scripts/run_docker_with_params.sh "${{ github.event.comment.body }}"
       - name: Add Success Comment
         if: needs.setParams.outputs.comment-id && success()
