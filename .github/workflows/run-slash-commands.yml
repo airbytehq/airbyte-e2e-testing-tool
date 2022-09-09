@@ -11,7 +11,7 @@ jobs:
       - name: Run docker container with params
         run: |
           aa="${{ github.event.comment.body }}"
-          echo $aa
+          echo "$(echo $aa)"
 #  setParams:
 #    # Only allow slash commands on pull request (not on issues)
 #    if: ${{ github.event.issue.pull_request }}
