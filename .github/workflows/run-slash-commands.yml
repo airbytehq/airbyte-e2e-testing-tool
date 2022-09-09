@@ -16,8 +16,6 @@ jobs:
       comment-body: ${{ steps.comment-info.outputs.comment-body }}
       command: ${{ steps.regex.outputs.first_match }}
     steps:
-      - name: Checkout Airbyte
-        uses: actions/checkout@v2
       - name: Get PR repo and ref
         id: getref
         run: |
@@ -28,8 +26,7 @@ jobs:
         id: comment-info
         run: |
           echo ::set-output name=comment-id::"${{ github.event.comment.id }}"
-          c="${{ github.event.comment.body }}"
-          echo ::set-output name=comment-body::"$(echo $c)"
+          echo ::set-output name=comment-body::"$(echo ${{ github.event.comment.body }})"
       - name: check
         run: |
           echo "${{ steps.comment-info.outputs.comment-body }}"
