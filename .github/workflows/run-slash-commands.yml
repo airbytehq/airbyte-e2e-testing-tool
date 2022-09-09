@@ -57,7 +57,7 @@ jobs:
         run: chmod +x ./.github/scripts/run_docker_with_params.sh
       - name: Run docker container with params
         run: |
-          aa="$(echo ${{ github.event.comment.body }})"
+          aa=${{ github.event.comment.body }})
           bb=${aa//\"/\\\"}
           echo $bb
           ./.github/scripts/run_docker_with_params.sh "${{ github.event.comment.body }}"
