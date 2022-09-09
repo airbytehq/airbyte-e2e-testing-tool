@@ -27,7 +27,6 @@ jobs:
         run: |
           echo ::set-output name=comment-id::"${{ github.event.comment.id }}"
           body_modified="${{ github.event.comment.body }}"
-          c="${body_modified//\"/\\\"}"
           echo ::set-output name=comment-body::"${"${{ github.event.comment.body }}"//\"/\\\"}"
       - name: check
         run: |
