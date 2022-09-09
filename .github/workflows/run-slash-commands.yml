@@ -26,8 +26,8 @@ jobs:
         id: comment-info
         run: |
           echo ::set-output name=comment-id::"${{ github.event.comment.id }}"
-          c="$(${{ github.event.comment.body }})"
-          echo ::set-output name=comment-body::"$(echo $c)"
+          c="${{ github.event.comment.body }}"
+          echo ::set-output name=comment-body::"$(echo $c | jq -r '.head.ref')"
       - name: check
         run: |
           echo "${{ steps.comment-info.outputs.comment-body }}"
