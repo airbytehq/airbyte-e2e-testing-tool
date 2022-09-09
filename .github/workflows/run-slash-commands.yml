@@ -28,6 +28,9 @@ jobs:
           body_modified=${{ github.event.comment.body }}
           echo ::set-output name=comment-id::"${{ github.event.comment.id }}"
           echo ::set-output name=comment-body::"${{ github.event.comment.body }}"
+      - name: check
+        run: |
+          echo "${{ steps.comment-info.outputs.comment-body }}"
       - name: Get command
         id: regex
         uses: AsasInnab/regex-action@v1
