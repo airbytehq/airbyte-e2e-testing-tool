@@ -6,6 +6,7 @@ import static io.airbyte.testingtool.scenario.instance.InstanceTypes.AIRBYTE;
 import static io.airbyte.testingtool.scenario.instance.InstanceTypes.CONNECTION;
 import static io.airbyte.testingtool.scenario.instance.InstanceTypes.DESTINATION;
 import static io.airbyte.testingtool.scenario.instance.InstanceTypes.SOURCE;
+import static io.airbyte.testingtool.scenario.instance.InstanceTypes.SOURCE_WITH_CONNECTION_SETTINGS;
 
 import io.airbyte.testingtool.scenario.config.ActionParameterTypes;
 import io.airbyte.testingtool.scenario.config.ScenarioConfigAction;
@@ -16,6 +17,7 @@ import io.airbyte.testingtool.scenario.instance.DestinationInstance;
 import io.airbyte.testingtool.scenario.instance.Instance;
 import io.airbyte.testingtool.scenario.instance.InstanceTypes;
 import io.airbyte.testingtool.scenario.instance.SourceInstance;
+import io.airbyte.testingtool.scenario.instance.SourceWithSettingsInstance;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -42,9 +44,12 @@ public class ActionFactory {
       case SYNC_CONNECTION -> getActionSyncConnection(order, config,
           scenarioInstanceNameToInstanceMap);
       case CREATE_SOURCE -> getActionCreateSource(order, config, scenarioInstanceNameToInstanceMap);
+      case CREATE_SOURCE_WITH_CONN_SETTINGS -> getActionCreateSourceWithSettings(order, config, scenarioInstanceNameToInstanceMap);
       case CREATE_DESTINATION -> getActionCreateDestination(order, config,
           scenarioInstanceNameToInstanceMap);
       case CREATE_CONNECTION -> getActionCreateConnection(order, config,
+          scenarioInstanceNameToInstanceMap);
+      case CREATE_CUSTOM_CONNECTION -> getActionCreateConnectionCustom(order, config,
           scenarioInstanceNameToInstanceMap);
       case UPDATE_SOURCE_VERSION -> getActionUpdateSourceVersion(order, config,
           scenarioInstanceNameToInstanceMap, params);
@@ -127,6 +132,20 @@ public class ActionFactory {
         .build();
   }
 
+  private static ActionCreateSourceWithConnectionSettings getActionCreateSourceWithSettings(int order, ScenarioConfigAction config,
+      Map<String, Instance> scenarioInstanceNameToInstanceMap) {
+    return ActionCreateSourceWithConnectionSettings
+        .actionCreateSourceWithConnectionSettingsBuilder()
+        .order(order)
+        .requiredInstances(getRequiredInstances(config, scenarioInstanceNameToInstanceMap))
+        .resultInstance(getInstance(config.getResultInstance(), scenarioInstanceNameToInstanceMap))
+        .airbyteInstance(getInstanceByType(AIRBYTE, config.getRequiredInstances(),
+            scenarioInstanceNameToInstanceMap, AirbyteInstance.class))
+        .sourceInstance(getInstance(config.getResultInstance(), scenarioInstanceNameToInstanceMap,
+            SourceWithSettingsInstance.class))
+        .build();
+  }
+
   private static ActionCreateDestination getActionCreateDestination(int order,
       ScenarioConfigAction config,
       Map<String, Instance> scenarioInstanceNameToInstanceMap) {
@@ -158,6 +177,26 @@ public class ActionFactory {
                 scenarioInstanceNameToInstanceMap, DestinationInstance.class))
         .sourceInstance(getInstanceByType(SOURCE, config.getRequiredInstances(),
             scenarioInstanceNameToInstanceMap, SourceInstance.class))
+        .connection(getInstance(config.getResultInstance(), scenarioInstanceNameToInstanceMap,
+            AirbyteConnection.class))
+        .build();
+  }
+
+  private static ActionCreateConnection getActionCreateConnectionCustom(int order,
+      ScenarioConfigAction config,
+      Map<String, Instance> scenarioInstanceNameToInstanceMap) {
+    return ActionCreateConnectionCustom
+        .actionCreateConnectionCustomBuilder()
+        .order(order)
+        .requiredInstances(getRequiredInstances(config, scenarioInstanceNameToInstanceMap))
+        .resultInstance(getInstance(config.getResultInstance(), scenarioInstanceNameToInstanceMap))
+        .airbyteInstance(getInstanceByType(AIRBYTE, config.getRequiredInstances(),
+            scenarioInstanceNameToInstanceMap, AirbyteInstance.class))
+        .destinationInstance(
+            getInstanceByType(DESTINATION, config.getRequiredInstances(),
+                scenarioInstanceNameToInstanceMap, DestinationInstance.class))
+        .sourceInstance(getInstanceByType(SOURCE_WITH_CONNECTION_SETTINGS, config.getRequiredInstances(),
+            scenarioInstanceNameToInstanceMap, SourceWithSettingsInstance.class))
         .connection(getInstance(config.getResultInstance(), scenarioInstanceNameToInstanceMap,
             AirbyteConnection.class))
         .build();
