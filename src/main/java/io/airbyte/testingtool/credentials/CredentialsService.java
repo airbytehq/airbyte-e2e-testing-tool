@@ -115,7 +115,7 @@ public class CredentialsService {
     if (settings == null) {
       throw new RuntimeException("The credential config has no settings!");
     } else {
-      return settingsType.cast(settings);
+      return Jsons.deserialize(settings.toString(), settingsType);
     }
   }
 
