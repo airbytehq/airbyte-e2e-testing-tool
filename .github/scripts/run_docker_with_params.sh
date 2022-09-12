@@ -3,5 +3,5 @@
 docker_arg="$1"
 echo "Docker arg = $docker_arg"
 docker build -t testingtool .
-echo "run testingtool:latest "$docker_arg""
-docker run testingtool:latest "$docker_arg"
+echo "docker run testingtool:latest $docker_arg"
+docker run testingtool:latest $docker_arg
