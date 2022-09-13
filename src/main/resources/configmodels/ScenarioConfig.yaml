@@ -15,6 +15,9 @@ properties:
   scenarioName:
     description: Scenario name. Recommend to keep it unique to understand which scenario is executed from logs.
     type: string
+  scenarioDescription:
+    description: Brief scenario description. The description is visible on help/list commands.
+    type: string
   usedInstances:
     description: List of instance that can be used inside the scenario.
     type: array

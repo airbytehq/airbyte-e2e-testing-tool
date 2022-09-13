@@ -52,17 +52,24 @@ public class HelpService {
     addFullHelpExample(putScenarioName, helpTextBuilder);
 
     helpTextBuilder.append("#### Available scenarios :\n");
-    ScenarioConfigService.getScenarioConfigs().keySet().forEach(scenarioName -> helpTextBuilder.append("- ").append(scenarioName).append("\n"));
+    ScenarioConfigService.getScenarioConfigs().forEach((name, config) -> helpTextBuilder.append("- ").append(name).append("\n").append(getScenarioDescription(config)));
 
     return helpTextBuilder.toString();
   }
+
+  private static String getScenarioDescription(ScenarioConfig config) {
+    return (StringUtils.isNotEmpty(config.getScenarioDescription()) ? "_:information_source: "+config.getScenarioDescription()+"_\n" : "");
+  }
+
 
   public static String getHelpLine(Command helpCommand, String scenarioName) {
     return "`" + helpCommand.getCommand() + " " + SCENARIO_NAME_ARGUMENT + "=\"" + scenarioName + "\"`";
   }
 
   private static void addCallExample(ScenarioConfig scenarioConfig, StringBuilder builder) {
-    builder.append("#### Scenario `").append(scenarioConfig.getScenarioName()).append("` example call").append("\n");
+    builder.append("#### Scenario `").append(scenarioConfig.getScenarioName()).append("`.\n");
+    builder.append(getScenarioDescription(scenarioConfig));
+    builder.append("\n#### Call examples :\n");
     builder.append("- **Run scenario**   : ");
     addCallLine(RUN_SCENARIO, scenarioConfig, builder);
     builder.append("- **Run scenario with local creds**  : ");

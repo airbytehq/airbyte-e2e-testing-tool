@@ -1,5 +1,6 @@
 {
   "scenarioName" : "Simple sync scenario",
+  "scenarioDescription" : "Sync default connection.",
   "usedInstances" : [
     {
       "instanceName" : "airbyte_1",

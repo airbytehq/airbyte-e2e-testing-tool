@@ -1,5 +1,6 @@
 {
   "scenarioName" : "Custom connection sync scenario",
+  "scenarioDescription" : "Configure custom connection using source settings and sync it.",
   "usedInstances" : [
     {
       "instanceName" : "airbyte_1",
