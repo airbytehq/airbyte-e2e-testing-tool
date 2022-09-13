@@ -172,6 +172,7 @@ _Note! Credential parameters should have file name with extension like `some_cre
 
 | Version | Description                                                                            |
 |---------|----------------------------------------------------------------------------------------|
+| 0.2.1   | Add additional settings to CredentialConfig                                            |
 | 0.2.0   | Run scenario using secret service. !No default test run anymore!                       |
 | 0.1.3   | Run scenario using local files                                                         |
 | 0.1.2   | Action parameters.                                                                     |
