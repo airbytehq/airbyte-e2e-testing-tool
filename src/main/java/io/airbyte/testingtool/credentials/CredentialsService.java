@@ -12,6 +12,7 @@ import io.airbyte.testingtool.argument_parser.Command;
 import io.airbyte.testingtool.json.Jsons;
 import io.airbyte.testingtool.scenario.config.CredentialConfig;
 import io.airbyte.testingtool.scenario.config.ServiceAccountConfig;
+import io.airbyte.testingtool.scenario.instance.InstanceWithCredentials;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -106,6 +107,15 @@ public class CredentialsService {
       }
     } else {
       return serviceAccountConfig;
+    }
+  }
+
+  public static <T> T extractSettingsFromConfig(InstanceWithCredentials instance, Class<T> settingsType) {
+    var settings = instance.getCredentialConfig().getAdditionalSettings();
+    if (settings == null) {
+      throw new RuntimeException("The credential config has no settings!");
+    } else {
+      return Jsons.deserialize(settings.toString(), settingsType);
     }
   }
 

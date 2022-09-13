@@ -6,6 +6,7 @@ import static io.airbyte.testingtool.scenario.instance.InstanceTypes.AIRBYTE;
 import static io.airbyte.testingtool.scenario.instance.InstanceTypes.CONNECTION;
 import static io.airbyte.testingtool.scenario.instance.InstanceTypes.DESTINATION;
 import static io.airbyte.testingtool.scenario.instance.InstanceTypes.SOURCE;
+import static io.airbyte.testingtool.scenario.instance.InstanceTypes.SOURCE_WITH_CONNECTION_SETTINGS;
 
 import io.airbyte.testingtool.scenario.config.ActionParameterTypes;
 import io.airbyte.testingtool.scenario.instance.InstanceTypes;
@@ -19,10 +20,12 @@ public enum Actions {
   RESET_CONNECTION(List.of(AIRBYTE, CONNECTION), null, null),
   SYNC_CONNECTION(List.of(AIRBYTE, CONNECTION), null, null),
   CREATE_SOURCE(List.of(AIRBYTE), SOURCE, null),
+  CREATE_SOURCE_WITH_CONN_SETTINGS(List.of(AIRBYTE), SOURCE_WITH_CONNECTION_SETTINGS, null),
   CREATE_DESTINATION(List.of(AIRBYTE), DESTINATION, null),
   UPDATE_SOURCE_VERSION(List.of(AIRBYTE, SOURCE), null, List.of(SOURCE_VERSION)),
   UPDATE_DESTINATION_VERSION(List.of(AIRBYTE, DESTINATION), null, List.of(DESTINATION_VERSION)),
-  CREATE_CONNECTION(List.of(AIRBYTE, SOURCE, DESTINATION), CONNECTION, null);
+  CREATE_CONNECTION(List.of(AIRBYTE, SOURCE, DESTINATION), CONNECTION, null),
+  CREATE_CUSTOM_CONNECTION(List.of(AIRBYTE, SOURCE_WITH_CONNECTION_SETTINGS, DESTINATION), CONNECTION, null);
 
   @Getter
   private final List<InstanceTypes> requiredInstances;
