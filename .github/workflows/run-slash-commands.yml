@@ -63,10 +63,19 @@ jobs:
         shell: bash
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
-      - name: Pull Docker image
-        run: docker pull postgres
       - name: Change wrapper permissions
-        run: chmod +x ./.github/scripts/run_docker_with_params.sh
+        run: |
+          chmod +x ./.github/scripts/run_docker_with_params.sh
+          mkdir secrets
+      - name: Connect to secret manager
+        run: |
+          cat > secrets/service_account_credentials.json << EOF
+          ${{ secrets.GOOGLE_SERVICE_ACCOUNT_CREDENTIALS }}
+          EOF
+      - name: CHECK
+        run: |
+          value='secrets/service_account_credentials.json'
+          echo "$value"
       - name: Build image
         run: docker build -t testingtool .
       - name: Run container
