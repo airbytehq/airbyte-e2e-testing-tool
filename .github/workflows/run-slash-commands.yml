@@ -77,8 +77,8 @@ jobs:
           EOF
       - name: CHECK
         run: |
-          value='secrets/service_account_credentials.json'
-          echo "$value"
+          vread var < secrets/service_account_credentials.json
+          echo $var
       - name: Build image
         run: docker build -t testingtool .
       - name: Run container
