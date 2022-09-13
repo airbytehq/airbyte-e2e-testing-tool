@@ -77,7 +77,7 @@ jobs:
           EOF
       - name: CHECK
         run: |
-          vread var < secrets/service_account_credentials.json
+          read var < secrets/service_account_credentials.json
           echo $var
       - name: Build image
         run: docker build -t testingtool .
