@@ -68,9 +68,12 @@ jobs:
           chmod +x ./.github/scripts/run_docker_with_params.sh
           mkdir secrets
       - name: Connect to secret manager
+        shell: bash
+        env:
+          SERVICE_ACCOUNT_SECRET: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_CREDENTIALS }}
         run: |
           cat > secrets/service_account_credentials.json << EOF
-          ${{ secrets.GOOGLE_SERVICE_ACCOUNT_CREDENTIALS }}
+          "$SERVICE_ACCOUNT_SECRET"
           EOF
       - name: CHECK
         run: |
