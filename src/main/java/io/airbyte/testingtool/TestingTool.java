@@ -4,14 +4,10 @@ import io.airbyte.testingtool.argument_parser.RunArgumentFactory;
 import io.airbyte.testingtool.argument_parser.RunArguments;
 import io.airbyte.testingtool.scenario.ScenarioFactory;
 import io.airbyte.testingtool.scenario.helper.HelpService;
-
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
 
 public class TestingTool {
 
@@ -19,7 +15,6 @@ public class TestingTool {
 
   public static void main(String[] args) throws IOException {
     LOGGER.info("Testing tool started!");
-    LOGGER.error("=> {}", Files.readString(Path.of("secrets/service_account_credentials.json")));
 
     var runArguments = RunArgumentFactory.getArguments(args);
     LOGGER.info("Run arguments : \n{}", runArguments.toString());
