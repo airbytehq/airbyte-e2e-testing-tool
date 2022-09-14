@@ -1,11 +1,11 @@
 package io.airbyte.testingtool.scenario.validator.validations;
 
+import io.airbyte.testingtool.scenario.ScenarioUtils;
 import io.airbyte.testingtool.scenario.config.ScenarioConfig;
 import io.airbyte.testingtool.scenario.config.ScenarioConfigAction;
 import io.airbyte.testingtool.scenario.config.ScenarioConfigInstance;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import org.apache.commons.lang3.StringUtils;
 
 public class ScenarioValidationInstanceInitiation extends AbstractScenarioValidation {
@@ -21,8 +21,7 @@ public class ScenarioValidationInstanceInitiation extends AbstractScenarioValida
 
   @Override
   protected void validateInternal(List<String> errors) {
-    var initiatedInstanceNames = Stream.concat(getScenarioConfig().getScenarioActions().stream(),
-            getScenarioConfig().getPreparationActions().stream())
+    var initiatedInstanceNames = ScenarioUtils.getAllActions(getScenarioConfig()).stream()
         .map(ScenarioConfigAction::getResultInstance).collect(
             Collectors.toSet());
     var requiredInitializationInstanceNames = getScenarioConfig().getUsedInstances().stream()

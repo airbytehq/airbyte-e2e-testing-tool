@@ -7,6 +7,7 @@ import static io.airbyte.testingtool.argument_parser.Command.RUN_SCENARIO_LOCAL;
 import static io.airbyte.testingtool.argument_parser.RunArgumentFactory.SCENARIO_NAME_ARGUMENT;
 
 import io.airbyte.testingtool.argument_parser.Command;
+import io.airbyte.testingtool.scenario.ScenarioUtils;
 import io.airbyte.testingtool.scenario.config.ScenarioConfig;
 import io.airbyte.testingtool.scenario.config.ScenarioConfigAction;
 import io.airbyte.testingtool.scenario.config.ScenarioConfigActionParameter;
@@ -17,7 +18,6 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import org.apache.commons.lang3.StringUtils;
 
 public class HelpService {
@@ -128,7 +128,7 @@ public class HelpService {
   }
 
   private static String getCallParamArgs(final ScenarioConfig scenarioConfig) {
-    var allActions = Stream.concat(scenarioConfig.getPreparationActions().stream(), scenarioConfig.getScenarioActions().stream());
+    var allActions = ScenarioUtils.getAllActions(scenarioConfig);
     Set<String> allParamNames = new HashSet<>();
     allActions.forEach(action -> allParamNames.addAll(action.getRequiredParameters().stream().map(ScenarioConfigActionParameter::getName).collect(
         Collectors.toSet())));
@@ -161,7 +161,7 @@ public class HelpService {
   }
 
   private static void addRequiredParameters(final ScenarioConfig scenarioConfig, final StringBuilder builder) {
-    var allActions = Stream.concat(scenarioConfig.getPreparationActions().stream(), scenarioConfig.getScenarioActions().stream());
+    var allActions = ScenarioUtils.getAllActions(scenarioConfig);
     Set<ScenarioConfigActionParameter> requiredParams = new HashSet<>();
     allActions.forEach(action -> {
       if (!action.getRequiredParameters().isEmpty()) {
