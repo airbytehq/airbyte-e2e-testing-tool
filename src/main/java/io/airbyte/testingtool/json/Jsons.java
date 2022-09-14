@@ -5,6 +5,7 @@
 package io.airbyte.testingtool.json;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.json.JsonReadFeature;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 import com.fasterxml.jackson.core.util.Separators;
@@ -27,6 +28,7 @@ public class Jsons {
   private static ObjectMapper initMapper() {
     final ObjectMapper result = new ObjectMapper().registerModule(new JavaTimeModule());
     result.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+    result.configure(JsonReadFeature.ALLOW_UNESCAPED_CONTROL_CHARS.mappedFeature(), true);
     return result;
   }
 
