@@ -4,10 +4,10 @@ import io.airbyte.testingtool.argument_parser.RunArgumentFactory;
 import io.airbyte.testingtool.argument_parser.RunArguments;
 import io.airbyte.testingtool.scenario.ScenarioFactory;
 import io.airbyte.testingtool.scenario.helper.HelpService;
+import io.airbyte.testingtool.scenario.validator.ValidationService;
+import java.io.IOException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.IOException;
 
 public class TestingTool {
 
@@ -30,6 +30,7 @@ public class TestingTool {
   }
 
   private static void runScenario(final RunArguments arguments) {
+    ValidationService.validateScenarioConfig(arguments.getScenarioConfig());
     var scenario = ScenarioFactory.getScenario(arguments);
     LOGGER.info("Scenario [{}] is selected for execution.", scenario.getScenarioName());
 

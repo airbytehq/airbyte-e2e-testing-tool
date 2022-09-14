@@ -26,15 +26,18 @@ public class ScenarioFactory {
 
   public static TestScenario buildScenario(final ScenarioConfig config, final Map<String, CredentialConfig> credentialConfigs,
       final Map<String, String> params) {
-    ValidationService.validateScenarioRun(config, credentialConfigs, params);
+    if (ValidationService.validateScenarioRun(config, credentialConfigs, params)) {
 
-    final Map<String, Instance> scenarioInstanceNameToInstanceMap = mapInstancesAndCredentials(config, credentialConfigs);
+      final Map<String, Instance> scenarioInstanceNameToInstanceMap = mapInstancesAndCredentials(config, credentialConfigs);
 
-    return TestScenario.builder()
-        .scenarioName(config.getScenarioName())
-        .preparationActions(getActions(config.getPreparationActions(), scenarioInstanceNameToInstanceMap, params))
-        .scenarioActions(getActions(config.getScenarioActions(), scenarioInstanceNameToInstanceMap, params))
-        .build();
+      return TestScenario.builder()
+          .scenarioName(config.getScenarioName())
+          .preparationActions(getActions(config.getPreparationActions(), scenarioInstanceNameToInstanceMap, params))
+          .scenarioActions(getActions(config.getScenarioActions(), scenarioInstanceNameToInstanceMap, params))
+          .build();
+    } else {
+      throw new RuntimeException("The scenario failed the run validation.");
+    }
   }
 
   private static Map<String, Instance> mapInstancesAndCredentials(final ScenarioConfig config,
