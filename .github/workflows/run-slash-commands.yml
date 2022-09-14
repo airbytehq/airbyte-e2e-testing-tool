@@ -47,8 +47,11 @@ jobs:
         with:
           comment-id: ${{ needs.setParams.outputs.comment-id }}
           reactions: eyes, rocket
-      - name: Checkout Airbyte
+      - name: Checkout Testing Tool
         uses: actions/checkout@v2
+        with:
+          repository: ${{  needs.setParams.outputs.repo }}
+          ref: ${{  needs.setParams.outputs.ref }}
       - name: Set up JDK 17
         uses: actions/setup-java@v3
         with:
