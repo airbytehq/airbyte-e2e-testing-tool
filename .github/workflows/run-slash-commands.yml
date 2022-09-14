@@ -75,8 +75,9 @@ jobs:
         env:
           SERVICE_ACCOUNT_SECRET: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_CREDENTIALS }}
         run: |
+          echo '$SERVICE_ACCOUNT_SECRET'
           cat > secrets/service_account_credentials.json << EOF
-          "$SERVICE_ACCOUNT_SECRET"
+          '$SERVICE_ACCOUNT_SECRET'
           EOF
       - name: Run docker container with params
         run: ./.github/scripts/run_docker_with_params.sh '${{ github.event.comment.body }}'
