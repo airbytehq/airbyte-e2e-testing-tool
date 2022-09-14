@@ -1,0 +1,63 @@
+{
+  "scenarioName" : "Test invalid scenario",
+  "scenarioDescription" : "The scenario contains logical gap for the demo purposes",
+  "usedInstances" : [
+    {
+      "instanceName" : "airbyte_1",
+      "instanceType" : "AIRBYTE"
+    },
+    {
+      "instanceName" : "source_1",
+      "instanceType" : "SOURCE"
+    },
+    {
+      "instanceName": "destination_1",
+      "instanceType": "DESTINATION"
+    },
+    {
+      "instanceName": "connection_1",
+      "instanceType": "CONNECTION"
+    }
+  ],
+  "preparationActions" : [
+    {
+      "action" : "CONNECT_AIRBYTE_API",
+      "resultInstance" : "airbyte_2"
+    },
+    {
+      "action" : "CREATE_SOURCE",
+      "requiredInstances" : ["airbyte_1"],
+      "resultInstance" : "source_1"
+    },
+    {
+      "action": "CREATE_DESTINATION",
+      "requiredInstances" : ["airbyte_1"],
+      "resultInstance": "destination_1"
+    },
+    {
+      "action" : "UPDATE_SOURCE_VERSION",
+      "requiredInstances" : ["airbyte_1", "source_1"],
+      "requiredParameters" : [{"name": "old_version", "type" : "source_version"}]
+    },
+    {
+      "action" : "CREATE_CONNECTION",
+      "requiredInstances" : ["airbyte_1", "source_1", "destination_1"],
+      "resultInstance" : "connection_1"
+    }
+  ],
+  "scenarioActions" : [
+    {
+      "action" : "SYNC_CONNECTION",
+      "requiredInstances" : ["airbyte_1", "connection_1"]
+    },
+    {
+      "action" : "UPDATE_SOURCE_VERSION",
+      "requiredInstances" : ["airbyte_1", "source_1"],
+      "requiredParameters" : [{"name": "new_version", "type" : "source_version"}]
+    },
+    {
+      "action" : "SYNC_CONNECTION",
+      "requiredInstances" : ["airbyte_1", "connection_1"]
+    }
+  ]
+}
