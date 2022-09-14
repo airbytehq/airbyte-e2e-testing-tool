@@ -9,7 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @AllArgsConstructor
-public abstract class AbstractValidation {
+public abstract class AbstractScenarioValidation {
 
   @Getter(AccessLevel.PROTECTED)
   private final ScenarioConfig scenarioConfig;
@@ -25,7 +25,7 @@ public abstract class AbstractValidation {
         .build();
   }
 
-  protected abstract String getValidationName();
+  public abstract String getValidationName();
 
   protected abstract void validateInternal(List<String> errors);
 

@@ -110,35 +110,29 @@ _Note! The instance name is a way to use the same instance in different actions_
 ```
 
 ## How to run
-The tool is on the very early state and can be executed with local hardcoded credential files.
+You have two ways how to provide required credentials to the tool. The main flow is to get credentials from the secret service, but also you can use 
+your local files a source for credentials.
 
-### Run default (test) configuration
+
+### Get list of existing scenarios
 1. Clone the repository
 2. Build the project
-3. Create three files with credential configs (`airbyte_creds.json`, `destination_creds.json`, `source_creds.json`) in the folder `secrets`
+3. Create the `Run/Debug` configuration with argument line `/list-scenarios` to get list of available scenarios
+4. Run the configuration
+5. Check log
 
-     ![image](https://user-images.githubusercontent.com/1310940/185700802-b6a75916-efdf-4b22-bafb-19fc23f0c9d7.png)
+The result you can find in the execution log.
+![Screenshot from 2022-08-30 12-58-25](https://user-images.githubusercontent.com/30464745/187408450-da041b4d-7390-4965-820c-897c048cae27.png)
 
-4. Run `TestingTool::main`
+_Note! The help text is formatted for GitHub. You can put it there to get a more readable view._
+![Screenshot from 2022-08-30 12-58-37](https://user-images.githubusercontent.com/30464745/187408455-314c9538-b016-423a-a341-eb53f7dcc57f.png)
 
-_Note! This is a hardcoded default configuration for testing purposes._
-
-### Run scenario with local credentials
-1. Clone the repository
-2. Build the project
-3. (Optional) Run the `TestingTool::main` with the argument `/list-scenarios` to get list of available scenarios
-4. (Optional) Run the `TestingTool::main` with the argument `/help name="<scenario_name>"` to get scenario call example and required credentials
-5. Put your credential files in the `secrets` folder in the project root
-6. Run the scenario (get from step 3) by passing the required arguments (get from step 4) to the method `TestingTool::main`
-
-## How to run /help for a scenario
-You can get generated doc for a scenario by passing specific arguments to the main method `TestingTool::main`.
-
+### Get list of required parameters for the scenario
 1. Clone the repository
 2. Build the project
 3. Create the `Run/Debug` configuration with argument line `/help name="Simple sync scenario"` (For getting extended help use `/help-full` instead of `/help`)
 
-     ![image](https://user-images.githubusercontent.com/30464745/186178683-55c29578-44c4-47fb-b4d2-5e2b4da99149.png)
+   ![image](https://user-images.githubusercontent.com/30464745/186178683-55c29578-44c4-47fb-b4d2-5e2b4da99149.png)
 
 4. Run the configuration
 
@@ -148,11 +142,41 @@ The result you can find in the execution log.
 _Note! The help text is formatted for GitHub. You can put it there to get a more readable view._
 ![Screenshot from 2022-08-23 17-05-03](https://user-images.githubusercontent.com/30464745/186179206-a8193142-5278-434b-8ddd-d7bc666725b3.png)
 
+### Run scenario with credentials from Secret service
+1. Clone the repository
+2. Build the project
+3. Put secret service credential file in the `secrets/service_account_credentials.json` folder in the project root (You can find file structure in 
+the ServiceAccountConfig.yaml)
+4. Run the scenario by passing the required arguments to the method `TestingTool::main` with the command `/run-scenario`
+
+#### Example:
+
+![Screenshot from 2022-08-30 12-54-42](https://user-images.githubusercontent.com/30464745/187407611-1eeefdff-2417-41a7-8b8b-4467dc4f885a.png)
+
+_Note! Credential parameters should have secret name like `tt_airbyte_dev2`_
+![Screenshot from 2022-08-30 12-53-34](https://user-images.githubusercontent.com/30464745/187407350-1ea6f14f-a55f-47e7-aad9-ec1369d653ba.png)
+
+### Run scenario with local credentials
+1. Clone the repository
+2. Build the project
+3. Put your credential files in the `secrets` folder in the project root
+4. Run the scenario by passing the required arguments to the method `TestingTool::main` with the command `/run-scenario-local`
+
+#### Example:
+
+![Screenshot from 2022-08-30 12-56-21](https://user-images.githubusercontent.com/30464745/187407955-7b0be9af-de38-427d-b037-c077fdf2673d.png)
+
+_Note! Credential parameters should have file name with extension like `some_cred_file.json`_
+
 ## CHANGELOG
 
-| Version | Description                                                                             |
-|---------|-----------------------------------------------------------------------------------------|
-| 0.1.3   | Run scenario using local files                                                          |
-| 0.1.2   | Action parameters.                                                                      |
-| 0.1.1   | Implement HelpService. Now you can get short description with examples for a scenario.  |
-| 0.1.0   | Stage 1. POC                                                                            |
+| Version | Description                                                                            |
+|---------|----------------------------------------------------------------------------------------|
+| 0.2.3   | Scenario validation result is now available in help and list commands                  |
+| 0.2.2   | Scenario description                                                                   |
+| 0.2.1   | Add additional settings to CredentialConfig                                            |
+| 0.2.0   | Run scenario using secret service. !No default test run anymore!                       |
+| 0.1.3   | Run scenario using local files                                                         |
+| 0.1.2   | Action parameters.                                                                     |
+| 0.1.1   | Implement HelpService. Now you can get short description with examples for a scenario. |
+| 0.1.0   | Stage 1. POC                                                                           |

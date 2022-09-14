@@ -9,14 +9,14 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.apache.commons.lang3.StringUtils;
 
-public class ValidationActionInstances extends AbstractValidation {
+public class ScenarioValidationActionInstances extends AbstractScenarioValidation {
 
-  public ValidationActionInstances(ScenarioConfig scenarioConfig) {
+  public ScenarioValidationActionInstances(ScenarioConfig scenarioConfig) {
     super(scenarioConfig);
   }
 
   @Override
-  protected String getValidationName() {
+  public String getValidationName() {
     return "Check that all action instances listed in the `UsedInstances` section";
   }
 
