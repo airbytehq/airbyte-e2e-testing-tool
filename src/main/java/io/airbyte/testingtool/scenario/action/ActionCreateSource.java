@@ -15,8 +15,8 @@ public class ActionCreateSource extends ScenarioAction {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(ActionCreateSource.class);
 
-  private final AirbyteInstance airbyteInstance;
-  private final SourceInstance sourceInstance;
+  protected final AirbyteInstance airbyteInstance;
+  protected final SourceInstance sourceInstance;
 
   @Builder
   public ActionCreateSource(int order, List<Instance> requiredInstances, Instance resultInstance, AirbyteInstance airbyteInstance,

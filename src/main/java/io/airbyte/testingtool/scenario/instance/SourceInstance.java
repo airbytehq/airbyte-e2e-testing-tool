@@ -13,11 +13,11 @@ public class SourceInstance extends InstanceWithCredentials {
 
   @Getter
   @Setter
-  private UUID id;
+  protected UUID id;
 
   @Getter
   @Setter
-  private AirbyteInstance airbyteInstance;
+  protected AirbyteInstance airbyteInstance;
 
   @Builder
   public SourceInstance(String instanceName, CredentialConfig credentialConfig) {

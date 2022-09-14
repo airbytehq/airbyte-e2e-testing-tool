@@ -18,18 +18,19 @@ public class RunValidationParameters extends AbstractScenarioValidation {
   }
 
   @Override
-  protected String getValidationName() {
+  public String getValidationName() {
     return "All required parameters exist";
   }
 
   @Override
   protected void validateInternal(List<String> errors) {
-    var failedActions = Stream.concat(getScenarioConfig().getScenarioActions().stream(), getScenarioConfig().getPreparationActions().stream()).map(action -> {
-      var missingParams = action.getRequiredParameters().stream().map(ScenarioConfigActionParameter::getName)
-          .filter(name -> !params.containsKey(name)).collect(
-              Collectors.toSet());
-      return (missingParams.isEmpty() ? null : action.getAction().name() + " action requires params : " + missingParams);
-    }).filter(Objects::nonNull).collect(Collectors.toSet());
+    var failedActions = Stream.concat(getScenarioConfig().getScenarioActions().stream(), getScenarioConfig().getPreparationActions().stream())
+        .map(action -> {
+          var missingParams = action.getRequiredParameters().stream().map(ScenarioConfigActionParameter::getName)
+              .filter(name -> !params.containsKey(name)).collect(
+                  Collectors.toSet());
+          return (missingParams.isEmpty() ? null : action.getAction().name() + " action requires params : " + missingParams);
+        }).filter(Objects::nonNull).collect(Collectors.toSet());
 
     if (!failedActions.isEmpty()) {
       errors.addAll(failedActions);

@@ -1,5 +1,6 @@
 {
   "scenarioName" : "Update source version scenario",
+  "scenarioDescription" : "Configure default connection, set source version. After sync, update version and repeat sync",
   "usedInstances" : [
     {
       "instanceName" : "airbyte_1",

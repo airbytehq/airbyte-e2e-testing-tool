@@ -16,7 +16,7 @@ public class ScenarioValidationActionInstances extends AbstractScenarioValidatio
   }
 
   @Override
-  protected String getValidationName() {
+  public String getValidationName() {
     return "Check that all action instances listed in the `UsedInstances` section";
   }
 

@@ -19,10 +19,10 @@ public class ActionCreateConnection extends ScenarioAction {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(ActionCreateConnection.class);
 
-  private final AirbyteInstance airbyteInstance;
-  private final AirbyteConnection connection;
-  private final DestinationInstance destinationInstance;
-  private final SourceInstance sourceInstance;
+  protected final AirbyteInstance airbyteInstance;
+  protected final AirbyteConnection connection;
+  protected final DestinationInstance destinationInstance;
+  protected final SourceInstance sourceInstance;
 
   @Builder
   public ActionCreateConnection(int order, List<Instance> requiredInstances, Instance resultInstance, AirbyteInstance airbyteInstance,
@@ -45,8 +45,12 @@ public class ActionCreateConnection extends ScenarioAction {
   }
 
   private void createConnection() throws ApiException {
+    ConnectionRead connectionRead = airbyteInstance.getAirbyteApi().getConnectionApi().createConnection(getConnectionCreateConfig());
+    connection.setConnectionId(connectionRead.getConnectionId());
+  }
 
-    ConnectionCreate connectionConfig = new ConnectionCreate()
+  protected ConnectionCreate getConnectionCreateConfig() throws ApiException {
+    return new ConnectionCreate()
         .status(ConnectionStatus.ACTIVE)
         .sourceId(sourceInstance.getId())
         .destinationId(destinationInstance.getId())
@@ -54,8 +58,5 @@ public class ActionCreateConnection extends ScenarioAction {
         .namespaceDefinition(NamespaceDefinitionType.CUSTOMFORMAT)
         .namespaceFormat("output_namespace_${SOURCE_NAMESPACE}")
         .prefix("output_table_");
-    ConnectionRead connectionRead = airbyteInstance.getAirbyteApi().getConnectionApi().createConnection(connectionConfig);
-    connection.setConnectionId(connectionRead.getConnectionId());
-
   }
 }

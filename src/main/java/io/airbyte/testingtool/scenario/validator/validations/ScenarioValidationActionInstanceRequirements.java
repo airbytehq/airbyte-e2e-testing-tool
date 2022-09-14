@@ -16,7 +16,7 @@ public class ScenarioValidationActionInstanceRequirements extends AbstractScenar
   }
 
   @Override
-  protected String getValidationName() {
+  public String getValidationName() {
     return "Action should have all mandatory attributes";
   }
 

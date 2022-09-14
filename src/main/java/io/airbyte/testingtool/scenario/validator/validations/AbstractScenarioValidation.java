@@ -25,7 +25,7 @@ public abstract class AbstractScenarioValidation {
         .build();
   }
 
-  protected abstract String getValidationName();
+  public abstract String getValidationName();
 
   protected abstract void validateInternal(List<String> errors);
 

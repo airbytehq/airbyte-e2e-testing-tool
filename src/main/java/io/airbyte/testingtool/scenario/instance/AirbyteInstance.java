@@ -54,7 +54,6 @@ public class AirbyteInstance extends InstanceWithCredentials {
         throw new RuntimeException(String.format("There are no source definition available with name \"%s\"", definitionName));
       }
     } catch (ApiException e) {
-      LOGGER.error("Fail to airbyte client connect");
       throw new RuntimeException("Fail to airbyte client connect", e);
     }
   }

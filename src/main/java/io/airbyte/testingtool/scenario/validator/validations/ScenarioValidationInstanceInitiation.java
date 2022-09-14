@@ -15,7 +15,7 @@ public class ScenarioValidationInstanceInitiation extends AbstractScenarioValida
   }
 
   @Override
-  protected String getValidationName() {
+  public String getValidationName() {
     return "Check that all instances have initialization action";
   }
 

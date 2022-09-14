@@ -54,8 +54,9 @@ public class TestScenario {
 
   private String getActionSummaryText(SortedSet<ScenarioAction> actions) {
     StringBuilder summary = new StringBuilder();
+    var longestName = actions.stream().map(action -> action.getActionName().length()).max(Integer::compare).orElse(0);
     actions.forEach(action -> {
-      summary.append(StringUtils.rightPad("  [" + action.getActionName() + "]", 30)).append(" : ").append(action.getStatus().name());
+      summary.append(StringUtils.rightPad("  [" + action.getActionName() + "]", longestName + 5)).append(" : ").append(action.getStatus().name());
       var actionText = action.getResultSummary();
       summary.append((StringUtils.isNotEmpty(actionText) ? " - " + actionText : "")).append("\n");
     });
