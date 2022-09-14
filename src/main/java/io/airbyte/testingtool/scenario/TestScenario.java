@@ -41,24 +41,26 @@ public class TestScenario {
     }
   }
 
-  public void printSummary() {
-    LOGGER.info("""
-            Scenario `{}` execution is finished {}.
-            Preparation actions :
-            {}
-            Scenario actions    :
-            {}
+  public String getTextSummary() {
+    return String.format("""
+            ### Scenario `%s` execution is finished %s.
+            #### Preparation actions :
+            | Preparation action | Result |
+            |---|---|
+            %s
+            #### Scenario actions    :
+            | Scenario action | Result |
+            |---|---|
+            %s
             """, scenarioName, (isFailed ? " with errors!" : "successfully"), getActionSummaryText(preparationActions),
         getActionSummaryText(scenarioActions));
   }
 
   private String getActionSummaryText(SortedSet<ScenarioAction> actions) {
     StringBuilder summary = new StringBuilder();
-    var longestName = actions.stream().map(action -> action.getActionName().length()).max(Integer::compare).orElse(0);
     actions.forEach(action -> {
-      summary.append(StringUtils.rightPad("  [" + action.getActionName() + "]", longestName + 5)).append(" : ").append(action.getStatus().name());
       var actionText = action.getResultSummary();
-      summary.append((StringUtils.isNotEmpty(actionText) ? " - " + actionText : "")).append("\n");
+      summary.append("| ").append(action.getActionName()).append(" | ").append(action.getStatus().getName()).append(" ").append((StringUtils.isNotEmpty(actionText) ? actionText : "")).append(" |\n");
     });
     return summary.toString();
   }
