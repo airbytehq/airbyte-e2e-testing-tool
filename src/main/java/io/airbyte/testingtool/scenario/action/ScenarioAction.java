@@ -45,7 +45,7 @@ public abstract class ScenarioAction implements Comparable<ScenarioAction> {
 
       } catch (Exception e) {
         status = ActionStatuses.FAILED;
-        resultSummary = "Execution failed with exception : " + e.getMessage();
+        resultSummary = e.getMessage();
       }
       isExecuted = true;
     } else {
