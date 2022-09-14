@@ -4,10 +4,14 @@ FROM openjdk:${JDK_VERSION}-slim
 
 ENV APPLICATION airbyte-e2e-testing-tool
 
-COPY build/distributions/${APPLICATION}*.tar /tmp/${APPLICATION}.tar
+#ENV JAVA_TOOL_OPTIONS -agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=*:5005
+COPY build/distributions/${APPLICATION}*.tar /app/${APPLICATION}.tar
 
-WORKDIR /tmp
+WORKDIR /app
 
-RUN tar xf ${APPLICATION}.tar --strip-components=1
+RUN tar xf ${APPLICATION}.tar --strip-components=1 && rm -rf ${APPLICATION}.tar
 
-ENTRYPOINT ["java", "-jar", "/tmp/lib/airbyte-e2e-testing-tool-0.2.0.jar"]
+WORKDIR /app/lib
+#VOLUME /app/lib/secrets
+ENTRYPOINT ["java", "-jar", "airbyte-e2e-testing-tool-0.2.0.jar"]
+#ENTRYPOINT ["/bin/bash", "-c", "./entrypoint.sh"]

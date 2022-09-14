@@ -72,6 +72,6 @@ jsonSchema2Pojo {
 jar {
     manifest {
         attributes 'Main-Class': 'io.airbyte.testingtool.TestingTool'
-        attributes 'Class-Path': configurations.runtimeClasspath.files.collect { it.getName() }.join(' ')
+        attributes 'Class-Path': ' secrets/ ' + configurations.runtimeClasspath.files.collect { it.getName() }.join(' ')
     }
 }
