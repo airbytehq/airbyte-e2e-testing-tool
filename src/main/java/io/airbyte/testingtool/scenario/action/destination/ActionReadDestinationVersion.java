@@ -39,6 +39,7 @@ public class ActionReadDestinationVersion extends ScenarioAction {
     var destinationDefinitionRead = destinationDefinitionApi.getDestinationDefinition(destinationDefinition);
     version.setParameterValue(destinationDefinitionRead.getDockerImageTag());
     LOGGER.info("Read destination version \"{}\" into {} parameter.", version.getParameterValue(), version.getParameterName());
+    context = "Destination version `"+version.getParameterValue()+"` -> **" + version.getParameterName() + "**";
   }
 
   @Override

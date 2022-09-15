@@ -60,5 +60,6 @@ public class ActionUpdateSourceVersion extends ScenarioAction {
     sourceDefinitionApi.updateSourceDefinition(sourceDefinitionUpdate);
 
     LOGGER.info("Source version \"{}\" was updated", version.getParameterValue());
+    context = "New Source version `"+version.getParameterValue()+"` from (**" + version.getParameterName() + "**)";
   }
 }

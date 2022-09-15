@@ -39,6 +39,7 @@ public class ActionReadSourceVersion extends ScenarioAction {
     var sourceDefinitionRead = sourceDefinitionApi.getSourceDefinition(sourceDefinition);
     version.setParameterValue(sourceDefinitionRead.getDockerImageTag());
     LOGGER.info("Read source version \"{}\" into {} parameter.", version.getParameterValue(), version.getParameterName());
+    context = "Source version `"+version.getParameterValue()+"` -> **" + version.getParameterName() + "**";
   }
 
   @Override

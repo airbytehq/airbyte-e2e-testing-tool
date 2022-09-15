@@ -60,5 +60,6 @@ public class ActionUpdateDestinationVersion extends ScenarioAction {
     destinationDefinitionApi.updateDestinationDefinition(destinationDefinitionUpdate);
 
     LOGGER.info("Destination version \"{}\" was updated", version.getParameterValue());
+    context = "New destination version `"+version.getParameterValue()+"` from (**" + version.getParameterName() + "**)";
   }
 }
