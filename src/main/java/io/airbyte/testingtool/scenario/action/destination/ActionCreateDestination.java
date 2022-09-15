@@ -47,5 +47,6 @@ public class ActionCreateDestination extends ScenarioAction {
     var createdDestination = airbyteInstance.getAirbyteApi().getDestinationApi().createDestination(createDestination);
     destinationInstance.setId(createdDestination.getDestinationId());
     LOGGER.info("New destination \"{}\" successfully created.", definitionName);
+    context = "Destination name : **" + destinationInstance.getInstanceName() + "**";
   }
 }

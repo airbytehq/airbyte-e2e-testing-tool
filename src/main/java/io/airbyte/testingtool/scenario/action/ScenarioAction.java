@@ -1,6 +1,8 @@
 package io.airbyte.testingtool.scenario.action;
 
 import io.airbyte.testingtool.scenario.instance.Instance;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.List;
 import lombok.Getter;
 import org.slf4j.Logger;
@@ -15,6 +17,10 @@ public abstract class ScenarioAction implements Comparable<ScenarioAction> {
   private final Instance resultInstance;
   @Getter
   private String resultSummary = "";
+  @Getter
+  protected String context = "";
+  @Getter
+  private Duration duration;
   @Getter
   private ActionStatuses status;
   private boolean isExecuted = false;
@@ -36,6 +42,7 @@ public abstract class ScenarioAction implements Comparable<ScenarioAction> {
   }
 
   public void doAction() {
+    Instant start = Instant.now();
     if (isRepeatable() || !isExecuted) {
       try {
         checkAllRequiredInstancesInitialized();
@@ -51,6 +58,7 @@ public abstract class ScenarioAction implements Comparable<ScenarioAction> {
     } else {
       LOGGER.error("Action {} can't be executed one more time!", getActionName());
     }
+    duration = Duration.between(start, Instant.now());
   }
 
   private void markResultInstanceAsInitialized() {

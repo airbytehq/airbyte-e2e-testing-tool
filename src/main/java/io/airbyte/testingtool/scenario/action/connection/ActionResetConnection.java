@@ -28,6 +28,7 @@ public class ActionResetConnection extends ScenarioAction {
   @Override
   public void doActionInternal() {
     reset();
+    context = "Connection name : **" + connection.getInstanceName() + "**";
   }
 
   private void reset() {

@@ -43,16 +43,21 @@ public class ActionConnectToAirbyteAPI extends ScenarioAction {
   private void connectToApi() {
     var creds = airbyteInstance.getCredentialConfig();
     String apiServerHost = creds.getCredentialJson().get(API_HOST_NODE).textValue();
-    var apiServerPort = creds.getCredentialJson().get(API_PORT_NODE);
-    var apiPath = creds.getCredentialJson().get(API_PATH_NODE);
-    var apiScheme = creds.getCredentialJson().get(API_SCHEME_NODE);
+    var apiServerPortJson = creds.getCredentialJson().get(API_PORT_NODE);
+    var apiServerPort = apiServerPortJson == null ? 80 : Integer.parseInt(apiServerPortJson.textValue());
+    var apiPathJson = creds.getCredentialJson().get(API_PATH_NODE);
+    var apiPath = apiPathJson == null ? "/api" : apiPathJson.textValue();
+    var apiSchemeJson = creds.getCredentialJson().get(API_SCHEME_NODE);
+    var apiScheme = apiSchemeJson == null ? "http" : apiSchemeJson.textValue();
+
+    context = "Instance name : **" + airbyteInstance.getInstanceName() + "**. Url : " + apiScheme + "://" + apiServerHost + ":" + apiServerPort;
 
     LOGGER.info("Creating Airbyte Config Api Client...");
     AirbyteApiClient airbyteApi = new AirbyteApiClient(new ApiClient()
-        .setScheme(apiScheme == null ? "http" : apiScheme.textValue())
+        .setScheme(apiScheme)
         .setHost(apiServerHost)
-        .setPort(apiServerPort == null ? 80 : Integer.parseInt(apiServerPort.textValue()))
-        .setBasePath(apiPath == null ? "/api" : apiPath.textValue())
+        .setPort(apiServerPort)
+        .setBasePath(apiPath)
         .setRequestInterceptor(builder -> {
           builder.setHeader("X-Endpoint-API-UserInfo", getAuthHeader(API_USER, true));
           builder.setHeader("User-Agent", "Airbyte-E2E-Testing-Tool");

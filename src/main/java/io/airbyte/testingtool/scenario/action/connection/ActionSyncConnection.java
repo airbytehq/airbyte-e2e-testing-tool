@@ -32,6 +32,7 @@ public class ActionSyncConnection extends ScenarioAction {
   @Override
   public void doActionInternal() throws ApiException, InterruptedException {
     sync();
+    context = "Connection name : **" + connection.getInstanceName() + "**";
   }
 
   private void sync() throws ApiException, InterruptedException {

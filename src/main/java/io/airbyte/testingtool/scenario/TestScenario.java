@@ -45,12 +45,12 @@ public class TestScenario {
     return String.format("""
             ### Scenario `%s` execution is finished %s.
             #### Preparation actions :
-            | Preparation action | Result |
-            |---|---|
+            | Preparation action | Result | Context | Duration |
+            |:---|:---:|:---|:---:|
             %s
             #### Scenario actions    :
-            | Scenario action | Result |
-            |---|---|
+            | Scenario action | Result | Context | Duration |
+            |:---|:---:|:---|:---:|
             %s
             """, scenarioName, (isFailed ? " with errors!" : "successfully"), getActionSummaryText(preparationActions),
         getActionSummaryText(scenarioActions));
@@ -60,7 +60,9 @@ public class TestScenario {
     StringBuilder summary = new StringBuilder();
     actions.forEach(action -> {
       var actionText = action.getResultSummary();
-      summary.append("| ").append(action.getActionName()).append(" | ").append(action.getStatus().getName()).append(" ").append((StringUtils.isNotEmpty(actionText) ? actionText : "")).append(" |\n");
+      summary.append("| ").append(action.getActionName()).append(" | ").append(action.getStatus().getName()).append(" ")
+          .append((StringUtils.isNotEmpty(actionText) ? actionText : "")).append(" | ").append(action.getContext()).append(" | **")
+          .append(action.getDuration().getSeconds()).append(" sec** |\n");
     });
     return summary.toString();
   }

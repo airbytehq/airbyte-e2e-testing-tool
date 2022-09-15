@@ -43,6 +43,7 @@ public class ActionCreateConnection extends ScenarioAction {
   @Override
   public void doActionInternal() throws ApiException {
     createConnection();
+    context = "Connection name : **" + connection.getInstanceName() + "**";
   }
 
   private void createConnection() throws ApiException {
