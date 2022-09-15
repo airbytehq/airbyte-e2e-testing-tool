@@ -5,6 +5,9 @@ import io.airbyte.testingtool.argument_parser.RunArguments;
 import io.airbyte.testingtool.scenario.ScenarioFactory;
 import io.airbyte.testingtool.scenario.helper.HelpService;
 import io.airbyte.testingtool.scenario.validator.ValidationService;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.function.Supplier;
 import org.slf4j.Logger;
@@ -13,7 +16,7 @@ import org.slf4j.LoggerFactory;
 public class TestingTool {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(TestingTool.class);
-
+  private static final String RESULT_DIRECTORY = "result";
   public static void main(String[] args) throws IOException {
     LOGGER.info("Testing tool started!");
 
@@ -28,8 +31,18 @@ public class TestingTool {
     };
 
     LOGGER.info("Testing tool execution finished!");
+    writeResultIntoFile(result.getRunText());
+  }
 
-    // @TODO Mariia Khokh. Please put result.getRunText() into result file
+  private static void writeResultIntoFile(String result)
+      throws IOException {
+    File directory = new File(RESULT_DIRECTORY);
+    if (!directory.exists()) {
+      directory.mkdir();
+    }
+    BufferedWriter writer = new BufferedWriter(new FileWriter(directory.getPath() + "/log"));
+    writer.write(result);
+    writer.close();
   }
 
   private static TestingToolRunResult runScenario(final RunArguments arguments) {
