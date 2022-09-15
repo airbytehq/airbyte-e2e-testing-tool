@@ -91,7 +91,7 @@ jobs:
           body: |
             > :white_check_mark: https://github.com/${{github.repository}}/actions/runs/${{github.run_id}}
             >
-            > '${ steps.read_file.outputs.contents }'
+            > ${{ steps.read_file.outputs.contents }}
       - name: Add Failure Comment
         if: needs.setParams.outputs.comment-id && failure()
         uses: peter-evans/create-or-update-comment@v1
@@ -100,4 +100,4 @@ jobs:
           body: |
             > :x: https://github.com/${{github.repository}}/actions/runs/${{github.run_id}}
             >
-            > '${ steps.read_file.outputs.contents }'
+            > ${{ steps.read_file.outputs.contents }}
