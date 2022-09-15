@@ -69,9 +69,4 @@ jsonSchema2Pojo {
     includeSetters = true
     serializable = true
 }
-jar {
-    manifest {
-        attributes 'Main-Class': 'io.airbyte.testingtool.TestingTool'
-        attributes 'Class-Path': ' secrets/ ' + configurations.runtimeClasspath.files.collect { it.getName() }.join(' ')
-    }
-}
+
