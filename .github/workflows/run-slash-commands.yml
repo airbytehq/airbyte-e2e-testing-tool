@@ -73,7 +73,7 @@ jobs:
       - name: Connect to secret manager
         uses: jsdaniell/create-json@1.1.2
         with:
-          name: "secrets/service_account_credentials.json"
+          name: "/secrets/service_account_credentials.json"
           json: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_CREDENTIALS }}
       - name: Run docker container with params
         run: ./.github/scripts/run_docker_with_params.sh '${{ github.event.comment.body }}'
