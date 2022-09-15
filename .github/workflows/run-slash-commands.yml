@@ -82,7 +82,7 @@ jobs:
         id: read_file
         uses: andstor/file-reader-action@v1
         with:
-          path: "/result/log"
+          path: "result/log"
       - name: Add Success Comment
         if: needs.setParams.outputs.comment-id && success()
         uses: peter-evans/create-or-update-comment@v1
