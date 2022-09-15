@@ -62,7 +62,7 @@ public class TestScenario {
       var actionText = action.getResultSummary();
       summary.append("| ").append(action.getActionName()).append(" | ").append(action.getStatus().getName()).append(" ")
           .append((StringUtils.isNotEmpty(actionText) ? actionText : "")).append(" | ").append(action.getContext()).append(" | **")
-          .append(action.getDuration().getSeconds()).append(" sec** |\n");
+          .append(action.getDurationSec()).append(" sec** |\n");
     });
     return summary.toString();
   }

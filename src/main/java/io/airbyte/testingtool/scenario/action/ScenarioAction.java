@@ -19,7 +19,6 @@ public abstract class ScenarioAction implements Comparable<ScenarioAction> {
   private String resultSummary = "";
   @Getter
   protected String context = "";
-  @Getter
   private Duration duration;
   @Getter
   private ActionStatuses status;
@@ -84,5 +83,8 @@ public abstract class ScenarioAction implements Comparable<ScenarioAction> {
     return true;
   }
 
+  public long getDurationSec() {
+    return (duration != null ? duration.getSeconds() : 0);
+  }
 
 }
