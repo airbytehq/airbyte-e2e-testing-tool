@@ -90,7 +90,7 @@ jobs:
           comment-id: ${{ needs.setParams.outputs.comment-id }}
           body: |
             > :white_check_mark: https://github.com/${{github.repository}}/actions/runs/${{github.run_id}}
-            >
+            >   
             > ${{ steps.read_file.outputs.contents }}
       - name: Add Failure Comment
         if: needs.setParams.outputs.comment-id && failure()
@@ -99,5 +99,5 @@ jobs:
           comment-id: ${{ needs.setParams.outputs.comment-id }}
           body: |
             > :x: https://github.com/${{github.repository}}/actions/runs/${{github.run_id}}
-            >
+            >   
             > ${{ steps.read_file.outputs.contents }}
