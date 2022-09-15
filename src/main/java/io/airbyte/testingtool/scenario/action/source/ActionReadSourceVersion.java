@@ -1,7 +1,8 @@
-package io.airbyte.testingtool.scenario.action;
+package io.airbyte.testingtool.scenario.action.source;
 
 import io.airbyte.api.client.generated.SourceDefinitionApi;
 import io.airbyte.api.client.model.generated.SourceDefinitionIdRequestBody;
+import io.airbyte.testingtool.scenario.action.ScenarioAction;
 import io.airbyte.testingtool.scenario.instance.AirbyteInstance;
 import io.airbyte.testingtool.scenario.instance.Instance;
 import io.airbyte.testingtool.scenario.instance.SourceInstance;

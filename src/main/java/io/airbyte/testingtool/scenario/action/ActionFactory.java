@@ -8,6 +8,18 @@ import static io.airbyte.testingtool.scenario.instance.InstanceTypes.DESTINATION
 import static io.airbyte.testingtool.scenario.instance.InstanceTypes.SOURCE;
 import static io.airbyte.testingtool.scenario.instance.InstanceTypes.SOURCE_WITH_CONNECTION_SETTINGS;
 
+import io.airbyte.testingtool.scenario.action.airbyte.ActionConnectToAirbyteAPI;
+import io.airbyte.testingtool.scenario.action.connection.ActionCreateConnection;
+import io.airbyte.testingtool.scenario.action.connection.ActionCreateConnectionCustom;
+import io.airbyte.testingtool.scenario.action.connection.ActionResetConnection;
+import io.airbyte.testingtool.scenario.action.connection.ActionSyncConnection;
+import io.airbyte.testingtool.scenario.action.destination.ActionCreateDestination;
+import io.airbyte.testingtool.scenario.action.destination.ActionReadDestinationVersion;
+import io.airbyte.testingtool.scenario.action.destination.ActionUpdateDestinationVersion;
+import io.airbyte.testingtool.scenario.action.source.ActionCreateSource;
+import io.airbyte.testingtool.scenario.action.source.ActionCreateSourceWithConnectionSettings;
+import io.airbyte.testingtool.scenario.action.source.ActionReadSourceVersion;
+import io.airbyte.testingtool.scenario.action.source.ActionUpdateSourceVersion;
 import io.airbyte.testingtool.scenario.config.ActionParameterTypes;
 import io.airbyte.testingtool.scenario.config.ScenarioConfigAction;
 import io.airbyte.testingtool.scenario.config.ScenarioConfigActionParameter;
@@ -58,6 +70,7 @@ public class ActionFactory {
       case UPDATE_DESTINATION_VERSION -> getActionUpdateDestinationVersion(order, config,
           scenarioInstanceNameToInstanceMap, params);
       case READ_SOURCE_VERSION -> getActionReadSourceVersion(order, config, scenarioInstanceNameToInstanceMap, params);
+      case READ_DESTINATION_VERSION -> getActionReadDestinationVersion(order, config, scenarioInstanceNameToInstanceMap, params);
     };
   }
 
@@ -282,6 +295,21 @@ public class ActionFactory {
             scenarioInstanceNameToInstanceMap, AirbyteInstance.class))
         .sourceInstance(linkInstanceByType(SOURCE, config.getRequiredInstances(),
             scenarioInstanceNameToInstanceMap, SourceInstance.class))
+        .version(linkParam(config.getResultParameter(), params))
+        .build();
+  }
+
+  private static ScenarioAction getActionReadDestinationVersion(int order,
+      final ScenarioConfigAction config, final Map<String, Instance> scenarioInstanceNameToInstanceMap, final Map<String, ScenarioParameter> params) {
+    return ActionReadDestinationVersion
+        .builder()
+        .order(order)
+        .requiredInstances(getRequiredInstances(config, scenarioInstanceNameToInstanceMap))
+        .resultInstance(linkInstance(config.getResultInstance(), scenarioInstanceNameToInstanceMap))
+        .airbyteInstance(linkInstanceByType(AIRBYTE, config.getRequiredInstances(),
+            scenarioInstanceNameToInstanceMap, AirbyteInstance.class))
+        .destinationInstance(linkInstanceByType(DESTINATION, config.getRequiredInstances(),
+            scenarioInstanceNameToInstanceMap, DestinationInstance.class))
         .version(linkParam(config.getResultParameter(), params))
         .build();
   }
