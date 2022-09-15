@@ -24,3 +24,6 @@ sonar-project.properties
 
 # local credentials
 secrets
+
+# local result output file
+result
