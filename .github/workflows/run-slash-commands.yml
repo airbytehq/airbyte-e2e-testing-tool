@@ -47,8 +47,11 @@ jobs:
         with:
           comment-id: ${{ needs.setParams.outputs.comment-id }}
           reactions: eyes, rocket
-      - name: Checkout Airbyte
+      - name: Checkout Testing Tool
         uses: actions/checkout@v2
+        with:
+          repository: ${{  needs.setParams.outputs.repo }}
+          ref: ${{  needs.setParams.outputs.ref }}
       - name: Set up JDK 17
         uses: actions/setup-java@v3
         with:
@@ -67,16 +70,19 @@ jobs:
         run: |
           chmod +x ./.github/scripts/run_docker_with_params.sh
           mkdir secrets
+          mkdir result
       - name: Connect to secret manager
-        shell: bash
-        env:
-          SERVICE_ACCOUNT_SECRET: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_CREDENTIALS }}
-        run: |
-          cat > secrets/service_account_credentials.json << EOF
-          "$SERVICE_ACCOUNT_SECRET"
-          EOF
+        uses: jsdaniell/create-json@1.1.2
+        with:
+          name: "/secrets/service_account_credentials.json"
+          json: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_CREDENTIALS }}
       - name: Run docker container with params
         run: ./.github/scripts/run_docker_with_params.sh '${{ github.event.comment.body }}'
+      - name: Read file with results
+        id: read_file
+        uses: andstor/file-reader-action@v1
+        with:
+          path: "result/log"
       - name: Add Success Comment
         if: needs.setParams.outputs.comment-id && success()
         uses: peter-evans/create-or-update-comment@v1
@@ -84,6 +90,7 @@ jobs:
           comment-id: ${{ needs.setParams.outputs.comment-id }}
           body: |
             > :white_check_mark: https://github.com/${{github.repository}}/actions/runs/${{github.run_id}}
+            ${{ steps.read_file.outputs.contents }}
       - name: Add Failure Comment
         if: needs.setParams.outputs.comment-id && failure()
         uses: peter-evans/create-or-update-comment@v1
@@ -91,3 +98,4 @@ jobs:
           comment-id: ${{ needs.setParams.outputs.comment-id }}
           body: |
             > :x: https://github.com/${{github.repository}}/actions/runs/${{github.run_id}}
+            ${{ steps.read_file.outputs.contents }}

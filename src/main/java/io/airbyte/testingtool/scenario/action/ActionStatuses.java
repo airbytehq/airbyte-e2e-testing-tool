@@ -1,17 +1,18 @@
 package io.airbyte.testingtool.scenario.action;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+@AllArgsConstructor
 public enum ActionStatuses {
-  NOT_EXECUTED(false),
-  OK(false),
-  FAILED(true),
-  SKIPPED(false);
+  NOT_EXECUTED(false, ":white_circle:"),
+  OK(false, ":green_circle:"),
+  FAILED(true, ":red_circle:"),
+  SKIPPED(false, ":white_circle:");
 
   @Getter
-  private boolean isFailure;
+  private final boolean isFailure;
+  @Getter
+  private final String name;
 
-  ActionStatuses(boolean isFailure) {
-    this.isFailure = isFailure;
-  }
 }

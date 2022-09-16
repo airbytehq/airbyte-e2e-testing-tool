@@ -1,10 +1,11 @@
-package io.airbyte.testingtool.scenario.action;
+package io.airbyte.testingtool.scenario.action.connection;
 
 import io.airbyte.api.client.invoker.generated.ApiException;
 import io.airbyte.api.client.model.generated.ConnectionCreate;
 import io.airbyte.api.client.model.generated.ConnectionRead;
 import io.airbyte.api.client.model.generated.ConnectionStatus;
 import io.airbyte.api.client.model.generated.NamespaceDefinitionType;
+import io.airbyte.testingtool.scenario.action.ScenarioAction;
 import io.airbyte.testingtool.scenario.instance.AirbyteConnection;
 import io.airbyte.testingtool.scenario.instance.AirbyteInstance;
 import io.airbyte.testingtool.scenario.instance.DestinationInstance;
@@ -42,6 +43,7 @@ public class ActionCreateConnection extends ScenarioAction {
   @Override
   public void doActionInternal() throws ApiException {
     createConnection();
+    context = "Connection name : **" + connection.getInstanceName() + "**";
   }
 
   private void createConnection() throws ApiException {

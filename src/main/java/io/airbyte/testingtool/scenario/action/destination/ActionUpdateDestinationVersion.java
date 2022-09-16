@@ -1,19 +1,20 @@
-package io.airbyte.testingtool.scenario.action;
+package io.airbyte.testingtool.scenario.action.destination;
 
 import io.airbyte.api.client.generated.DestinationDefinitionApi;
 import io.airbyte.api.client.invoker.generated.ApiException;
 import io.airbyte.api.client.model.generated.DestinationDefinitionUpdate;
+import io.airbyte.testingtool.scenario.action.ScenarioAction;
 import io.airbyte.testingtool.scenario.instance.AirbyteInstance;
 import io.airbyte.testingtool.scenario.instance.DestinationInstance;
 import io.airbyte.testingtool.scenario.instance.Instance;
+import io.airbyte.testingtool.scenario.parameter.ScenarioParameter;
 import java.util.List;
 import lombok.Builder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Scenario action.
- * The action changes destination version to a specific value.
+ * Scenario action. The action changes destination version to a specific value.
  */
 public class ActionUpdateDestinationVersion extends ScenarioAction {
 
@@ -22,12 +23,12 @@ public class ActionUpdateDestinationVersion extends ScenarioAction {
 
   private final AirbyteInstance airbyteInstance;
   private final DestinationInstance destinationInstance;
-  private final String version;
+  private final ScenarioParameter version;
 
   @Builder
   public ActionUpdateDestinationVersion(int order, List<Instance> requiredInstances,
       Instance resultInstance, AirbyteInstance airbyteInstance,
-      DestinationInstance destinationInstance, String version) {
+      DestinationInstance destinationInstance, ScenarioParameter version) {
     super(order, requiredInstances, resultInstance);
     this.airbyteInstance = airbyteInstance;
     this.destinationInstance = destinationInstance;
@@ -45,7 +46,7 @@ public class ActionUpdateDestinationVersion extends ScenarioAction {
   }
 
   private void updateDestinationVersion() throws ApiException {
-    LOGGER.info("Start updating Source version to  \"{}\"", version);
+    LOGGER.info("Start updating Source version to  \"{}\"", version.getParameterValue());
 
     DestinationDefinitionApi destinationDefinitionApi = airbyteInstance.getAirbyteApi()
         .getDestinationDefinitionApi();
@@ -54,10 +55,11 @@ public class ActionUpdateDestinationVersion extends ScenarioAction {
     DestinationDefinitionUpdate destinationDefinitionUpdate = new DestinationDefinitionUpdate();
     destinationDefinitionUpdate.setDestinationDefinitionId(
         airbyteInstance.getDestinationDefinitionId(definitionName));
-    destinationDefinitionUpdate.setDockerImageTag(version);
+    destinationDefinitionUpdate.setDockerImageTag(version.getParameterValue());
 
     destinationDefinitionApi.updateDestinationDefinition(destinationDefinitionUpdate);
 
-    LOGGER.info("Destination version \"{}\" was updated", version);
+    LOGGER.info("Destination version \"{}\" was updated", version.getParameterValue());
+    context = "New destination version `"+version.getParameterValue()+"` from (**" + version.getParameterName() + "**)";
   }
 }

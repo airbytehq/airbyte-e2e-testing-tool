@@ -35,6 +35,11 @@
       "resultInstance": "destination_1"
     },
     {
+      "action" : "READ_DESTINATION_VERSION",
+      "requiredInstances" : ["airbyte_1", "destination_1"],
+      "resultParameter" : {"name": "before_test_version", "type" : "destination_version"}
+    },
+    {
       "action" : "UPDATE_DESTINATION_VERSION",
       "requiredInstances" : ["airbyte_1", "destination_1"],
       "requiredParameters" : [{"name": "old_version", "type" : "destination_version"}]
@@ -58,6 +63,11 @@
     {
       "action" : "SYNC_CONNECTION",
       "requiredInstances" : ["airbyte_1", "connection_1"]
+    },
+    {
+      "action" : "UPDATE_DESTINATION_VERSION",
+      "requiredInstances" : ["airbyte_1", "destination_1"],
+      "requiredParameters" : [{"name": "before_test_version", "type" : "destination_version"}]
     }
   ]
 }

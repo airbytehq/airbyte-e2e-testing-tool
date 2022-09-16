@@ -1,6 +1,6 @@
 {
-  "scenarioName" : "Update source version scenario",
-  "scenarioDescription" : "Configure default connection, set source version. After sync, update version and repeat sync",
+  "scenarioName" : "Test invalid scenario",
+  "scenarioDescription" : "The scenario contains logical gap for the demo purposes",
   "usedInstances" : [
     {
       "instanceName" : "airbyte_1",
@@ -22,17 +22,12 @@
   "preparationActions" : [
     {
       "action" : "CONNECT_AIRBYTE_API",
-      "resultInstance" : "airbyte_1"
+      "resultInstance" : "airbyte_2"
     },
     {
       "action" : "CREATE_SOURCE",
       "requiredInstances" : ["airbyte_1"],
       "resultInstance" : "source_1"
-    },
-    {
-      "action" : "READ_SOURCE_VERSION",
-      "requiredInstances" : ["airbyte_1", "source_1"],
-      "resultParameter" : {"name": "before_test_version", "type" : "source_version"}
     },
     {
       "action": "CREATE_DESTINATION",
@@ -63,11 +58,6 @@
     {
       "action" : "SYNC_CONNECTION",
       "requiredInstances" : ["airbyte_1", "connection_1"]
-    },
-    {
-      "action" : "UPDATE_SOURCE_VERSION",
-      "requiredInstances" : ["airbyte_1", "source_1"],
-      "requiredParameters" : [{"name": "before_test_version", "type" : "source_version"}]
     }
   ]
 }

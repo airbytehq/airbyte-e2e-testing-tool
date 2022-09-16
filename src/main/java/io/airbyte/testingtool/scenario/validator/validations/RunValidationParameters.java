@@ -1,12 +1,10 @@
 package io.airbyte.testingtool.scenario.validator.validations;
 
+import io.airbyte.testingtool.scenario.ScenarioUtils;
 import io.airbyte.testingtool.scenario.config.ScenarioConfig;
-import io.airbyte.testingtool.scenario.config.ScenarioConfigActionParameter;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class RunValidationParameters extends AbstractScenarioValidation {
 
@@ -18,21 +16,20 @@ public class RunValidationParameters extends AbstractScenarioValidation {
   }
 
   @Override
-  protected String getValidationName() {
+  public String getValidationName() {
     return "All required parameters exist";
   }
 
   @Override
   protected void validateInternal(List<String> errors) {
-    var failedActions = Stream.concat(getScenarioConfig().getScenarioActions().stream(), getScenarioConfig().getPreparationActions().stream()).map(action -> {
-      var missingParams = action.getRequiredParameters().stream().map(ScenarioConfigActionParameter::getName)
-          .filter(name -> !params.containsKey(name)).collect(
-              Collectors.toSet());
-      return (missingParams.isEmpty() ? null : action.getAction().name() + " action requires params : " + missingParams);
-    }).filter(Objects::nonNull).collect(Collectors.toSet());
+    var missingParams = ScenarioUtils.getAllRequiredParametersWithoutInitialization(getScenarioConfig()).stream()
+        .filter(parameter -> !params.containsKey(parameter.getName()))
+        .map(parameter ->
+            parameter.getName() + " is required parameter by missing in the input params.")
+        .collect(Collectors.toSet());
 
-    if (!failedActions.isEmpty()) {
-      errors.addAll(failedActions);
+    if (!missingParams.isEmpty()) {
+      errors.addAll(missingParams);
     }
   }
 }

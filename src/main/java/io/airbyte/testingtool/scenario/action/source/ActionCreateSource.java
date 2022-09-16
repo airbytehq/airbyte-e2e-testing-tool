@@ -1,15 +1,15 @@
-package io.airbyte.testingtool.scenario.action;
+package io.airbyte.testingtool.scenario.action.source;
 
 import io.airbyte.api.client.invoker.generated.ApiException;
 import io.airbyte.api.client.model.generated.SourceCreate;
+import io.airbyte.testingtool.scenario.action.ScenarioAction;
 import io.airbyte.testingtool.scenario.instance.AirbyteInstance;
 import io.airbyte.testingtool.scenario.instance.Instance;
 import io.airbyte.testingtool.scenario.instance.SourceInstance;
+import java.util.List;
 import lombok.Builder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.List;
 
 public class ActionCreateSource extends ScenarioAction {
 
@@ -43,6 +43,7 @@ public class ActionCreateSource extends ScenarioAction {
     createSource.setWorkspaceId(airbyteInstance.getWorkspaceId());
     var definitionName = sourceInstance.getCredentialConfig().getInstanceType();
     createSource.setSourceDefinitionId(airbyteInstance.getSourceDefinitionId(definitionName));
+    context = "Source name : **" + sourceInstance.getInstanceName() + "**";
     try {
       var createdSource = airbyteInstance.getAirbyteApi().getSourceApi().createSource(createSource);
       sourceInstance.setId(createdSource.getSourceId());

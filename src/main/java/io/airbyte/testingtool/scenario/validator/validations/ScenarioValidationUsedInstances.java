@@ -13,7 +13,7 @@ public class ScenarioValidationUsedInstances extends AbstractScenarioValidation 
   }
 
   @Override
-  protected String getValidationName() {
+  public String getValidationName() {
     return "Validate `UsedInstances` section";
   }
 

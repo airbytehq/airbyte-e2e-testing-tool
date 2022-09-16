@@ -1,5 +1,6 @@
-package io.airbyte.testingtool.scenario.action;
+package io.airbyte.testingtool.scenario.action.connection;
 
+import io.airbyte.testingtool.scenario.action.ScenarioAction;
 import io.airbyte.testingtool.scenario.instance.AirbyteConnection;
 import io.airbyte.testingtool.scenario.instance.AirbyteInstance;
 import io.airbyte.testingtool.scenario.instance.Instance;
@@ -27,6 +28,7 @@ public class ActionResetConnection extends ScenarioAction {
   @Override
   public void doActionInternal() {
     reset();
+    context = "Connection name : **" + connection.getInstanceName() + "**";
   }
 
   private void reset() {
