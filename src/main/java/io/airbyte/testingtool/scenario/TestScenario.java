@@ -46,11 +46,11 @@ public class TestScenario {
             ### Scenario `%s` execution is finished %s.
             #### Preparation actions :
             | Preparation action | Result | Context | Duration |
-            |:---|:---:|:---|:---:|
+            |:---|:---|:---|:---:|
             %s
             #### Scenario actions    :
             | Scenario action | Result | Context | Duration |
-            |:---|:---:|:---|:---:|
+            |:---|:---|:---|:---:|
             %s
             """, scenarioName, (isFailed ? " with errors!" : "successfully"), getActionSummaryText(preparationActions),
         getActionSummaryText(scenarioActions));

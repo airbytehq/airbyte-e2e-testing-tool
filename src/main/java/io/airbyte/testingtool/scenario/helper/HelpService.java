@@ -128,11 +128,8 @@ public class HelpService {
   }
 
   private static String getCallParamArgs(final ScenarioConfig scenarioConfig) {
-    var allActions = ScenarioUtils.getAllActions(scenarioConfig);
-    Set<String> allParamNames = new HashSet<>();
-    allActions.forEach(action -> allParamNames.addAll(action.getRequiredParameters().stream().map(ScenarioConfigActionParameter::getName).collect(
-        Collectors.toSet())));
-    return " " + StringUtils.trim(allParamNames.stream().map(HelpService::getParamArgLine).collect(Collectors.joining(" ")));
+    var allParamNames = ScenarioUtils.getAllRequiredParametersWithoutInitialization(scenarioConfig);
+    return " " + StringUtils.trim(allParamNames.stream().map(parameter -> getParamArgLine(parameter.getName())).collect(Collectors.joining(" ")));
   }
 
   private static String getCredArgLine(final ScenarioConfigInstance instance) {
@@ -161,13 +158,7 @@ public class HelpService {
   }
 
   private static void addRequiredParameters(final ScenarioConfig scenarioConfig, final StringBuilder builder) {
-    var allActions = ScenarioUtils.getAllActions(scenarioConfig);
-    Set<ScenarioConfigActionParameter> requiredParams = new HashSet<>();
-    allActions.forEach(action -> {
-      if (!action.getRequiredParameters().isEmpty()) {
-        requiredParams.addAll(action.getRequiredParameters());
-      }
-    });
+    List<ScenarioConfigActionParameter> requiredParams = ScenarioUtils.getAllRequiredParametersWithoutInitialization(scenarioConfig);
     if (!requiredParams.isEmpty()) {
       builder.append("#### Parameters in the scenario").append("\n");
       requiredParams.forEach(parameter -> builder.append(getParameterText(parameter)).append("\n"));
