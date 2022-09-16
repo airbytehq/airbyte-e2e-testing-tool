@@ -1,9 +1,9 @@
 package io.airbyte.testingtool.scenario.action.connection;
 
 import io.airbyte.api.client.invoker.generated.ApiException;
-import io.airbyte.api.client.model.generated.AirbyteStreamAndConfiguration;
+import io.airbyte.api.client.model.generated.AirbyteCatalog;
 import io.airbyte.api.client.model.generated.ConnectionCreate;
-import io.airbyte.testingtool.scenario.config.settings.AirbyteCatalogSettings;
+import io.airbyte.api.client.model.generated.SourceDiscoverSchemaRequestBody;
 import io.airbyte.testingtool.scenario.config.settings.AirbyteStreamAndConfigSettings;
 import io.airbyte.testingtool.scenario.config.settings.ConnectionSettings;
 import io.airbyte.testingtool.scenario.instance.AirbyteConnection;
@@ -12,7 +12,6 @@ import io.airbyte.testingtool.scenario.instance.DestinationInstance;
 import io.airbyte.testingtool.scenario.instance.Instance;
 import io.airbyte.testingtool.scenario.instance.SourceWithSettingsInstance;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -36,24 +35,26 @@ public class ActionCreateConnectionCustom extends ActionCreateConnection{
 
   @Override
   protected ConnectionCreate getConnectionCreateConfig() throws ApiException {
-    var defaultAirbyteCatalog = sourceInstance.discoverSourceSchema();
-    var customStreams = connectionStreamsCustomization(defaultAirbyteCatalog.getStreams(),
-            getSettings().getSyncCatalogConfig().getStreams());
-    defaultAirbyteCatalog.getStreams().clear();
-    defaultAirbyteCatalog.getStreams().addAll(customStreams);
+    var requestBody = new SourceDiscoverSchemaRequestBody();
+    requestBody.setSourceId(sourceInstance.getId());
+    requestBody.setDisableCache(true);
+    var sourceDiscoverSchema = airbyteInstance.getAirbyteApi()
+            .getSourceApi()
+            .discoverSchemaForSourceWithHttpInfo(requestBody);
+    var catalog = sourceDiscoverSchema.getData().getCatalog();
+    customizationCatalog(catalog, getSettings().getSyncCatalogConfig().getStreams());
     return super.getConnectionCreateConfig()
             .name(getSettings().getConnectionName())
-            .syncCatalog(defaultAirbyteCatalog); // @TODO A. Korotkov
+            .syncCatalog(catalog); // @TODO A. Korotkov
   }
 
   private ConnectionSettings getSettings() {
     return ((SourceWithSettingsInstance)this.sourceInstance).getConnectionSettings();
   }
 
-  private List<AirbyteStreamAndConfiguration> connectionStreamsCustomization(List<AirbyteStreamAndConfiguration> defaultStreams,
-                                                                             List<AirbyteStreamAndConfigSettings> customStreams) {
-    List<AirbyteStreamAndConfiguration> customCatalogStreams = new ArrayList<>();
-    defaultStreams.forEach(defaultStream -> {
+  private void customizationCatalog(AirbyteCatalog catalog,
+                                    List<AirbyteStreamAndConfigSettings> customStreams) {
+    catalog.getStreams().forEach(defaultStream -> {
       if (Objects.nonNull(Objects.requireNonNull(defaultStream.getStream()).getName())) {
         var streamName = Objects.requireNonNull(defaultStream.getStream()).getName();
         var streamNamespace = Objects.requireNonNull(defaultStream.getStream()).getNamespace();
@@ -63,19 +64,24 @@ public class ActionCreateConnectionCustom extends ActionCreateConnection{
                 .findFirst();
         if (optionalStreamCustom.isPresent()) {
           var streamCustom = optionalStreamCustom.get();
-          var stream = defaultStream;
-          Objects.requireNonNull(stream.getConfig()).setSelected(streamCustom.getConfig().getSelected());
-          Objects.requireNonNull(stream.getConfig()).setSyncMode(streamCustom.getConfig().getSyncMode());
-          Objects.requireNonNull(stream.getConfig()).setCursorField(streamCustom.getConfig().getCursorField());
-          Objects.requireNonNull(stream.getConfig()).setPrimaryKey(streamCustom.getConfig().getPrimaryKey());
-          Objects.requireNonNull(stream.getConfig()).setDestinationSyncMode(streamCustom.getConfig().getDestinationSyncMode());
-          Objects.requireNonNull(stream.getConfig()).setAliasName(streamCustom.getConfig().getAliasName());
-          customCatalogStreams.add(stream);
-        } else {
-          customCatalogStreams.add(defaultStream);
+          Objects.requireNonNull(defaultStream.getConfig()).setSelected(streamCustom.getConfig().getSelected());
+          if (Objects.nonNull(streamCustom.getConfig().getAliasName())) {
+            Objects.requireNonNull(defaultStream.getConfig()).setAliasName(streamCustom.getConfig().getAliasName());
+          }
+          if (Objects.nonNull(streamCustom.getConfig().getSyncMode())) {
+            Objects.requireNonNull(defaultStream.getConfig()).setSyncMode(streamCustom.getConfig().getSyncMode());
+          }
+          if (Objects.nonNull(streamCustom.getConfig().getDestinationSyncMode())) {
+            Objects.requireNonNull(defaultStream.getConfig()).setDestinationSyncMode(streamCustom.getConfig().getDestinationSyncMode());
+          }
+          if (Objects.nonNull(streamCustom.getConfig().getCursorField())) {
+            Objects.requireNonNull(defaultStream.getConfig()).setCursorField(streamCustom.getConfig().getCursorField());
+          }
+          if (Objects.nonNull(streamCustom.getConfig().getPrimaryKey())) {
+            Objects.requireNonNull(defaultStream.getConfig()).setPrimaryKey(streamCustom.getConfig().getPrimaryKey());
+          }
         }
       }
     });
-    return customCatalogStreams;
   }
 }

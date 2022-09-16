@@ -11,4 +11,4 @@ properties:
     type: string
   syncCatalogConfig:
     description: Sync Catalog Configuration
-    "$ref": AirbyteCatalogSettings.yaml
+    "$ref": catalog/AirbyteCatalogSettings.yaml

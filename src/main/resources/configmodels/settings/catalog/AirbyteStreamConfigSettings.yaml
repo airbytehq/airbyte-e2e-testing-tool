@@ -5,7 +5,7 @@ title: AirbyteStreamSettings
 description: Airbyte Stream Configuration Settings for customize stream.
 type: object
 required:
-  - aliasName
+  - selected
 additionalProperties: false
 properties:
   aliasName:
