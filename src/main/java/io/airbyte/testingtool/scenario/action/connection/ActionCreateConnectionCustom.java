@@ -45,7 +45,7 @@ public class ActionCreateConnectionCustom extends ActionCreateConnection{
     customizationCatalog(catalog, getSettings().getSyncCatalogConfig().getStreams());
     return super.getConnectionCreateConfig()
             .name(getSettings().getConnectionName())
-            .syncCatalog(catalog); // @TODO A. Korotkov
+            .syncCatalog(catalog);
   }
 
   private ConnectionSettings getSettings() {
