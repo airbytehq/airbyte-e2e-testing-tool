@@ -9,3 +9,6 @@ properties:
   connectionName:
     description: TBD
     type: string
+  syncCatalogConfig:
+    description: Sync Catalog Configuration
+    "$ref": catalog/AirbyteCatalogSettings.yaml
