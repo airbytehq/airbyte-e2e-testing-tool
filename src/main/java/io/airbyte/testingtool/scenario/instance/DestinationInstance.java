@@ -32,14 +32,17 @@ public class DestinationInstance extends InstanceWithCredentials {
     return InstanceTypes.DESTINATION;
   }
 
+  public String getAribyteDestinationTypeName() {
+    return getCredentialConfig().getInstanceType();
+  }
+
   public void setDockerImageTag(String version) throws ApiException {
     DestinationDefinitionApi destinationDefinitionApi = airbyteInstance.getAirbyteApi()
         .getDestinationDefinitionApi();
-    var definitionName = this.getCredentialConfig().getInstanceType();
 
     DestinationDefinitionUpdate destinationDefinitionUpdate = new DestinationDefinitionUpdate();
     destinationDefinitionUpdate.setDestinationDefinitionId(
-        airbyteInstance.getDestinationDefinitionId(definitionName));
+        airbyteInstance.getDestinationDefinitionId(getAribyteDestinationTypeName()));
     destinationDefinitionUpdate.setDockerImageTag(version);
 
     destinationDefinitionApi.updateDestinationDefinition(destinationDefinitionUpdate);
@@ -49,8 +52,7 @@ public class DestinationInstance extends InstanceWithCredentials {
     DestinationDefinitionApi destinationDefinitionApi = airbyteInstance.getAirbyteApi()
         .getDestinationDefinitionApi();
     var destinationDefinition = new DestinationDefinitionIdRequestBody();
-    var definitionName = this.getCredentialConfig().getInstanceType();
-    destinationDefinition.setDestinationDefinitionId(airbyteInstance.getDestinationDefinitionId(definitionName));
+    destinationDefinition.setDestinationDefinitionId(airbyteInstance.getDestinationDefinitionId(getAribyteDestinationTypeName()));
     var destinationDefinitionRead = destinationDefinitionApi.getDestinationDefinition(destinationDefinition);
     return destinationDefinitionRead.getDockerImageTag();
   }

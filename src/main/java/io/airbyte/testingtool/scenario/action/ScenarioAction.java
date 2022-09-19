@@ -16,8 +16,6 @@ public abstract class ScenarioAction implements Comparable<ScenarioAction> {
   private final List<Instance> requiredInstances;
   private final Instance resultInstance;
   @Getter
-  private String resultSummary = "";
-  @Getter
   protected String context = "";
   private Duration duration;
   @Getter
@@ -51,7 +49,7 @@ public abstract class ScenarioAction implements Comparable<ScenarioAction> {
 
       } catch (Exception e) {
         status = ActionStatuses.FAILED;
-        resultSummary = e.getMessage();
+        context = e.getMessage();
       }
       isExecuted = true;
     } else {

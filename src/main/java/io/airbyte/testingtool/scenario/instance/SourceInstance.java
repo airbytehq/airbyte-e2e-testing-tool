@@ -40,14 +40,17 @@ public class SourceInstance extends InstanceWithCredentials {
     }
   }
 
+  public String getAribyteSourceTypeName() {
+    return getCredentialConfig().getInstanceType();
+  }
+
   public void setDockerImageTag(String version) throws ApiException {
     SourceDefinitionApi sourceDefinitionApi = airbyteInstance.getAirbyteApi()
         .getSourceDefinitionApi();
-    var definitionName = this.getCredentialConfig().getInstanceType();
 
     SourceDefinitionUpdate sourceDefinitionUpdate = new SourceDefinitionUpdate();
     sourceDefinitionUpdate.setSourceDefinitionId(
-        airbyteInstance.getSourceDefinitionId(definitionName));
+        airbyteInstance.getSourceDefinitionId(getAribyteSourceTypeName()));
     sourceDefinitionUpdate.setDockerImageTag(version);
 
     sourceDefinitionApi.updateSourceDefinition(sourceDefinitionUpdate);
@@ -57,8 +60,7 @@ public class SourceInstance extends InstanceWithCredentials {
     SourceDefinitionApi sourceDefinitionApi = airbyteInstance.getAirbyteApi()
         .getSourceDefinitionApi();
     var sourceDefinition = new SourceDefinitionIdRequestBody();
-    var definitionName = this.getCredentialConfig().getInstanceType();
-    sourceDefinition.setSourceDefinitionId(airbyteInstance.getSourceDefinitionId(definitionName));
+    sourceDefinition.setSourceDefinitionId(airbyteInstance.getSourceDefinitionId(getAribyteSourceTypeName()));
     var sourceDefinitionRead = sourceDefinitionApi.getSourceDefinition(sourceDefinition);
     return sourceDefinitionRead.getDockerImageTag();
   }

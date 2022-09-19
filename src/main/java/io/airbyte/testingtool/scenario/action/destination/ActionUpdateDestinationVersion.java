@@ -39,9 +39,15 @@ public class ActionUpdateDestinationVersion extends ScenarioAction {
     return "Update Destination version";
   }
 
-  private void updateDestinationVersion() throws ApiException {
+  private void updateDestinationVersion() {
     LOGGER.info("Start updating Source version to  \"{}\"", version.getParameterValue());
-    destinationInstance.setDockerImageTag(version.getParameterValue());
+    try {
+      destinationInstance.setDockerImageTag(version.getParameterValue());
+    } catch (ApiException e) {
+      throw new RuntimeException(
+          "Fail to set version `" + version.getParameterValue() + "` to the destination `" + destinationInstance.getAribyteDestinationTypeName()
+              + "`!");
+    }
     context = "New destination version `" + version.getParameterValue() + "` from (**" + version.getParameterName() + "**)";
     LOGGER.info(context);
   }

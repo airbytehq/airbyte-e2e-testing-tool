@@ -40,9 +40,14 @@ public class ActionUpdateSourceVersion extends ScenarioAction {
     return "Update Source version";
   }
 
-  private void updateSourceVersion() throws ApiException {
+  private void updateSourceVersion() {
     LOGGER.info("Start updating Source version to  \"{}\"", version.getParameterValue());
-    sourceInstance.setDockerImageTag(version.getParameterValue());
+    try {
+      sourceInstance.setDockerImageTag(version.getParameterValue());
+    } catch (ApiException e) {
+      throw new RuntimeException(
+          "Fail to set version `" + version.getParameterValue() + "` to the source `" + sourceInstance.getAribyteSourceTypeName() + "`!");
+    }
     context = "New Source version `" + version.getParameterValue() + "` from (**" + version.getParameterName() + "**)";
     LOGGER.info(context);
   }
