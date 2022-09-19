@@ -11,9 +11,6 @@ properties:
   aliasName:
     description: Alias Name
     type: string
-  selected:
-    description: Selected flag
-    type: boolean
   primaryKey:
     description: Primary Key
     type: array

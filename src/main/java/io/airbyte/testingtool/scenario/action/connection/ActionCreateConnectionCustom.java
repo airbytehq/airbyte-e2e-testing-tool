@@ -64,7 +64,6 @@ public class ActionCreateConnectionCustom extends ActionCreateConnection{
                 .findFirst();
         if (optionalStreamCustom.isPresent()) {
           var streamCustom = optionalStreamCustom.get();
-          Objects.requireNonNull(defaultStream.getConfig()).setSelected(streamCustom.getConfig().getSelected());
           if (Objects.nonNull(streamCustom.getConfig().getAliasName())) {
             Objects.requireNonNull(defaultStream.getConfig()).setAliasName(streamCustom.getConfig().getAliasName());
           }
@@ -80,6 +79,8 @@ public class ActionCreateConnectionCustom extends ActionCreateConnection{
           if (Objects.nonNull(streamCustom.getConfig().getPrimaryKey())) {
             Objects.requireNonNull(defaultStream.getConfig()).setPrimaryKey(streamCustom.getConfig().getPrimaryKey());
           }
+        } else {
+          Objects.requireNonNull(defaultStream.getConfig()).setSelected(false);
         }
       }
     });
