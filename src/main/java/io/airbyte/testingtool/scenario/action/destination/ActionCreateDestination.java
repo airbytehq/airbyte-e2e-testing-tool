@@ -36,17 +36,21 @@ public class ActionCreateDestination extends ScenarioAction {
     createDestination();
   }
 
-  private void createDestination() throws ApiException {
+  private void createDestination() {
     DestinationCreate createDestination = new DestinationCreate();
     createDestination.setConnectionConfiguration(destinationInstance.getCredentialConfig().getCredentialJson());
     createDestination.setName(destinationInstance.getInstanceName());
     createDestination.setWorkspaceId(airbyteInstance.getWorkspaceId());
     var definitionName = destinationInstance.getCredentialConfig().getInstanceType();
     createDestination.setDestinationDefinitionId(airbyteInstance.getDestinationDefinitionId(definitionName));
-
-    var createdDestination = airbyteInstance.getAirbyteApi().getDestinationApi().createDestination(createDestination);
-    destinationInstance.setId(createdDestination.getDestinationId());
-    LOGGER.info("New destination \"{}\" successfully created.", definitionName);
     context = "Destination name : **" + destinationInstance.getInstanceName() + "**";
+    try {
+      var createdDestination = airbyteInstance.getAirbyteApi().getDestinationApi().createDestination(createDestination);
+      destinationInstance.setId(createdDestination.getDestinationId());
+      destinationInstance.setAirbyteInstance(airbyteInstance);
+      LOGGER.info("New destination \"{}\" successfully created.", definitionName);
+    } catch (ApiException e) {
+      throw new RuntimeException("Fail to create new destination", e);
+    }
   }
 }
