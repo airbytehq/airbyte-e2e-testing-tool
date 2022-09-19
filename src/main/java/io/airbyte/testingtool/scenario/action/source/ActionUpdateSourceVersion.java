@@ -1,10 +1,7 @@
 package io.airbyte.testingtool.scenario.action.source;
 
-import io.airbyte.api.client.generated.SourceDefinitionApi;
 import io.airbyte.api.client.invoker.generated.ApiException;
-import io.airbyte.api.client.model.generated.SourceDefinitionUpdate;
 import io.airbyte.testingtool.scenario.action.ScenarioAction;
-import io.airbyte.testingtool.scenario.instance.AirbyteInstance;
 import io.airbyte.testingtool.scenario.instance.Instance;
 import io.airbyte.testingtool.scenario.instance.SourceInstance;
 import io.airbyte.testingtool.scenario.parameter.ScenarioParameter;
@@ -21,16 +18,14 @@ public class ActionUpdateSourceVersion extends ScenarioAction {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(ActionUpdateSourceVersion.class);
 
-  private final AirbyteInstance airbyteInstance;
   private final SourceInstance sourceInstance;
   private final ScenarioParameter version;
 
   @Builder
   public ActionUpdateSourceVersion(int order, List<Instance> requiredInstances,
-      Instance resultInstance, AirbyteInstance airbyteInstance, SourceInstance sourceInstance,
+      Instance resultInstance, SourceInstance sourceInstance,
       ScenarioParameter version) {
     super(order, requiredInstances, resultInstance);
-    this.airbyteInstance = airbyteInstance;
     this.sourceInstance = sourceInstance;
     this.version = version;
   }
@@ -45,21 +40,15 @@ public class ActionUpdateSourceVersion extends ScenarioAction {
     return "Update Source version";
   }
 
-  private void updateSourceVersion() throws ApiException {
+  private void updateSourceVersion() {
     LOGGER.info("Start updating Source version to  \"{}\"", version.getParameterValue());
-
-    SourceDefinitionApi sourceDefinitionApi = airbyteInstance.getAirbyteApi()
-        .getSourceDefinitionApi();
-    var definitionName = sourceInstance.getCredentialConfig().getInstanceType();
-
-    SourceDefinitionUpdate sourceDefinitionUpdate = new SourceDefinitionUpdate();
-    sourceDefinitionUpdate.setSourceDefinitionId(
-        airbyteInstance.getSourceDefinitionId(definitionName));
-    sourceDefinitionUpdate.setDockerImageTag(version.getParameterValue());
-
-    sourceDefinitionApi.updateSourceDefinition(sourceDefinitionUpdate);
-
-    LOGGER.info("Source version \"{}\" was updated", version.getParameterValue());
-    context = "New Source version `"+version.getParameterValue()+"` from (**" + version.getParameterName() + "**)";
+    try {
+      sourceInstance.setDockerImageTag(version.getParameterValue());
+    } catch (ApiException e) {
+      throw new RuntimeException(
+          "Fail to set version `" + version.getParameterValue() + "` to the source `" + sourceInstance.getAribyteSourceTypeName() + "`!");
+    }
+    context = "New Source version `" + version.getParameterValue() + "` from (**" + version.getParameterName() + "**)";
+    LOGGER.info(context);
   }
 }

@@ -4,7 +4,6 @@ import io.airbyte.testingtool.scenario.action.ScenarioAction;
 import java.util.SortedSet;
 import lombok.Builder;
 import lombok.Getter;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,27 +42,28 @@ public class TestScenario {
 
   public String getTextSummary() {
     return String.format("""
-            ### Scenario `%s` execution is finished %s.
+            ### %s Scenario `%s` execution is finished %s
             #### Preparation actions :
             | Preparation action | Result | Context | Duration |
-            |:---|:---:|:---|:---:|
+            |:---|:---|:---|:---:|
             %s
             #### Scenario actions    :
             | Scenario action | Result | Context | Duration |
-            |:---|:---:|:---|:---:|
+            |:---|:---|:---|:---:|
             %s
-            """, scenarioName, (isFailed ? " with errors!" : "successfully"), getActionSummaryText(preparationActions),
+            """, (isFailed ? ":x:" : ":heavy_check_mark:"), scenarioName, (isFailed ? " with errors!" : "successfully."),
+        getActionSummaryText(preparationActions),
         getActionSummaryText(scenarioActions));
   }
 
   private String getActionSummaryText(SortedSet<ScenarioAction> actions) {
     StringBuilder summary = new StringBuilder();
-    actions.forEach(action -> {
-      var actionText = action.getResultSummary();
-      summary.append("| ").append(action.getActionName()).append(" | ").append(action.getStatus().getName()).append(" ")
-          .append((StringUtils.isNotEmpty(actionText) ? actionText : "")).append(" | ").append(action.getContext()).append(" | **")
-          .append(action.getDurationSec()).append(" sec** |\n");
-    });
+    actions.forEach(action ->
+      summary.append("| ").append(action.getActionName())
+          .append(" | ").append(action.getStatus().getName())
+          .append(" | ").append(action.getContext())
+          .append(" | **").append(action.getDurationSec()).append(" sec** |\n")
+    );
     return summary.toString();
   }
 
