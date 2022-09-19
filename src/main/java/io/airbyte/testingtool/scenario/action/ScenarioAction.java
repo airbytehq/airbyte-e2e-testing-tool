@@ -11,8 +11,8 @@ import org.slf4j.LoggerFactory;
 public abstract class ScenarioAction implements Comparable<ScenarioAction> {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(ScenarioAction.class);
-
-  protected final int order;
+  @Getter
+  public final int order;
   private final List<Instance> requiredInstances;
   private final Instance resultInstance;
   @Getter
@@ -27,10 +27,6 @@ public abstract class ScenarioAction implements Comparable<ScenarioAction> {
     this.requiredInstances = requiredInstances;
     this.resultInstance = resultInstance;
     this.status = ActionStatuses.NOT_EXECUTED;
-  }
-
-  public int getOrder() {
-    return order;
   }
 
   @Override

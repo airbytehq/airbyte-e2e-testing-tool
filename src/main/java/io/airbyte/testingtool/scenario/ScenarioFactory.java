@@ -20,6 +20,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,11 +45,12 @@ public class ScenarioFactory {
 
       final Map<String, Instance> scenarioInstanceNameToInstanceMap = mapInstancesAndCredentials(config, credentialConfigs);
       final Map<String, ScenarioParameter> scenarioParameterMap = mapParameters(config, params);
+      AtomicInteger order = new AtomicInteger(1);
 
       return TestScenario.builder()
           .scenarioName(config.getScenarioName())
-          .preparationActions(getActions(config.getPreparationActions(), scenarioInstanceNameToInstanceMap, scenarioParameterMap))
-          .scenarioActions(getActions(config.getScenarioActions(), scenarioInstanceNameToInstanceMap, scenarioParameterMap))
+          .preparationActions(getActions(order, config.getPreparationActions(), scenarioInstanceNameToInstanceMap, scenarioParameterMap))
+          .scenarioActions(getActions(order, config.getScenarioActions(), scenarioInstanceNameToInstanceMap, scenarioParameterMap))
           .build();
     } else {
       throw new RuntimeException("The scenario failed the run validation.");
@@ -97,11 +99,11 @@ public class ScenarioFactory {
     return allParamNames;
   }
 
-  private static SortedSet<ScenarioAction> getActions(final List<ScenarioConfigAction> actionConfigs,
+  private static SortedSet<ScenarioAction> getActions(final AtomicInteger order, final List<ScenarioConfigAction> actionConfigs,
       final Map<String, Instance> scenarioInstanceNameToInstanceMap, final Map<String, ScenarioParameter> params) {
     final SortedSet<ScenarioAction> actions = new TreeSet<>();
     actionConfigs.forEach(scenarioConfigAction ->
-        actions.add(ActionFactory.getScenarioAction(actions.size(), scenarioConfigAction, scenarioInstanceNameToInstanceMap, params))
+        actions.add(ActionFactory.getScenarioAction(order.getAndIncrement(), scenarioConfigAction, scenarioInstanceNameToInstanceMap, params))
     );
     return actions;
   }
