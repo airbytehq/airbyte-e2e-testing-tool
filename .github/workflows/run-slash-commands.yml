@@ -64,6 +64,9 @@ jobs:
       - name: Build application
         run: ./gradlew clean build
         shell: bash
+      - name: Get application version
+        id: get-version
+        run: echo ::set-output name=version::"$(eval ./gradlew getImageVersion)"
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
       - name: Change wrapper permissions
@@ -77,7 +80,7 @@ jobs:
           name: "/secrets/service_account_credentials.json"
           json: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_CREDENTIALS }}
       - name: Run docker container with params
-        run: ./.github/scripts/run_docker_with_params.sh '${{ github.event.comment.body }}'
+        run: ./.github/scripts/run_docker_with_params.sh '${{ github.event.comment.body }}' '${{ steps.get-version.outputs.version }}'
       - name: Read file with results
         id: read_file
         uses: andstor/file-reader-action@v1
@@ -98,4 +101,3 @@ jobs:
           comment-id: ${{ needs.setParams.outputs.comment-id }}
           body: |
             > :x: https://github.com/${{github.repository}}/actions/runs/${{github.run_id}}
-            ${{ steps.read_file.outputs.contents }}

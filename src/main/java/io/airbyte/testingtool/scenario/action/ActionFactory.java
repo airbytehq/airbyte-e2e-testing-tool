@@ -259,8 +259,6 @@ public class ActionFactory {
         .order(order)
         .requiredInstances(getRequiredInstances(config, scenarioInstanceNameToInstanceMap))
         .resultInstance(linkInstance(config.getResultInstance(), scenarioInstanceNameToInstanceMap))
-        .airbyteInstance(linkInstanceByType(AIRBYTE, config.getRequiredInstances(),
-            scenarioInstanceNameToInstanceMap, AirbyteInstance.class))
         .sourceInstance(linkInstanceByType(SOURCE, config.getRequiredInstances(),
             scenarioInstanceNameToInstanceMap, SourceInstance.class))
         .version(linkParamByType(SOURCE_VERSION, config.getRequiredParameters(), params))
@@ -275,8 +273,6 @@ public class ActionFactory {
         .order(order)
         .requiredInstances(getRequiredInstances(config, scenarioInstanceNameToInstanceMap))
         .resultInstance(linkInstance(config.getResultInstance(), scenarioInstanceNameToInstanceMap))
-        .airbyteInstance(linkInstanceByType(AIRBYTE, config.getRequiredInstances(),
-            scenarioInstanceNameToInstanceMap, AirbyteInstance.class))
         .destinationInstance(
             linkInstanceByType(DESTINATION, config.getRequiredInstances(),
                 scenarioInstanceNameToInstanceMap, DestinationInstance.class))
@@ -291,8 +287,6 @@ public class ActionFactory {
         .order(order)
         .requiredInstances(getRequiredInstances(config, scenarioInstanceNameToInstanceMap))
         .resultInstance(linkInstance(config.getResultInstance(), scenarioInstanceNameToInstanceMap))
-        .airbyteInstance(linkInstanceByType(AIRBYTE, config.getRequiredInstances(),
-            scenarioInstanceNameToInstanceMap, AirbyteInstance.class))
         .sourceInstance(linkInstanceByType(SOURCE, config.getRequiredInstances(),
             scenarioInstanceNameToInstanceMap, SourceInstance.class))
         .version(linkParam(config.getResultParameter(), params))
@@ -306,8 +300,6 @@ public class ActionFactory {
         .order(order)
         .requiredInstances(getRequiredInstances(config, scenarioInstanceNameToInstanceMap))
         .resultInstance(linkInstance(config.getResultInstance(), scenarioInstanceNameToInstanceMap))
-        .airbyteInstance(linkInstanceByType(AIRBYTE, config.getRequiredInstances(),
-            scenarioInstanceNameToInstanceMap, AirbyteInstance.class))
         .destinationInstance(linkInstanceByType(DESTINATION, config.getRequiredInstances(),
             scenarioInstanceNameToInstanceMap, DestinationInstance.class))
         .version(linkParam(config.getResultParameter(), params))
