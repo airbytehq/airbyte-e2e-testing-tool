@@ -32,6 +32,20 @@ jobs:
           regex_pattern: "^/[a-zA-Z0-9_/-]+"
           regex_flags: "i"
           search_string: ${{ github.event.comment.body }}
+      - name: Download docker-compose file
+        id: docker-compose-file
+        uses: suisei-cn/actions-download-file@v1.0.1
+        with:
+          url: "https://github.com/airbytehq/airbyte/blob/master/docker-compose.yaml"
+      - name: Download env file
+        id: env-file
+        uses: suisei-cn/actions-download-file@v1.0.1
+        with:
+          url: "https://github.com/airbytehq/airbyte/blob/master/.env"
+      - name: Check docker-compose file
+        run: (ls docker-compose.yaml && echo yes) || echo no
+      - name: Check env file
+        run: (ls .env && echo yes) || echo no
   runAirbyte:
     if: |
       needs.setParams.outputs.command == '/help-full' ||
@@ -48,20 +62,6 @@ jobs:
           comment-id: ${{ needs.setParams.outputs.comment-id }}
           body: |
             > :see_no_evil: We apologize. Our team is currently testing new features that will change your life and work for the best. Please wait a few hours.
-      - name: Download docker-compose file
-        id: docker-compose-file
-        uses: suisei-cn/actions-download-file@v1.0.1
-        with:
-          url: "https://github.com/airbytehq/airbyte/blob/master/docker-compose.yaml"
-      - name: Download env file
-        id: env-file
-        uses: suisei-cn/actions-download-file@v1.0.1
-        with:
-          url: "https://github.com/airbytehq/airbyte/blob/master/.env"
-      - name: Check docker-compose file
-        run: (ls docker-compose.yaml && echo yes) || echo no
-      - name: Check env file
-        run: (ls .env && echo yes) || echo no
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
       - name: Set up Docker Compose
