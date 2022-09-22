@@ -5,32 +5,23 @@ import io.airbyte.api.client.model.generated.ConnectionCreate;
 import io.airbyte.api.client.model.generated.ConnectionRead;
 import io.airbyte.api.client.model.generated.ConnectionStatus;
 import io.airbyte.api.client.model.generated.NamespaceDefinitionType;
-import io.airbyte.testingtool.scenario.action.ScenarioAction;
+import io.airbyte.testingtool.scenario.instance.AirbyteApiInstance;
 import io.airbyte.testingtool.scenario.instance.AirbyteConnection;
-import io.airbyte.testingtool.scenario.instance.AirbyteInstance;
 import io.airbyte.testingtool.scenario.instance.DestinationInstance;
 import io.airbyte.testingtool.scenario.instance.Instance;
 import io.airbyte.testingtool.scenario.instance.SourceInstance;
 import java.util.List;
 import lombok.Builder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-public class ActionCreateConnection extends ScenarioAction {
+public class ActionCreateConnection extends AbstractConnectionAction {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(ActionCreateConnection.class);
-
-  protected final AirbyteInstance airbyteInstance;
-  protected final AirbyteConnection connection;
   protected final DestinationInstance destinationInstance;
   protected final SourceInstance sourceInstance;
 
   @Builder
-  public ActionCreateConnection(int order, List<Instance> requiredInstances, Instance resultInstance, AirbyteInstance airbyteInstance,
-      AirbyteConnection connection, DestinationInstance destinationInstance, SourceInstance sourceInstance) {
-    super(order, requiredInstances, resultInstance);
-    this.airbyteInstance = airbyteInstance;
-    this.connection = connection;
+  public ActionCreateConnection(int order, List<Instance> requiredInstances, Instance resultInstance, AirbyteConnection connectionInstance,
+      DestinationInstance destinationInstance, SourceInstance sourceInstance) {
+    super(order, requiredInstances, resultInstance, connectionInstance);
     this.destinationInstance = destinationInstance;
     this.sourceInstance = sourceInstance;
   }
@@ -43,12 +34,25 @@ public class ActionCreateConnection extends ScenarioAction {
   @Override
   public void doActionInternal() throws ApiException {
     createConnection();
-    context = "Connection name : **" + connection.getInstanceName() + "**";
   }
 
   private void createConnection() throws ApiException {
-    ConnectionRead connectionRead = airbyteInstance.getAirbyteApi().getConnectionApi().createConnection(getConnectionCreateConfig());
-    connection.setConnectionId(connectionRead.getConnectionId());
+    var airbyteApiInstance = getAirbyteApiInstance();
+    ConnectionRead connectionRead = airbyteApiInstance.getAirbyteApi().getConnectionApi().createConnection(getConnectionCreateConfig());
+    connectionInstance.setAirbyteInstance(airbyteApiInstance);
+    connectionInstance.setConnectionId(connectionRead.getConnectionId());
+  }
+
+  protected AirbyteApiInstance getAirbyteApiInstance() {
+    var sourceApi = sourceInstance.getAirbyteApiInstance();
+    var destinationApi = destinationInstance.getAirbyteApiInstance();
+    if (sourceApi.equals(destinationApi)) {
+      return sourceApi;
+    } else {
+      throw new RuntimeException(
+          "Unable to create connection between Source and Destination from different Airbyte instances. " + sourceApi.getInstanceName() + " <> "
+              + destinationApi.getInstanceName());
+    }
   }
 
   protected ConnectionCreate getConnectionCreateConfig() throws ApiException {

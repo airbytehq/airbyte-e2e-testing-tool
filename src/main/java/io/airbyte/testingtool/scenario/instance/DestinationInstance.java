@@ -4,6 +4,7 @@ import io.airbyte.api.client.generated.DestinationDefinitionApi;
 import io.airbyte.api.client.invoker.generated.ApiException;
 import io.airbyte.api.client.model.generated.DestinationDefinitionIdRequestBody;
 import io.airbyte.api.client.model.generated.DestinationDefinitionUpdate;
+import io.airbyte.api.client.model.generated.DestinationIdRequestBody;
 import io.airbyte.testingtool.scenario.config.CredentialConfig;
 import java.util.UUID;
 import lombok.Builder;
@@ -18,13 +19,12 @@ public class DestinationInstance extends InstanceWithCredentials {
 
   @Getter
   @Setter
-  protected AirbyteInstance airbyteInstance;
+  protected AirbyteApiInstance airbyteApiInstance;
 
   @Builder
-  public DestinationInstance(String instanceName, CredentialConfig credentialConfig, UUID id, AirbyteInstance airbyteInstance) {
+  public DestinationInstance(String instanceName, CredentialConfig credentialConfig, UUID id) {
     super(instanceName, credentialConfig);
     this.id = id;
-    this.airbyteInstance = airbyteInstance;
   }
 
   @Override
@@ -37,23 +37,33 @@ public class DestinationInstance extends InstanceWithCredentials {
   }
 
   public void setDockerImageTag(String version) throws ApiException {
-    DestinationDefinitionApi destinationDefinitionApi = airbyteInstance.getAirbyteApi()
+    DestinationDefinitionApi destinationDefinitionApi = airbyteApiInstance.getAirbyteApi()
         .getDestinationDefinitionApi();
 
     DestinationDefinitionUpdate destinationDefinitionUpdate = new DestinationDefinitionUpdate();
     destinationDefinitionUpdate.setDestinationDefinitionId(
-        airbyteInstance.getDestinationDefinitionId(getAribyteDestinationTypeName()));
+        airbyteApiInstance.getDestinationDefinitionId(getAribyteDestinationTypeName()));
     destinationDefinitionUpdate.setDockerImageTag(version);
 
     destinationDefinitionApi.updateDestinationDefinition(destinationDefinitionUpdate);
   }
 
   public String getDockerImageTag() throws ApiException {
-    DestinationDefinitionApi destinationDefinitionApi = airbyteInstance.getAirbyteApi()
+    DestinationDefinitionApi destinationDefinitionApi = airbyteApiInstance.getAirbyteApi()
         .getDestinationDefinitionApi();
-    var destinationDefinition = new DestinationDefinitionIdRequestBody();
-    destinationDefinition.setDestinationDefinitionId(airbyteInstance.getDestinationDefinitionId(getAribyteDestinationTypeName()));
-    var destinationDefinitionRead = destinationDefinitionApi.getDestinationDefinition(destinationDefinition);
+    var destinationDefinitionRead = destinationDefinitionApi.getDestinationDefinition(getDestinationDefinitionIdRequestBody());
     return destinationDefinitionRead.getDockerImageTag();
+  }
+
+  public DestinationDefinitionIdRequestBody getDestinationDefinitionIdRequestBody() {
+    var destinationDefinition = new DestinationDefinitionIdRequestBody();
+    destinationDefinition.setDestinationDefinitionId(airbyteApiInstance.getDestinationDefinitionId(getAribyteDestinationTypeName()));
+    return destinationDefinition;
+  }
+
+  public DestinationIdRequestBody getDestinationIdRequestBody() {
+    var destinationDefinition = new DestinationIdRequestBody();
+    destinationDefinition.setDestinationId(airbyteApiInstance.getDestinationDefinitionId(getAribyteDestinationTypeName()));
+    return destinationDefinition;
   }
 }

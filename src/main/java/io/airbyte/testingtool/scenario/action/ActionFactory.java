@@ -23,8 +23,8 @@ import io.airbyte.testingtool.scenario.action.source.ActionUpdateSourceVersion;
 import io.airbyte.testingtool.scenario.config.ActionParameterTypes;
 import io.airbyte.testingtool.scenario.config.ScenarioConfigAction;
 import io.airbyte.testingtool.scenario.config.ScenarioConfigActionParameter;
+import io.airbyte.testingtool.scenario.instance.AirbyteApiInstance;
 import io.airbyte.testingtool.scenario.instance.AirbyteConnection;
-import io.airbyte.testingtool.scenario.instance.AirbyteInstance;
 import io.airbyte.testingtool.scenario.instance.DestinationInstance;
 import io.airbyte.testingtool.scenario.instance.Instance;
 import io.airbyte.testingtool.scenario.instance.InstanceTypes;
@@ -71,6 +71,9 @@ public class ActionFactory {
           scenarioInstanceNameToInstanceMap, params);
       case READ_SOURCE_VERSION -> getActionReadSourceVersion(order, config, scenarioInstanceNameToInstanceMap, params);
       case READ_DESTINATION_VERSION -> getActionReadDestinationVersion(order, config, scenarioInstanceNameToInstanceMap, params);
+      case DELETE_SOURCE -> null;
+      case DELETE_CONNECTION -> null;
+      case DELETE_DESTINATION -> null;
     };
   }
 
@@ -132,8 +135,8 @@ public class ActionFactory {
         .order(order)
         .requiredInstances(getRequiredInstances(config, scenarioInstanceNameToInstanceMap))
         .resultInstance(linkInstance(config.getResultInstance(), scenarioInstanceNameToInstanceMap))
-        .airbyteInstance(linkInstance(config.getResultInstance(), scenarioInstanceNameToInstanceMap,
-            AirbyteInstance.class))
+        .airbyteApiInstance(linkInstance(config.getResultInstance(), scenarioInstanceNameToInstanceMap,
+            AirbyteApiInstance.class))
         .build();
   }
 
@@ -144,8 +147,8 @@ public class ActionFactory {
         .order(order)
         .requiredInstances(getRequiredInstances(config, scenarioInstanceNameToInstanceMap))
         .resultInstance(linkInstance(config.getResultInstance(), scenarioInstanceNameToInstanceMap))
-        .airbyteInstance(linkInstanceByType(AIRBYTE, config.getRequiredInstances(),
-            scenarioInstanceNameToInstanceMap, AirbyteInstance.class))
+        .airbyteApiInstance(linkInstanceByType(AIRBYTE, config.getRequiredInstances(),
+            scenarioInstanceNameToInstanceMap, AirbyteApiInstance.class))
         .sourceInstance(linkInstance(config.getResultInstance(), scenarioInstanceNameToInstanceMap,
             SourceInstance.class))
         .build();
@@ -158,8 +161,8 @@ public class ActionFactory {
         .order(order)
         .requiredInstances(getRequiredInstances(config, scenarioInstanceNameToInstanceMap))
         .resultInstance(linkInstance(config.getResultInstance(), scenarioInstanceNameToInstanceMap))
-        .airbyteInstance(linkInstanceByType(AIRBYTE, config.getRequiredInstances(),
-            scenarioInstanceNameToInstanceMap, AirbyteInstance.class))
+        .airbyteApiInstance(linkInstanceByType(AIRBYTE, config.getRequiredInstances(),
+            scenarioInstanceNameToInstanceMap, AirbyteApiInstance.class))
         .sourceInstance(linkInstance(config.getResultInstance(), scenarioInstanceNameToInstanceMap,
             SourceWithSettingsInstance.class))
         .build();
@@ -173,8 +176,8 @@ public class ActionFactory {
         .order(order)
         .requiredInstances(getRequiredInstances(config, scenarioInstanceNameToInstanceMap))
         .resultInstance(linkInstance(config.getResultInstance(), scenarioInstanceNameToInstanceMap))
-        .airbyteInstance(linkInstanceByType(AIRBYTE, config.getRequiredInstances(),
-            scenarioInstanceNameToInstanceMap, AirbyteInstance.class))
+        .airbyteApiInstance(linkInstanceByType(AIRBYTE, config.getRequiredInstances(),
+            scenarioInstanceNameToInstanceMap, AirbyteApiInstance.class))
         .destinationInstance(
             linkInstance(config.getResultInstance(), scenarioInstanceNameToInstanceMap,
                 DestinationInstance.class))
@@ -189,14 +192,12 @@ public class ActionFactory {
         .order(order)
         .requiredInstances(getRequiredInstances(config, scenarioInstanceNameToInstanceMap))
         .resultInstance(linkInstance(config.getResultInstance(), scenarioInstanceNameToInstanceMap))
-        .airbyteInstance(linkInstanceByType(AIRBYTE, config.getRequiredInstances(),
-            scenarioInstanceNameToInstanceMap, AirbyteInstance.class))
         .destinationInstance(
             linkInstanceByType(DESTINATION, config.getRequiredInstances(),
                 scenarioInstanceNameToInstanceMap, DestinationInstance.class))
         .sourceInstance(linkInstanceByType(SOURCE, config.getRequiredInstances(),
             scenarioInstanceNameToInstanceMap, SourceInstance.class))
-        .connection(linkInstance(config.getResultInstance(), scenarioInstanceNameToInstanceMap,
+        .connectionInstance(linkInstance(config.getResultInstance(), scenarioInstanceNameToInstanceMap,
             AirbyteConnection.class))
         .build();
   }
@@ -209,14 +210,12 @@ public class ActionFactory {
         .order(order)
         .requiredInstances(getRequiredInstances(config, scenarioInstanceNameToInstanceMap))
         .resultInstance(linkInstance(config.getResultInstance(), scenarioInstanceNameToInstanceMap))
-        .airbyteInstance(linkInstanceByType(AIRBYTE, config.getRequiredInstances(),
-            scenarioInstanceNameToInstanceMap, AirbyteInstance.class))
         .destinationInstance(
             linkInstanceByType(DESTINATION, config.getRequiredInstances(),
                 scenarioInstanceNameToInstanceMap, DestinationInstance.class))
         .sourceInstance(linkInstanceByType(SOURCE_WITH_CONNECTION_SETTINGS, config.getRequiredInstances(),
             scenarioInstanceNameToInstanceMap, SourceWithSettingsInstance.class))
-        .connection(linkInstance(config.getResultInstance(), scenarioInstanceNameToInstanceMap,
+        .connectionInstance(linkInstance(config.getResultInstance(), scenarioInstanceNameToInstanceMap,
             AirbyteConnection.class))
         .build();
   }
@@ -229,8 +228,6 @@ public class ActionFactory {
         .order(order)
         .requiredInstances(getRequiredInstances(config, scenarioInstanceNameToInstanceMap))
         .resultInstance(linkInstance(config.getResultInstance(), scenarioInstanceNameToInstanceMap))
-        .airbyteInstance(linkInstanceByType(AIRBYTE, config.getRequiredInstances(),
-            scenarioInstanceNameToInstanceMap, AirbyteInstance.class))
         .connection(linkInstanceByType(CONNECTION, config.getRequiredInstances(),
             scenarioInstanceNameToInstanceMap, AirbyteConnection.class))
         .build();
@@ -244,8 +241,6 @@ public class ActionFactory {
         .order(order)
         .requiredInstances(getRequiredInstances(config, scenarioInstanceNameToInstanceMap))
         .resultInstance(linkInstance(config.getResultInstance(), scenarioInstanceNameToInstanceMap))
-        .airbyteInstance(linkInstanceByType(AIRBYTE, config.getRequiredInstances(),
-            scenarioInstanceNameToInstanceMap, AirbyteInstance.class))
         .connection(linkInstanceByType(CONNECTION, config.getRequiredInstances(),
             scenarioInstanceNameToInstanceMap, AirbyteConnection.class))
         .build();

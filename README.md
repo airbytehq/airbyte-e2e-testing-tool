@@ -210,6 +210,7 @@ _Note! Credential parameters should have file name with extension like `some_cre
 
 | Version | Description                                                                            |
 |---------|----------------------------------------------------------------------------------------|
+| 0.4.1   | Action structure improvement + add delete actions for conn/src/dest instances          |
 | 0.4.0   | Phase 4 and 5 complete                                                                 |
 | 0.3.0   | Add possibility to provide params by actions + new action ReadSourceVersion            |
 | 0.2.3   | Scenario validation result is now available in help and list commands                  |

@@ -6,26 +6,22 @@ import io.airbyte.api.client.model.generated.ConnectionCreate;
 import io.airbyte.api.client.model.generated.SourceDiscoverSchemaRequestBody;
 import io.airbyte.testingtool.scenario.config.settings.AirbyteStreamAndConfigSettings;
 import io.airbyte.testingtool.scenario.config.settings.ConnectionSettings;
+import io.airbyte.testingtool.scenario.instance.AirbyteApiInstance;
 import io.airbyte.testingtool.scenario.instance.AirbyteConnection;
-import io.airbyte.testingtool.scenario.instance.AirbyteInstance;
 import io.airbyte.testingtool.scenario.instance.DestinationInstance;
 import io.airbyte.testingtool.scenario.instance.Instance;
+import io.airbyte.testingtool.scenario.instance.SourceInstance;
 import io.airbyte.testingtool.scenario.instance.SourceWithSettingsInstance;
-
 import java.util.List;
 import java.util.Objects;
-
 import lombok.Builder;
 
-public class ActionCreateConnectionCustom extends ActionCreateConnection{
+public class ActionCreateConnectionCustom extends ActionCreateConnection {
 
   @Builder(builderMethodName = "actionCreateConnectionCustomBuilder")
-  public ActionCreateConnectionCustom(int order, List<Instance> requiredInstances,
-      Instance resultInstance, AirbyteInstance airbyteInstance,
-      AirbyteConnection connection,
-      DestinationInstance destinationInstance,
-      SourceWithSettingsInstance sourceInstance) {
-    super(order, requiredInstances, resultInstance, airbyteInstance, connection, destinationInstance, sourceInstance);
+  public ActionCreateConnectionCustom(int order, List<Instance> requiredInstances, Instance resultInstance, AirbyteConnection connectionInstance,
+      DestinationInstance destinationInstance, SourceInstance sourceInstance) {
+    super(order, requiredInstances, resultInstance, connectionInstance, destinationInstance, sourceInstance);
   }
 
   @Override
@@ -38,30 +34,30 @@ public class ActionCreateConnectionCustom extends ActionCreateConnection{
     var requestBody = new SourceDiscoverSchemaRequestBody();
     requestBody.setSourceId(sourceInstance.getId());
     requestBody.setDisableCache(true);
-    var sourceDiscoverSchema = airbyteInstance.getAirbyteApi()
-            .getSourceApi()
-            .discoverSchemaForSourceWithHttpInfo(requestBody);
+    var sourceDiscoverSchema = getAirbyteApiInstance().getAirbyteApi()
+        .getSourceApi()
+        .discoverSchemaForSourceWithHttpInfo(requestBody);
     var catalog = sourceDiscoverSchema.getData().getCatalog();
     customizationCatalog(catalog, getSettings().getSyncCatalogConfig().getStreams());
     return super.getConnectionCreateConfig()
-            .name(getSettings().getConnectionName())
-            .syncCatalog(catalog);
+        .name(getSettings().getConnectionName())
+        .syncCatalog(catalog);
   }
 
   private ConnectionSettings getSettings() {
-    return ((SourceWithSettingsInstance)this.sourceInstance).getConnectionSettings();
+    return ((SourceWithSettingsInstance) this.sourceInstance).getConnectionSettings();
   }
 
   private void customizationCatalog(AirbyteCatalog catalog,
-                                    List<AirbyteStreamAndConfigSettings> customStreams) {
+      List<AirbyteStreamAndConfigSettings> customStreams) {
     catalog.getStreams().forEach(defaultStream -> {
       if (Objects.nonNull(Objects.requireNonNull(defaultStream.getStream()).getName())) {
         var streamName = Objects.requireNonNull(defaultStream.getStream()).getName();
         var streamNamespace = Objects.requireNonNull(defaultStream.getStream()).getNamespace();
         var optionalStreamCustom = customStreams.stream().filter(customStream -> customStream.getStream().getName().equals(streamName) &&
                 (Objects.nonNull(customStream.getStream().getNamespace()) || Objects.nonNull(streamNamespace) ||
-                        customStream.getStream().getNamespace().equals(streamName)))
-                .findFirst();
+                    customStream.getStream().getNamespace().equals(streamName)))
+            .findFirst();
         if (optionalStreamCustom.isPresent()) {
           var streamCustom = optionalStreamCustom.get();
           if (Objects.nonNull(streamCustom.getConfig().getAliasName())) {
