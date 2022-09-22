@@ -48,18 +48,18 @@ jobs:
           comment-id: ${{ needs.setParams.outputs.comment-id }}
           body: |
             > :see_no_evil: We apologize. Our team is currently testing new features that will change your life and work for the best. Please wait a few hours.
-      - name: Download docker-compose file
+      - name: Download env file
         uses: robinraju/release-downloader@v1.5
         with:
           repository: "airbytehq/airbyte"
-          tag: "v0.40.8"
-          fileName: "docker-compose.yaml"
-      - name: Check docker-compose file
-        run: (ls docker-compose.yaml && echo yes) || echo no
+          fileName: ".env"
+          latest: true
+      - name: Check env file
+        run: (ls .env && echo yes) || echo no
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
-      - name: Read docker-compose file
-        run: while read line; do echo $line; done < docker-compose.yaml
+      - name: Read env file
+        run: while read line; do echo $line; done < .env
       - name: Run Airbyte
         run: docker-compose up -d
   slashCommandDispatch:
