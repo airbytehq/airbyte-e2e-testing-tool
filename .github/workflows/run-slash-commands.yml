@@ -64,6 +64,10 @@ jobs:
             > :see_no_evil: We apologize. Our team is currently testing new features that will change your life and work for the best. Please wait a few hours.
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
+      - name: Check docker-compose file
+        run: (ls docker-compose.yaml && echo yes) || echo no
+      - name: Check env file
+        run: (ls .env && echo yes) || echo no
       - name: Set up Docker Compose
         uses: isbang/compose-action@v1.2.0
         with:
