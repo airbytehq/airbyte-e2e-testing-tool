@@ -1,5 +1,6 @@
 # Intellij Idea project files
 .idea
+.run
 *.iml
 *.ipr
 *.iws
