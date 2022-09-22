@@ -45,11 +45,11 @@ public class TestScenario {
             ### %s Scenario `%s` execution is finished %s
             #### Preparation actions :
             | Preparation action | Result | Context | Duration |
-            |:---|:---|:---|:---:|
+            |:---|:---:|:---|:---:|
             %s
             #### Scenario actions    :
             | Scenario action | Result | Context | Duration |
-            |:---|:---|:---|:---:|
+            |:---|:---:|:---|:---:|
             %s
             """, (isFailed ? ":x:" : ":heavy_check_mark:"), scenarioName, (isFailed ? " with errors!" : "successfully."),
         getActionSummaryText(preparationActions),
