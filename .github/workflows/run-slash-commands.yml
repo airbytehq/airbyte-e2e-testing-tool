@@ -52,6 +52,7 @@ jobs:
         uses: robinraju/release-downloader@v1.5
         with:
           repository: "airbytehq/airbyte"
+          tag: "v0.40.8"
           fileName: "docker-compose.yaml"
       - name: Check docker-compose file
         run: (ls docker-compose.yaml && echo yes) || echo no
