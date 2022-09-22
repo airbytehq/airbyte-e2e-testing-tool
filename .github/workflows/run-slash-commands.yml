@@ -67,7 +67,7 @@ jobs:
       - name: Set up Docker Compose
         uses: isbang/compose-action@v1.2.0
         with:
-          compose-file: "./docker-compose.yml"
+          compose-file: "docker-compose.yml"
   slashCommandDispatch:
     runs-on: ubuntu-latest
     needs: runAirbyte
