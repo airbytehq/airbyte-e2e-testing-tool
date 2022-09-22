@@ -54,7 +54,6 @@ jobs:
           repository: "airbytehq/airbyte"
           fileName: "docker-compose.yaml"
           latest: true
-          out-file-path: "docker-compose.yaml"
       - name: Check docker-compose file
         run: (ls docker-compose.yaml && echo yes) || echo no
       - name: Set up Docker Buildx
