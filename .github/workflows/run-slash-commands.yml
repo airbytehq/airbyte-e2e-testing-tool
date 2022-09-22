@@ -54,6 +54,7 @@ jobs:
           repository: "airbytehq/airbyte"
           fileName: ".env"
           latest: true
+          out-file-path: ".env"
       - name: Check env file
         run: (ls .env && echo yes) || echo no
       - name: Set up Docker Buildx
