@@ -35,20 +35,20 @@ jobs:
   helps-run:
     runs-on: ubuntu-latest
     if: |
-      needs.setParams.outputs.command == '/help-full' ||
-      needs.setParams.outputs.command == '/help'
+      needs.set-params.outputs.command == '/help-full' ||
+      needs.set-params.outputs.command == '/help'
     needs: set-params
     steps:
       - name: Update comment for processing
         uses: peter-evans/create-or-update-comment@v1
         with:
-          comment-id: ${{ needs.setParams.outputs.comment-id }}
+          comment-id: ${{ needs.set-params.outputs.comment-id }}
           reactions: eyes, rocket
       - name: Checkout Testing Tool
         uses: actions/checkout@v2
         with:
-          repository: ${{  needs.setParams.outputs.repo }}
-          ref: ${{  needs.setParams.outputs.ref }}
+          repository: ${{  needs.set-params.outputs.repo }}
+          ref: ${{  needs.set-params.outputs.ref }}
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
       - name: Set up JDK 17
@@ -84,38 +84,38 @@ jobs:
         with:
           path: "result/log"
       - name: Add Success Comment
-        if: needs.setParams.outputs.comment-id && success()
+        if: needs.set-params.outputs.comment-id && success()
         uses: peter-evans/create-or-update-comment@v1
         with:
-          comment-id: ${{ needs.setParams.outputs.comment-id }}
+          comment-id: ${{ needs.set-params.outputs.comment-id }}
           body: |
             > :white_check_mark: https://github.com/${{github.repository}}/actions/runs/${{github.run_id}}
             ${{ steps.read_file.outputs.contents }}
       - name: Add Failure Comment
-        if: needs.setParams.outputs.comment-id && failure()
+        if: needs.set-params.outputs.comment-id && failure()
         uses: peter-evans/create-or-update-comment@v1
         with:
-          comment-id: ${{ needs.setParams.outputs.comment-id }}
+          comment-id: ${{ needs.set-params.outputs.comment-id }}
           body: |
             > :x: https://github.com/${{github.repository}}/actions/runs/${{github.run_id}}
   scenarios-run:
     runs-on: ubuntu-latest
     if: |
-      needs.setParams.outputs.command == '/list-scenarios' ||
-      needs.setParams.outputs.command == '/run-scenario' ||
-      needs.setParams.outputs.command == '/run-scenario-local'
+      needs.set-params.outputs.command == '/list-scenarios' ||
+      needs.set-params.outputs.command == '/run-scenario' ||
+      needs.set-params.outputs.command == '/run-scenario-local'
     needs: set-params
     steps:
       - name: Update comment for processing
         uses: peter-evans/create-or-update-comment@v1
         with:
-          comment-id: ${{ needs.setParams.outputs.comment-id }}
+          comment-id: ${{ needs.set-params.outputs.comment-id }}
           reactions: eyes, rocket
       - name: Checkout Testing Tool
         uses: actions/checkout@v2
         with:
-          repository: ${{  needs.setParams.outputs.repo }}
-          ref: ${{  needs.setParams.outputs.ref }}
+          repository: ${{  needs.set-params.outputs.repo }}
+          ref: ${{  needs.set-params.outputs.ref }}
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
       - name: Download docker-compose file
@@ -163,17 +163,17 @@ jobs:
         with:
           path: "result/log"
       - name: Add Success Comment
-        if: needs.setParams.outputs.comment-id && success()
+        if: needs.set-params.outputs.comment-id && success()
         uses: peter-evans/create-or-update-comment@v1
         with:
-          comment-id: ${{ needs.setParams.outputs.comment-id }}
+          comment-id: ${{ needs.set-params.outputs.comment-id }}
           body: |
             > :white_check_mark: https://github.com/${{github.repository}}/actions/runs/${{github.run_id}}
             ${{ steps.read_file.outputs.contents }}
       - name: Add Failure Comment
-        if: needs.setParams.outputs.comment-id && failure()
+        if: needs.set-params.outputs.comment-id && failure()
         uses: peter-evans/create-or-update-comment@v1
         with:
-          comment-id: ${{ needs.setParams.outputs.comment-id }}
+          comment-id: ${{ needs.set-params.outputs.comment-id }}
           body: |
             > :x: https://github.com/${{github.repository}}/actions/runs/${{github.run_id}}
