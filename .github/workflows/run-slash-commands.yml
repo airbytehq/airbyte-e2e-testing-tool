@@ -32,43 +32,33 @@ jobs:
           regex_pattern: "^/[a-zA-Z0-9_/-]+"
           regex_flags: "i"
           search_string: ${{ github.event.comment.body }}
-  runAirbyte:
+  slashCommandDispatch:
+    runs-on: ubuntu-latest
     if: |
       needs.setParams.outputs.command == '/help-full' ||
       needs.setParams.outputs.command == '/list-scenarios' ||
       needs.setParams.outputs.command == '/run-scenario' ||
       needs.setParams.outputs.command == '/run-scenario-local' ||
       needs.setParams.outputs.command == '/help'
-    runs-on: ubuntu-latest
     needs: setParams
     steps:
       - name: Update comment for processing
         uses: peter-evans/create-or-update-comment@v1
         with:
           comment-id: ${{ needs.setParams.outputs.comment-id }}
-          body: |
-            > :see_no_evil: We apologize. Our team is currently testing new features that will change your life and work for the best. Please wait a few hours.
+          reactions: eyes, rocket
       - name: Download docker-compose file
         uses: carlosperate/download-file-action@v1
         with:
           file-url: 'https://raw.githubusercontent.com/airbytehq/airbyte/master/docker-compose.yaml'
-      - name: Check docker-compose file
-        run: (ls docker-compose.yaml && echo yes) || echo no
+      - name: Download env file
+        uses: carlosperate/download-file-action@v1
+        with:
+          file-url: 'https://raw.githubusercontent.com/airbytehq/airbyte/master/.env'
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
-      - name: Read docker-compose file
-        run: while read line; do echo $line; done < docker-compose.yaml
       - name: Run Airbyte
         run: docker-compose up -d
-  slashCommandDispatch:
-    runs-on: ubuntu-latest
-    needs: runAirbyte
-    steps:
-      - name: Update comment for processing
-        uses: peter-evans/create-or-update-comment@v1
-        with:
-          comment-id: ${{ needs.setParams.outputs.comment-id }}
-          reactions: eyes, rocket
       - name: Checkout Testing Tool
         uses: actions/checkout@v2
         with:
