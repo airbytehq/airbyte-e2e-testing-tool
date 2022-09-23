@@ -51,12 +51,12 @@ jobs:
       - name: Download docker-compose file
         uses: carlosperate/download-file-action@v1
         with:
-          file-url: 'https://github.com/airbytehq/airbyte/blob/master/docker-compose.yaml'
+          file-url: 'https://raw.githubusercontent.com/airbytehq/airbyte/master/docker-compose.yaml'
       - name: Check docker-compose file
         run: (ls docker-compose.yaml && echo yes) || echo no
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
-      - name: Read env file
+      - name: Read docker-compose file
         run: while read line; do echo $line; done < docker-compose.yaml
       - name: Run Airbyte
         run: docker-compose up -d
