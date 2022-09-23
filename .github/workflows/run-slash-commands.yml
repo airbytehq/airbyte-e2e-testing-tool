@@ -57,6 +57,10 @@ jobs:
           file-url: 'https://raw.githubusercontent.com/airbytehq/airbyte/master/.env'
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
+      - name: Read docker-compose file
+        run: while read line; do echo $line; done < docker-compose.yaml
+      - name: Read env file
+        run: while read line; do echo $line; done < .env
       - name: Run Airbyte
         run: docker-compose up -d
       - name: Checkout Testing Tool
