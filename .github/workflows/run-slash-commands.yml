@@ -47,6 +47,11 @@ jobs:
         with:
           comment-id: ${{ needs.setParams.outputs.comment-id }}
           reactions: eyes, rocket
+      - name: Checkout Testing Tool
+        uses: actions/checkout@v2
+        with:
+          repository: ${{  needs.setParams.outputs.repo }}
+          ref: ${{  needs.setParams.outputs.ref }}
       - name: Download docker-compose file
         uses: carlosperate/download-file-action@v1
         with:
@@ -57,21 +62,10 @@ jobs:
           file-url: 'https://raw.githubusercontent.com/airbytehq/airbyte/master/.env'
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
-      - name: Files
-        run: ls -al
-      - name: Mv
+      - name: Rename env file
         run: mv env .env
-      - name: Read docker-compose file
-        run: while read line; do echo $line; done < docker-compose.yaml
-      - name: Read env file
-        run: while read line; do echo $line; done < .env
       - name: Run Airbyte
         run: docker-compose up -d
-      - name: Checkout Testing Tool
-        uses: actions/checkout@v2
-        with:
-          repository: ${{  needs.setParams.outputs.repo }}
-          ref: ${{  needs.setParams.outputs.ref }}
       - name: Set up JDK 17
         uses: actions/setup-java@v3
         with:
