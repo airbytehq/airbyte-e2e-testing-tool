@@ -1,23 +1,17 @@
 package io.airbyte.testingtool.scenario.action.connection;
 
-import io.airbyte.testingtool.scenario.action.ScenarioAction;
+import io.airbyte.api.client.invoker.generated.ApiException;
+import io.airbyte.testingtool.jobwaiter.JobWaiter;
 import io.airbyte.testingtool.scenario.instance.AirbyteConnection;
-import io.airbyte.testingtool.scenario.instance.AirbyteInstance;
 import io.airbyte.testingtool.scenario.instance.Instance;
 import java.util.List;
 import lombok.Builder;
 
-public class ActionResetConnection extends ScenarioAction {
-
-  private final AirbyteConnection connection;
-  private final AirbyteInstance airbyteInstance;
+public class ActionResetConnection extends AbstractConnectionAction {
 
   @Builder
-  public ActionResetConnection(int order, List<Instance> requiredInstances, Instance resultInstance, AirbyteConnection connection,
-      AirbyteInstance airbyteInstance) {
-    super(order, requiredInstances, resultInstance);
-    this.connection = connection;
-    this.airbyteInstance = airbyteInstance;
+  public ActionResetConnection(int order, List<Instance> requiredInstances, Instance resultInstance, AirbyteConnection connection) {
+    super(order, requiredInstances, resultInstance, connection);
   }
 
   @Override
@@ -26,12 +20,14 @@ public class ActionResetConnection extends ScenarioAction {
   }
 
   @Override
-  public void doActionInternal() {
+  public void doActionInternal() throws ApiException, InterruptedException {
     reset();
-    context = "Connection name : **" + connection.getInstanceName() + "**";
   }
 
-  private void reset() {
+  private void reset() throws ApiException, InterruptedException {
+    JobWaiter.waitForJobFinish(connectionInstance.getAirbyteInstance().getAirbyteApi().getJobsApi(),
+        connectionInstance.getAirbyteInstance().getAirbyteApi().getConnectionApi().resetConnection(connectionInstance.getConnectionRequestBody())
+            .getJob().getId());
   }
 
 }

@@ -1,16 +1,19 @@
 package io.airbyte.testingtool.scenario.instance;
 
+import io.airbyte.api.client.model.generated.ConnectionIdRequestBody;
+import java.util.UUID;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.util.UUID;
 
 public class AirbyteConnection extends Instance {
 
   @Getter
   @Setter
   private UUID connectionId;
+  @Getter
+  @Setter
+  protected AirbyteApiInstance airbyteInstance;
 
   @Builder
   public AirbyteConnection(String instanceName) {
@@ -22,8 +25,10 @@ public class AirbyteConnection extends Instance {
     return InstanceTypes.CONNECTION;
   }
 
-  public void configureConnection(AirbyteInstance airbyteInstance, SourceInstance sourceInstance, DestinationInstance destinationInstance) {
-
+  public ConnectionIdRequestBody getConnectionRequestBody() {
+    ConnectionIdRequestBody connectionIdRequestBody = new ConnectionIdRequestBody();
+    connectionIdRequestBody.setConnectionId(connectionId);
+    return connectionIdRequestBody;
   }
 
 }

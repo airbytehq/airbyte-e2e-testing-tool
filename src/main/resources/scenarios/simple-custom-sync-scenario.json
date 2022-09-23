@@ -36,14 +36,14 @@
     },
     {
       "action" : "CREATE_CUSTOM_CONNECTION",
-      "requiredInstances" : ["airbyte_1", "source_1", "destination_1"],
+      "requiredInstances" : ["source_1", "destination_1"],
       "resultInstance" : "connection_1"
     }
   ],
   "scenarioActions" : [
     {
       "action" : "SYNC_CONNECTION",
-      "requiredInstances" : ["airbyte_1", "connection_1"]
+      "requiredInstances" : ["connection_1"]
     }
   ]
 }

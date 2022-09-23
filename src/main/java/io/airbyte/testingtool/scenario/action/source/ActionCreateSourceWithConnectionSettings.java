@@ -1,6 +1,6 @@
 package io.airbyte.testingtool.scenario.action.source;
 
-import io.airbyte.testingtool.scenario.instance.AirbyteInstance;
+import io.airbyte.testingtool.scenario.instance.AirbyteApiInstance;
 import io.airbyte.testingtool.scenario.instance.Instance;
 import io.airbyte.testingtool.scenario.instance.SourceWithSettingsInstance;
 import java.util.List;
@@ -10,9 +10,9 @@ public class ActionCreateSourceWithConnectionSettings extends ActionCreateSource
 
   @Builder(builderMethodName = "actionCreateSourceWithConnectionSettingsBuilder")
   public ActionCreateSourceWithConnectionSettings(int order, List<Instance> requiredInstances,
-      Instance resultInstance, AirbyteInstance airbyteInstance,
+      Instance resultInstance, AirbyteApiInstance airbyteApiInstance,
       SourceWithSettingsInstance sourceInstance) {
-    super(order, requiredInstances, resultInstance, airbyteInstance, sourceInstance);
+    super(order, requiredInstances, resultInstance, sourceInstance, airbyteApiInstance);
   }
 
   @Override

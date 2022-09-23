@@ -6,6 +6,7 @@ import io.airbyte.api.client.model.generated.AirbyteCatalog;
 import io.airbyte.api.client.model.generated.SourceDefinitionIdRequestBody;
 import io.airbyte.api.client.model.generated.SourceDefinitionUpdate;
 import io.airbyte.api.client.model.generated.SourceDiscoverSchemaRequestBody;
+import io.airbyte.api.client.model.generated.SourceIdRequestBody;
 import io.airbyte.testingtool.scenario.config.CredentialConfig;
 import java.util.UUID;
 import lombok.Builder;
@@ -17,10 +18,9 @@ public class SourceInstance extends InstanceWithCredentials {
   @Getter
   @Setter
   protected UUID id;
-
   @Getter
   @Setter
-  protected AirbyteInstance airbyteInstance;
+  protected AirbyteApiInstance airbyteApiInstance;
 
   @Builder
   public SourceInstance(String instanceName, CredentialConfig credentialConfig) {
@@ -34,7 +34,8 @@ public class SourceInstance extends InstanceWithCredentials {
 
   public AirbyteCatalog discoverSourceSchema() throws ApiException {
     if (isInitialized()) {
-      return airbyteInstance.getAirbyteApi().getSourceApi().discoverSchemaForSource(new SourceDiscoverSchemaRequestBody().sourceId(id)).getCatalog();
+      return airbyteApiInstance.getAirbyteApi().getSourceApi().discoverSchemaForSource(new SourceDiscoverSchemaRequestBody().sourceId(id))
+          .getCatalog();
     } else {
       throw new RuntimeException("The source should be initialized by an action first!");
     }
@@ -45,24 +46,34 @@ public class SourceInstance extends InstanceWithCredentials {
   }
 
   public void setDockerImageTag(String version) throws ApiException {
-    SourceDefinitionApi sourceDefinitionApi = airbyteInstance.getAirbyteApi()
+    SourceDefinitionApi sourceDefinitionApi = airbyteApiInstance.getAirbyteApi()
         .getSourceDefinitionApi();
 
     SourceDefinitionUpdate sourceDefinitionUpdate = new SourceDefinitionUpdate();
     sourceDefinitionUpdate.setSourceDefinitionId(
-        airbyteInstance.getSourceDefinitionId(getAribyteSourceTypeName()));
+        airbyteApiInstance.getSourceDefinitionId(getAribyteSourceTypeName()));
     sourceDefinitionUpdate.setDockerImageTag(version);
 
     sourceDefinitionApi.updateSourceDefinition(sourceDefinitionUpdate);
   }
 
   public String getDockerImageTag() throws ApiException {
-    SourceDefinitionApi sourceDefinitionApi = airbyteInstance.getAirbyteApi()
+    SourceDefinitionApi sourceDefinitionApi = airbyteApiInstance.getAirbyteApi()
         .getSourceDefinitionApi();
-    var sourceDefinition = new SourceDefinitionIdRequestBody();
-    sourceDefinition.setSourceDefinitionId(airbyteInstance.getSourceDefinitionId(getAribyteSourceTypeName()));
-    var sourceDefinitionRead = sourceDefinitionApi.getSourceDefinition(sourceDefinition);
+    var sourceDefinitionRead = sourceDefinitionApi.getSourceDefinition(getSourceDefinitionIdRequestBody());
     return sourceDefinitionRead.getDockerImageTag();
+  }
+
+  public SourceDefinitionIdRequestBody getSourceDefinitionIdRequestBody() {
+    var sourceDefinition = new SourceDefinitionIdRequestBody();
+    sourceDefinition.setSourceDefinitionId(airbyteApiInstance.getSourceDefinitionId(getAribyteSourceTypeName()));
+    return sourceDefinition;
+  }
+
+  public SourceIdRequestBody getSourceIdRequestBody() {
+    var sourceDefinition = new SourceIdRequestBody();
+    sourceDefinition.setSourceId(airbyteApiInstance.getSourceDefinitionId(getAribyteSourceTypeName()));
+    return sourceDefinition;
   }
 
 }

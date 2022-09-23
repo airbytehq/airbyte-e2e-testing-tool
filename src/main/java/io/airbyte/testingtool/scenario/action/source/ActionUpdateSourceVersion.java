@@ -1,7 +1,6 @@
 package io.airbyte.testingtool.scenario.action.source;
 
 import io.airbyte.api.client.invoker.generated.ApiException;
-import io.airbyte.testingtool.scenario.action.ScenarioAction;
 import io.airbyte.testingtool.scenario.instance.Instance;
 import io.airbyte.testingtool.scenario.instance.SourceInstance;
 import io.airbyte.testingtool.scenario.parameter.ScenarioParameter;
@@ -14,25 +13,26 @@ import org.slf4j.LoggerFactory;
 /**
  * Scenario action. The action changes source version to a specific value.
  */
-public class ActionUpdateSourceVersion extends ScenarioAction {
+public class ActionUpdateSourceVersion extends AbstractSourceAction {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(ActionUpdateSourceVersion.class);
-
-  private final SourceInstance sourceInstance;
   private final ScenarioParameter version;
 
   @Builder
-  public ActionUpdateSourceVersion(int order, List<Instance> requiredInstances,
-      Instance resultInstance, SourceInstance sourceInstance,
-      ScenarioParameter version) {
-    super(order, requiredInstances, resultInstance);
-    this.sourceInstance = sourceInstance;
+  public ActionUpdateSourceVersion(int order, List<Instance> requiredInstances, Instance resultInstance,
+      SourceInstance sourceInstance, ScenarioParameter version) {
+    super(order, requiredInstances, resultInstance, sourceInstance);
     this.version = version;
   }
 
   @Override
   protected void doActionInternal() throws Exception {
     updateSourceVersion();
+  }
+
+  @Override
+  protected String getContextInternal() {
+    return "New Source version `" + version.getParameterValue() + "` from (**" + version.getParameterName() + "**)";
   }
 
   @Override
@@ -48,7 +48,5 @@ public class ActionUpdateSourceVersion extends ScenarioAction {
       throw new RuntimeException(
           "Fail to set version `" + version.getParameterValue() + "` to the source `" + sourceInstance.getAribyteSourceTypeName() + "`!");
     }
-    context = "New Source version `" + version.getParameterValue() + "` from (**" + version.getParameterName() + "**)";
-    LOGGER.info(context);
   }
 }

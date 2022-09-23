@@ -11,7 +11,7 @@ public class InstanceFactory {
 
   public static Instance getInstance(ScenarioConfigInstance instanceConfig, CredentialConfig creds) {
     return switch (instanceConfig.getInstanceType()) {
-      case AIRBYTE -> AirbyteInstance.builder().instanceName(instanceConfig.getInstanceName()).credentialConfig(creds).build();
+      case AIRBYTE -> AirbyteApiInstance.builder().instanceName(instanceConfig.getInstanceName()).credentialConfig(creds).build();
       case CONNECTION -> AirbyteConnection.builder().instanceName(instanceConfig.getInstanceName()).build();
       case SOURCE -> SourceInstance.builder().instanceName(instanceConfig.getInstanceName()).credentialConfig(creds).build();
       case SOURCE_WITH_CONNECTION_SETTINGS ->

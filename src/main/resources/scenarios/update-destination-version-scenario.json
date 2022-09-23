@@ -36,37 +36,37 @@
     },
     {
       "action" : "READ_DESTINATION_VERSION",
-      "requiredInstances" : ["airbyte_1", "destination_1"],
+      "requiredInstances" : ["destination_1"],
       "resultParameter" : {"name": "before_test_version", "type" : "destination_version"}
     },
     {
       "action" : "UPDATE_DESTINATION_VERSION",
-      "requiredInstances" : ["airbyte_1", "destination_1"],
+      "requiredInstances" : ["destination_1"],
       "requiredParameters" : [{"name": "old_version", "type" : "destination_version"}]
     },
     {
       "action" : "CREATE_CONNECTION",
-      "requiredInstances" : ["airbyte_1", "source_1", "destination_1"],
+      "requiredInstances" : ["source_1", "destination_1"],
       "resultInstance" : "connection_1"
     }
   ],
   "scenarioActions" : [
     {
       "action" : "SYNC_CONNECTION",
-      "requiredInstances" : ["airbyte_1", "connection_1"]
+      "requiredInstances" : ["connection_1"]
     },
     {
       "action" : "UPDATE_DESTINATION_VERSION",
-      "requiredInstances" : ["airbyte_1", "destination_1"],
+      "requiredInstances" : ["destination_1"],
       "requiredParameters" : [{"name": "new_version", "type" : "destination_version"}]
     },
     {
       "action" : "SYNC_CONNECTION",
-      "requiredInstances" : ["airbyte_1", "connection_1"]
+      "requiredInstances" : ["connection_1"]
     },
     {
       "action" : "UPDATE_DESTINATION_VERSION",
-      "requiredInstances" : ["airbyte_1", "destination_1"],
+      "requiredInstances" : ["destination_1"],
       "requiredParameters" : [{"name": "before_test_version", "type" : "destination_version"}]
     }
   ]

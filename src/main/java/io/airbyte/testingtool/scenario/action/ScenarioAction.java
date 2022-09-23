@@ -16,7 +16,7 @@ public abstract class ScenarioAction implements Comparable<ScenarioAction> {
   private final List<Instance> requiredInstances;
   private final Instance resultInstance;
   @Getter
-  protected String context = "";
+  private String context;
   private Duration duration;
   @Getter
   private ActionStatuses status;
@@ -42,7 +42,8 @@ public abstract class ScenarioAction implements Comparable<ScenarioAction> {
         doActionInternal();
         status = ActionStatuses.OK;
         markResultInstanceAsInitialized();
-
+        context = getContextInternal();
+        LOGGER.info("Action `{}` context : {}", getActionName(), context);
       } catch (Exception e) {
         status = ActionStatuses.FAILED;
         context = e.getMessage();
@@ -53,6 +54,8 @@ public abstract class ScenarioAction implements Comparable<ScenarioAction> {
     }
     duration = Duration.between(start, Instant.now());
   }
+
+  protected abstract String getContextInternal();
 
   private void markResultInstanceAsInitialized() {
     if (resultInstance != null) {
