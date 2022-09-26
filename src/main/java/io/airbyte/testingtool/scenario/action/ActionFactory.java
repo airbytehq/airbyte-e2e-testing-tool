@@ -1,7 +1,7 @@
 package io.airbyte.testingtool.scenario.action;
 
-import static io.airbyte.testingtool.scenario.config.ActionParameterTypes.DESTINATION_VERSION;
-import static io.airbyte.testingtool.scenario.config.ActionParameterTypes.SOURCE_VERSION;
+import static io.airbyte.testingtool.scenario.config.scenarios.ActionParameterTypes.DESTINATION_VERSION;
+import static io.airbyte.testingtool.scenario.config.scenarios.ActionParameterTypes.SOURCE_VERSION;
 import static io.airbyte.testingtool.scenario.instance.InstanceTypes.AIRBYTE;
 import static io.airbyte.testingtool.scenario.instance.InstanceTypes.CONNECTION;
 import static io.airbyte.testingtool.scenario.instance.InstanceTypes.DESTINATION;
@@ -20,9 +20,9 @@ import io.airbyte.testingtool.scenario.action.source.ActionCreateSource;
 import io.airbyte.testingtool.scenario.action.source.ActionCreateSourceWithConnectionSettings;
 import io.airbyte.testingtool.scenario.action.source.ActionReadSourceVersion;
 import io.airbyte.testingtool.scenario.action.source.ActionUpdateSourceVersion;
-import io.airbyte.testingtool.scenario.config.ActionParameterTypes;
-import io.airbyte.testingtool.scenario.config.ScenarioConfigAction;
-import io.airbyte.testingtool.scenario.config.ScenarioConfigActionParameter;
+import io.airbyte.testingtool.scenario.config.scenarios.ActionParameterTypes;
+import io.airbyte.testingtool.scenario.config.scenarios.ScenarioConfigAction;
+import io.airbyte.testingtool.scenario.config.scenarios.ScenarioConfigActionParameter;
 import io.airbyte.testingtool.scenario.instance.AirbyteApiInstance;
 import io.airbyte.testingtool.scenario.instance.AirbyteConnection;
 import io.airbyte.testingtool.scenario.instance.DestinationInstance;

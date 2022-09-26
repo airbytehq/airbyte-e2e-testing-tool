@@ -1,7 +1,7 @@
 package io.airbyte.testingtool.argument_parser;
 
-import io.airbyte.testingtool.scenario.config.CredentialConfig;
-import io.airbyte.testingtool.scenario.config.ScenarioConfig;
+import io.airbyte.testingtool.scenario.config.credentials.CredentialConfig;
+import io.airbyte.testingtool.scenario.config.scenarios.ScenarioConfig;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;

@@ -5,7 +5,7 @@ import io.airbyte.api.client.invoker.generated.ApiException;
 import io.airbyte.api.client.model.generated.DestinationDefinitionIdRequestBody;
 import io.airbyte.api.client.model.generated.DestinationDefinitionUpdate;
 import io.airbyte.api.client.model.generated.DestinationIdRequestBody;
-import io.airbyte.testingtool.scenario.config.CredentialConfig;
+import io.airbyte.testingtool.scenario.config.credentials.CredentialConfig;
 import java.util.UUID;
 import lombok.Builder;
 import lombok.Getter;

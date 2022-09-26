@@ -1,7 +1,7 @@
 package io.airbyte.testingtool.scenario.parameter;
 
-import io.airbyte.testingtool.scenario.config.ActionParameterTypes;
-import io.airbyte.testingtool.scenario.config.ScenarioConfigActionParameter;
+import io.airbyte.testingtool.scenario.config.scenarios.ActionParameterTypes;
+import io.airbyte.testingtool.scenario.config.scenarios.ScenarioConfigActionParameter;
 import lombok.Getter;
 import lombok.Setter;
 

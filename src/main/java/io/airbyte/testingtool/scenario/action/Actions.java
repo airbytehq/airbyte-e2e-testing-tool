@@ -1,14 +1,14 @@
 package io.airbyte.testingtool.scenario.action;
 
-import static io.airbyte.testingtool.scenario.config.ActionParameterTypes.DESTINATION_VERSION;
-import static io.airbyte.testingtool.scenario.config.ActionParameterTypes.SOURCE_VERSION;
+import static io.airbyte.testingtool.scenario.config.scenarios.ActionParameterTypes.DESTINATION_VERSION;
+import static io.airbyte.testingtool.scenario.config.scenarios.ActionParameterTypes.SOURCE_VERSION;
 import static io.airbyte.testingtool.scenario.instance.InstanceTypes.AIRBYTE;
 import static io.airbyte.testingtool.scenario.instance.InstanceTypes.CONNECTION;
 import static io.airbyte.testingtool.scenario.instance.InstanceTypes.DESTINATION;
 import static io.airbyte.testingtool.scenario.instance.InstanceTypes.SOURCE;
 import static io.airbyte.testingtool.scenario.instance.InstanceTypes.SOURCE_WITH_CONNECTION_SETTINGS;
 
-import io.airbyte.testingtool.scenario.config.ActionParameterTypes;
+import io.airbyte.testingtool.scenario.config.scenarios.ActionParameterTypes;
 import io.airbyte.testingtool.scenario.instance.InstanceTypes;
 import java.util.Collections;
 import java.util.List;

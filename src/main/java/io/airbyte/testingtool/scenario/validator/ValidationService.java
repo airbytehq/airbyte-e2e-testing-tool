@@ -1,7 +1,7 @@
 package io.airbyte.testingtool.scenario.validator;
 
-import io.airbyte.testingtool.scenario.config.CredentialConfig;
-import io.airbyte.testingtool.scenario.config.ScenarioConfig;
+import io.airbyte.testingtool.scenario.config.credentials.CredentialConfig;
+import io.airbyte.testingtool.scenario.config.scenarios.ScenarioConfig;
 import io.airbyte.testingtool.scenario.validator.validations.AbstractScenarioValidation;
 import io.airbyte.testingtool.scenario.validator.validations.RunValidationCredentials;
 import io.airbyte.testingtool.scenario.validator.validations.RunValidationParameters;
