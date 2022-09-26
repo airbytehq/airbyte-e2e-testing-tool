@@ -6,15 +6,15 @@ import io.airbyte.api.client.model.generated.ConnectionCreate;
 import io.airbyte.api.client.model.generated.SourceDiscoverSchemaRequestBody;
 import io.airbyte.testingtool.scenario.config.settings.AirbyteStreamAndConfigSettings;
 import io.airbyte.testingtool.scenario.config.settings.ConnectionSettings;
-import io.airbyte.testingtool.scenario.instance.AirbyteApiInstance;
 import io.airbyte.testingtool.scenario.instance.AirbyteConnection;
 import io.airbyte.testingtool.scenario.instance.DestinationInstance;
 import io.airbyte.testingtool.scenario.instance.Instance;
 import io.airbyte.testingtool.scenario.instance.SourceInstance;
 import io.airbyte.testingtool.scenario.instance.SourceWithSettingsInstance;
+import lombok.Builder;
+
 import java.util.List;
 import java.util.Objects;
-import lombok.Builder;
 
 public class ActionCreateConnectionCustom extends ActionCreateConnection {
 
@@ -34,6 +34,7 @@ public class ActionCreateConnectionCustom extends ActionCreateConnection {
     var requestBody = new SourceDiscoverSchemaRequestBody();
     requestBody.setSourceId(sourceInstance.getId());
     requestBody.setDisableCache(true);
+    updateUseNormalizationFlag(Objects.nonNull(getSettings().getNormalization()) ? getSettings().getNormalization() : false);
     var sourceDiscoverSchema = getAirbyteApiInstance().getAirbyteApi()
         .getSourceApi()
         .discoverSchemaForSourceWithHttpInfo(requestBody);

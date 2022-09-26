@@ -9,6 +9,10 @@ properties:
   connectionName:
     description: TBD
     type: string
+  normalization:
+    description: Use normalization with custom connection
+    type: boolean
+    default: false
   syncCatalogConfig:
     description: Sync Catalog Configuration
     "$ref": catalog/AirbyteCatalogSettings.yaml
