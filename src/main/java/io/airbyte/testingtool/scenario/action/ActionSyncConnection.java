@@ -2,6 +2,7 @@ package io.airbyte.testingtool.scenario.action;
 
 import io.airbyte.api.client.invoker.generated.ApiException;
 import io.airbyte.api.client.model.generated.ConnectionIdRequestBody;
+import io.airbyte.api.client.model.generated.JobInfoRead;
 import io.airbyte.testingtool.jobwaiter.JobWaiter;
 import io.airbyte.testingtool.scenario.instance.AirbyteConnection;
 import io.airbyte.testingtool.scenario.instance.AirbyteInstance;
@@ -36,8 +37,20 @@ public class ActionSyncConnection extends ScenarioAction {
   private void sync() throws ApiException, InterruptedException {
     ConnectionIdRequestBody connectionIdRequestBody = new ConnectionIdRequestBody();
     connectionIdRequestBody.setConnectionId(connection.getConnectionId());
-    JobWaiter.waitForJobFinish(airbyteInstance.getAirbyteApi().getJobsApi(),
-        airbyteInstance.getAirbyteApi().getConnectionApi().syncConnection(connectionIdRequestBody).getJob().getId());
-  }
+    JobInfoRead jobInfo = airbyteInstance.getAirbyteApi().getConnectionApi().syncConnection(connectionIdRequestBody);
 
+    JobWaiter.waitForJobFinish(airbyteInstance.getAirbyteApi().getJobsApi(),
+        jobInfo.getJob().getId());
+
+    List<String> syncLog = jobInfo.getAttempts().get(jobInfo.getAttempts().size() - 1).getLogs().getLogLines();
+
+    for (String logLine: syncLog) {
+      if (logLine.startsWith("METRIC_SYNC_START_TIME")) {
+        System.out.println("SYNC START RECORD:\n" + logLine);
+      }
+      else if (logLine.startsWith("METRIC_SYNC_END_TIME")) {
+        System.out.println("SYNC END RECORD:\n" + logLine);
+      }
+    }
+  }
 }
