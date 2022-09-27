@@ -39,8 +39,8 @@ public class ActionCreateConnection extends AbstractConnectionAction {
   @Override
   public void doActionInternal() throws ApiException {
     createConnection();
-    if (getNormalizationFlag()) {
-      connectionInstance.setNormalization(destinationInstance.isSupportNormalization());
+    if (getNormalizationFlag() && destinationInstance.isSupportNormalization()) {
+      connectionInstance.setNormalization();
     }
   }
 
