@@ -10,10 +10,15 @@ import io.airbyte.testingtool.scenario.instance.AirbyteConnection;
 import io.airbyte.testingtool.scenario.instance.DestinationInstance;
 import io.airbyte.testingtool.scenario.instance.Instance;
 import io.airbyte.testingtool.scenario.instance.SourceInstance;
-import java.util.List;
 import lombok.Builder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.List;
 
 public class ActionCreateConnection extends AbstractConnectionAction {
+
+  private static final Logger LOGGER = LoggerFactory.getLogger(ActionCreateConnection.class);
 
   protected final DestinationInstance destinationInstance;
   protected final SourceInstance sourceInstance;
@@ -34,6 +39,9 @@ public class ActionCreateConnection extends AbstractConnectionAction {
   @Override
   public void doActionInternal() throws ApiException {
     createConnection();
+    if (destinationInstance.isSupportNormalization()) {
+      connectionInstance.setNormalization(getNormalizationFlag());
+    }
   }
 
   private void createConnection() throws ApiException {
@@ -65,4 +73,9 @@ public class ActionCreateConnection extends AbstractConnectionAction {
         .namespaceFormat("output_namespace_${SOURCE_NAMESPACE}")
         .prefix("output_table_");
   }
+
+  protected boolean getNormalizationFlag() {
+    return true;
+  }
+
 }

@@ -3,6 +3,7 @@ package io.airbyte.testingtool.scenario.instance;
 import io.airbyte.api.client.generated.DestinationDefinitionApi;
 import io.airbyte.api.client.invoker.generated.ApiException;
 import io.airbyte.api.client.model.generated.DestinationDefinitionIdRequestBody;
+import io.airbyte.api.client.model.generated.DestinationDefinitionIdWithWorkspaceId;
 import io.airbyte.api.client.model.generated.DestinationDefinitionUpdate;
 import io.airbyte.api.client.model.generated.DestinationIdRequestBody;
 import io.airbyte.testingtool.scenario.config.credentials.CredentialConfig;
@@ -65,5 +66,17 @@ public class DestinationInstance extends InstanceWithCredentials {
     var destinationDefinition = new DestinationIdRequestBody();
     destinationDefinition.setDestinationId(airbyteApiInstance.getDestinationDefinitionId(getAribyteDestinationTypeName()));
     return destinationDefinition;
+  }
+
+  public boolean isSupportNormalization() throws ApiException {
+    DestinationDefinitionIdWithWorkspaceId definitionIdWithWorkspaceId = new DestinationDefinitionIdWithWorkspaceId();
+    definitionIdWithWorkspaceId.setDestinationDefinitionId(getDestinationDefinitionIdRequestBody().getDestinationDefinitionId());
+    definitionIdWithWorkspaceId.setWorkspaceId(airbyteApiInstance.getWorkspaceId());
+
+    var destinationDefinitionSpecification = airbyteApiInstance.getAirbyteApi()
+            .getDestinationDefinitionSpecificationApi()
+            .getDestinationDefinitionSpecification(definitionIdWithWorkspaceId);
+
+    return Boolean.TRUE.equals(destinationDefinitionSpecification.getSupportsNormalization());
   }
 }
