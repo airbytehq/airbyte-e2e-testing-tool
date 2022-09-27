@@ -1,6 +1,7 @@
 package io.airbyte.testingtool.scenario.config;
 
 import io.airbyte.testingtool.json.Jsons;
+import io.airbyte.testingtool.scenario.config.scenarios.ScenarioConfig;
 import io.airbyte.testingtool.scenario.validator.ScenarioValidationResult;
 import io.airbyte.testingtool.scenario.validator.ValidationService;
 import java.io.IOException;

@@ -2,7 +2,7 @@ package io.airbyte.testingtool.scenario.instance;
 
 import io.airbyte.api.client.AirbyteApiClient;
 import io.airbyte.api.client.invoker.generated.ApiException;
-import io.airbyte.testingtool.scenario.config.CredentialConfig;
+import io.airbyte.testingtool.scenario.config.credentials.CredentialConfig;
 import java.util.Objects;
 import java.util.UUID;
 import lombok.Builder;
@@ -11,7 +11,7 @@ import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class AirbyteApiInstance extends InstanceWithCredentials {
+public class AirbyteApiInstance extends AutonomousInstance {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(AirbyteApiInstance.class);
 
@@ -22,7 +22,7 @@ public class AirbyteApiInstance extends InstanceWithCredentials {
   private AirbyteApiClient airbyteApi;
 
   @Builder
-  public AirbyteApiInstance(String instanceName, CredentialConfig credentialConfig) {
+  public AirbyteApiInstance(String instanceName, CredentialConfig credentialConfig) throws Exception {
     super(instanceName, credentialConfig);
   }
 
