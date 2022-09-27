@@ -34,7 +34,6 @@ public class ActionCreateConnectionCustom extends ActionCreateConnection {
     var requestBody = new SourceDiscoverSchemaRequestBody();
     requestBody.setSourceId(sourceInstance.getId());
     requestBody.setDisableCache(true);
-    updateUseNormalizationFlag(Objects.nonNull(getSettings().getNormalization()) ? getSettings().getNormalization() : false);
     var sourceDiscoverSchema = getAirbyteApiInstance().getAirbyteApi()
         .getSourceApi()
         .discoverSchemaForSourceWithHttpInfo(requestBody);
@@ -43,6 +42,11 @@ public class ActionCreateConnectionCustom extends ActionCreateConnection {
     return super.getConnectionCreateConfig()
         .name(getSettings().getConnectionName())
         .syncCatalog(catalog);
+  }
+
+  @Override
+  protected void getNormalizationFlag() {
+    this.useNormalization = Objects.nonNull(getSettings().getNormalization()) ? getSettings().getNormalization() : true;
   }
 
   private ConnectionSettings getSettings() {
