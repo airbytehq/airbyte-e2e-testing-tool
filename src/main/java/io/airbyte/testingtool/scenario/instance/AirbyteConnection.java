@@ -5,6 +5,7 @@ import io.airbyte.api.client.model.generated.ConnectionIdRequestBody;
 import io.airbyte.api.client.model.generated.ConnectionRead;
 import io.airbyte.api.client.model.generated.ConnectionUpdate;
 import io.airbyte.api.client.model.generated.OperationCreate;
+import io.airbyte.api.client.model.generated.OperationIdRequestBody;
 import io.airbyte.api.client.model.generated.OperationRead;
 import io.airbyte.api.client.model.generated.OperatorConfiguration;
 import io.airbyte.api.client.model.generated.OperatorNormalization;
@@ -41,10 +42,16 @@ public class AirbyteConnection extends Instance {
     return connectionIdRequestBody;
   }
 
-  public void setNormalization() throws ApiException {
-    ConnectionIdRequestBody connectionIdRequestBody = new ConnectionIdRequestBody();
-    connectionIdRequestBody.setConnectionId(getConnectionId());
-    ConnectionRead connectionRead = airbyteInstance.getAirbyteApi().getConnectionApi().getConnection(connectionIdRequestBody);
+  public void setNormalization(boolean useNormalization) throws ApiException {
+    if (useNormalization) {
+      setNormalizationBasic();
+    } else {
+      setNormalizationRawData();
+    }
+  }
+
+  private void setNormalizationBasic() throws ApiException  {
+    ConnectionRead connectionRead = airbyteInstance.getAirbyteApi().getConnectionApi().getConnection(getConnectionRequestBody());
 
     OperationCreate operationCreate = new OperationCreate();
     operationCreate.setWorkspaceId(airbyteInstance.getWorkspaceId());
@@ -57,10 +64,26 @@ public class AirbyteConnection extends Instance {
     operationCreate.setOperatorConfiguration(operatorConfiguration);
 
     OperationRead operationRead = airbyteInstance.getAirbyteApi()
-            .getOperationApi()
-            .createOperation(operationCreate);
+        .getOperationApi()
+        .createOperation(operationCreate);
     connectionRead.addOperationIdsItem(operationRead.getOperationId());
     airbyteInstance.getAirbyteApi().getConnectionApi().updateConnection(createConnectionUpdate(connectionRead));
+  }
+
+  private void setNormalizationRawData() throws ApiException {
+    var operationApi = airbyteInstance.getAirbyteApi().getOperationApi();
+    var listOfOperations = operationApi.listOperationsForConnection(getConnectionRequestBody());
+    var operationsForDelete = listOfOperations.getOperations().stream().filter(o -> o.getOperatorConfiguration().getOperatorType().equals(NORMALIZATION))
+        .map(o -> {
+          var operationId = new OperationIdRequestBody();
+          operationId.setOperationId(o.getOperationId());
+          return operationId;
+        })
+        .toList();
+
+    for (OperationIdRequestBody operationIdRequestBody : operationsForDelete) {
+      operationApi.deleteOperation(operationIdRequestBody);
+    }
   }
 
   /* Helpers */

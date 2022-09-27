@@ -46,7 +46,7 @@ public class ActionCreateConnectionCustom extends ActionCreateConnection {
 
   @Override
   protected boolean getNormalizationFlag() {
-    return Objects.nonNull(getSettings().getNormalization()) ? getSettings().getNormalization() : true;
+    return Objects.nonNull(getSettings().getNormalization()) ? getSettings().getNormalization() : super.getNormalizationFlag();
   }
 
   private ConnectionSettings getSettings() {
