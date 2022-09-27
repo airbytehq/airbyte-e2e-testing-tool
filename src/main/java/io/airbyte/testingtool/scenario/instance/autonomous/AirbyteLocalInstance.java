@@ -1,13 +1,15 @@
 package io.airbyte.testingtool.scenario.instance.autonomous;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import io.airbyte.testingtool.json.Jsons;
 import io.airbyte.testingtool.scenario.config.credentials.CredentialConfig.InstanceCredTypes;
 
 public class AirbyteLocalInstance implements LocalInstance{
 
   @Override
   public JsonNode startLocalInstance() {
-    return null; // @TODO A.Korotkov please provide local creds to the instance here
+    var defaultJsonCreds = "{\"apiHost\" : \"172.17.0.1\", \"apiPort\" : \"8000\", \"apiScheme\" : \"http\"}";
+    return Jsons.deserialize(defaultJsonCreds);
   }
 
   @Override
