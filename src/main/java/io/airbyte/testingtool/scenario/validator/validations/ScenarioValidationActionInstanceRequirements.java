@@ -1,11 +1,11 @@
 package io.airbyte.testingtool.scenario.validator.validations;
 
 import io.airbyte.testingtool.scenario.ScenarioUtils;
-import io.airbyte.testingtool.scenario.config.ActionParameterTypes;
-import io.airbyte.testingtool.scenario.config.ScenarioConfig;
-import io.airbyte.testingtool.scenario.config.ScenarioConfigAction;
-import io.airbyte.testingtool.scenario.config.ScenarioConfigActionParameter;
-import io.airbyte.testingtool.scenario.config.ScenarioConfigInstance;
+import io.airbyte.testingtool.scenario.config.scenarios.ActionParameterTypes;
+import io.airbyte.testingtool.scenario.config.scenarios.ScenarioConfig;
+import io.airbyte.testingtool.scenario.config.scenarios.ScenarioConfigAction;
+import io.airbyte.testingtool.scenario.config.scenarios.ScenarioConfigActionParameter;
+import io.airbyte.testingtool.scenario.config.scenarios.ScenarioConfigInstance;
 import io.airbyte.testingtool.scenario.instance.InstanceTypes;
 import java.util.List;
 

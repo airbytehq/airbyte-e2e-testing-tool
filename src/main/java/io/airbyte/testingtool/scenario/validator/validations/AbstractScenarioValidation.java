@@ -1,6 +1,6 @@
 package io.airbyte.testingtool.scenario.validator.validations;
 
-import io.airbyte.testingtool.scenario.config.ScenarioConfig;
+import io.airbyte.testingtool.scenario.config.scenarios.ScenarioConfig;
 import io.airbyte.testingtool.scenario.validator.ValidationResult;
 import java.util.ArrayList;
 import java.util.List;

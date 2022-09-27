@@ -1,13 +1,13 @@
 package io.airbyte.testingtool.scenario.validator.validations;
 
-import io.airbyte.testingtool.scenario.config.CredentialConfig;
-import io.airbyte.testingtool.scenario.config.ScenarioConfig;
+import io.airbyte.testingtool.scenario.config.credentials.CredentialConfig;
+import io.airbyte.testingtool.scenario.config.scenarios.ScenarioConfig;
 import java.util.List;
 import java.util.Map;
 
 public class RunValidationCredentials extends AbstractScenarioValidation {
 
-  private final Map<String, CredentialConfig> credentialConfigs;
+  protected final Map<String, CredentialConfig> credentialConfigs;
 
   public RunValidationCredentials(ScenarioConfig scenarioConfig, Map<String, CredentialConfig> credentialConfigs) {
     super(scenarioConfig);

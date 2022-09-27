@@ -10,12 +10,9 @@ import com.google.cloud.secretmanager.v1.SecretName;
 import com.google.cloud.secretmanager.v1.SecretVersion;
 import io.airbyte.testingtool.argument_parser.Command;
 import io.airbyte.testingtool.json.Jsons;
-import io.airbyte.testingtool.scenario.config.CredentialConfig;
 import io.airbyte.testingtool.scenario.config.ServiceAccountConfig;
+import io.airbyte.testingtool.scenario.config.credentials.CredentialConfig;
 import io.airbyte.testingtool.scenario.instance.InstanceWithCredentials;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -25,6 +22,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.stream.StreamSupport;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class CredentialsService {
 
@@ -72,17 +71,17 @@ public class CredentialsService {
   private static CredentialConfig readSecretManagerCredential(final String secretName) throws IOException {
     var projectName = getServiceAccountConfig().getProjectId();
     Credentials myCredentials = ServiceAccountCredentials.fromStream(
-            new FileInputStream(LOCAL_SECRET_FOLDER + SERVICE_ACCOUNT_CREDENTIAL_FILE));
+        new FileInputStream(LOCAL_SECRET_FOLDER + SERVICE_ACCOUNT_CREDENTIAL_FILE));
     SecretManagerServiceSettings secretManagerServiceSettings =
-            SecretManagerServiceSettings.newBuilder()
-                    .setCredentialsProvider(FixedCredentialsProvider.create(myCredentials))
-                    .build();
+        SecretManagerServiceSettings.newBuilder()
+            .setCredentialsProvider(FixedCredentialsProvider.create(myCredentials))
+            .build();
     try (SecretManagerServiceClient client = SecretManagerServiceClient.create(secretManagerServiceSettings)) {
       SecretName secretNameForGetActiveVersion = SecretName.of(projectName, secretName);
       SecretManagerServiceClient.ListSecretVersionsPagedResponse versionList = client.listSecretVersions(secretNameForGetActiveVersion);
       var optionSecretWithVersion = StreamSupport.stream(versionList.iterateAll().spliterator(), false)
-              .filter(secretVersion -> secretVersion.getState().equals(SecretVersion.State.ENABLED))
-              .findFirst();
+          .filter(secretVersion -> secretVersion.getState().equals(SecretVersion.State.ENABLED))
+          .findFirst();
 
       if (optionSecretWithVersion.isEmpty()) {
         throw new RuntimeException(String.format("Driver could not find active version of \"%s\" secret.", secretName));

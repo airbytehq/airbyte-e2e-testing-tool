@@ -8,15 +8,13 @@ import static io.airbyte.testingtool.argument_parser.RunArgumentFactory.SCENARIO
 
 import io.airbyte.testingtool.argument_parser.Command;
 import io.airbyte.testingtool.scenario.ScenarioUtils;
-import io.airbyte.testingtool.scenario.config.ScenarioConfig;
-import io.airbyte.testingtool.scenario.config.ScenarioConfigAction;
-import io.airbyte.testingtool.scenario.config.ScenarioConfigActionParameter;
-import io.airbyte.testingtool.scenario.config.ScenarioConfigInstance;
 import io.airbyte.testingtool.scenario.config.ScenarioConfigService;
-import java.util.HashSet;
+import io.airbyte.testingtool.scenario.config.scenarios.ScenarioConfig;
+import io.airbyte.testingtool.scenario.config.scenarios.ScenarioConfigAction;
+import io.airbyte.testingtool.scenario.config.scenarios.ScenarioConfigActionParameter;
+import io.airbyte.testingtool.scenario.config.scenarios.ScenarioConfigInstance;
 import java.util.List;
 import java.util.Map.Entry;
-import java.util.Set;
 import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 

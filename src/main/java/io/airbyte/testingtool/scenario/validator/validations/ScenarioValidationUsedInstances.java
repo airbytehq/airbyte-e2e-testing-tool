@@ -1,7 +1,7 @@
 package io.airbyte.testingtool.scenario.validator.validations;
 
-import io.airbyte.testingtool.scenario.config.ScenarioConfig;
-import io.airbyte.testingtool.scenario.config.ScenarioConfigInstance;
+import io.airbyte.testingtool.scenario.config.scenarios.ScenarioConfig;
+import io.airbyte.testingtool.scenario.config.scenarios.ScenarioConfigInstance;
 import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;

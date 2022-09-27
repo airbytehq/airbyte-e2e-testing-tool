@@ -7,7 +7,7 @@ import io.airbyte.api.client.model.generated.SourceDefinitionIdRequestBody;
 import io.airbyte.api.client.model.generated.SourceDefinitionUpdate;
 import io.airbyte.api.client.model.generated.SourceDiscoverSchemaRequestBody;
 import io.airbyte.api.client.model.generated.SourceIdRequestBody;
-import io.airbyte.testingtool.scenario.config.CredentialConfig;
+import io.airbyte.testingtool.scenario.config.credentials.CredentialConfig;
 import java.util.UUID;
 import lombok.Builder;
 import lombok.Getter;
