@@ -23,8 +23,6 @@ public class ActionCreateConnection extends AbstractConnectionAction {
   protected final DestinationInstance destinationInstance;
   protected final SourceInstance sourceInstance;
 
-  protected boolean useNormalization = true;
-
   @Builder
   public ActionCreateConnection(int order, List<Instance> requiredInstances, Instance resultInstance, AirbyteConnection connectionInstance,
       DestinationInstance destinationInstance, SourceInstance sourceInstance) {
@@ -41,7 +39,7 @@ public class ActionCreateConnection extends AbstractConnectionAction {
   @Override
   public void doActionInternal() throws ApiException {
     createConnection();
-    if (useNormalization) {
+    if (getNormalizationFlag()) {
       connectionInstance.setNormalization(destinationInstance.isSupportNormalization());
     }
   }
@@ -76,8 +74,8 @@ public class ActionCreateConnection extends AbstractConnectionAction {
         .prefix("output_table_");
   }
 
-  protected void getNormalizationFlag() {
-    this.useNormalization = true;
+  protected boolean getNormalizationFlag() {
+    return true;
   }
 
 }
