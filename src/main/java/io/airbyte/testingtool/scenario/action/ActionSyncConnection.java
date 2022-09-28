@@ -45,11 +45,12 @@ public class ActionSyncConnection extends ScenarioAction {
     List<String> syncLog = jobInfo.getAttempts().get(jobInfo.getAttempts().size() - 1).getLogs().getLogLines();
 
     for (String logLine: syncLog) {
-      if (logLine.startsWith("METRIC_SYNC_START_TIME")) {
-        System.out.println("SYNC START RECORD:\n" + logLine);
+      System.out.println("---" + logLine);
+      if (logLine.contains("METRIC_SYNC_START_TIME")) {
+        System.out.println("---===SYNC START RECORD:\n" + logLine);
       }
-      else if (logLine.startsWith("METRIC_SYNC_END_TIME")) {
-        System.out.println("SYNC END RECORD:\n" + logLine);
+      else if (logLine.contains("METRIC_SYNC_END_TIME")) {
+        System.out.println("---===SYNC END RECORD:\n" + logLine);
       }
     }
   }
