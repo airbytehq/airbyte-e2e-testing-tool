@@ -11,13 +11,16 @@ import static io.airbyte.testingtool.scenario.instance.InstanceTypes.SOURCE_WITH
 import io.airbyte.testingtool.scenario.action.airbyte.ActionConnectToAirbyteAPI;
 import io.airbyte.testingtool.scenario.action.connection.ActionCreateConnection;
 import io.airbyte.testingtool.scenario.action.connection.ActionCreateConnectionCustom;
+import io.airbyte.testingtool.scenario.action.connection.ActionDeleteConnection;
 import io.airbyte.testingtool.scenario.action.connection.ActionResetConnection;
 import io.airbyte.testingtool.scenario.action.connection.ActionSyncConnection;
 import io.airbyte.testingtool.scenario.action.destination.ActionCreateDestination;
+import io.airbyte.testingtool.scenario.action.destination.ActionDeleteDestination;
 import io.airbyte.testingtool.scenario.action.destination.ActionReadDestinationVersion;
 import io.airbyte.testingtool.scenario.action.destination.ActionUpdateDestinationVersion;
 import io.airbyte.testingtool.scenario.action.source.ActionCreateSource;
 import io.airbyte.testingtool.scenario.action.source.ActionCreateSourceWithConnectionSettings;
+import io.airbyte.testingtool.scenario.action.source.ActionDeleteSource;
 import io.airbyte.testingtool.scenario.action.source.ActionReadSourceVersion;
 import io.airbyte.testingtool.scenario.action.source.ActionUpdateSourceVersion;
 import io.airbyte.testingtool.scenario.config.scenarios.ActionParameterTypes;
@@ -71,9 +74,9 @@ public class ActionFactory {
           scenarioInstanceNameToInstanceMap, params);
       case READ_SOURCE_VERSION -> getActionReadSourceVersion(order, config, scenarioInstanceNameToInstanceMap, params);
       case READ_DESTINATION_VERSION -> getActionReadDestinationVersion(order, config, scenarioInstanceNameToInstanceMap, params);
-      case DELETE_SOURCE -> null;
-      case DELETE_CONNECTION -> null;
-      case DELETE_DESTINATION -> null;
+      case DELETE_SOURCE -> getActionDeleteSource(order, config, scenarioInstanceNameToInstanceMap);
+      case DELETE_CONNECTION -> getActionDeleteConnection(order, config, scenarioInstanceNameToInstanceMap);
+      case DELETE_DESTINATION -> getActionDeleteDestination(order, config, scenarioInstanceNameToInstanceMap);
     };
   }
 
@@ -124,7 +127,11 @@ public class ActionFactory {
         .stream()
         .filter(parameter -> type.equals(parameter.getType()))
         .findFirst();
-    return incomingParameters.get(scenarioConfigParameter.get().getName());
+    if (scenarioConfigParameter.isPresent()) {
+      return incomingParameters.get(scenarioConfigParameter.get().getName());
+    } else {
+      throw new RuntimeException("Parameter not found by type " + type.value());
+    }
   }
 
   private static ActionConnectToAirbyteAPI getActionConnectToAirbyteAPI(int order,
@@ -298,6 +305,42 @@ public class ActionFactory {
         .destinationInstance(linkInstanceByType(DESTINATION, config.getRequiredInstances(),
             scenarioInstanceNameToInstanceMap, DestinationInstance.class))
         .version(linkParam(config.getResultParameter(), params))
+        .build();
+  }
+
+  private static ScenarioAction getActionDeleteSource(int order,
+      final ScenarioConfigAction config, final Map<String, Instance> scenarioInstanceNameToInstanceMap) {
+    return ActionDeleteSource
+        .builder()
+        .order(order)
+        .requiredInstances(getRequiredInstances(config, scenarioInstanceNameToInstanceMap))
+        .resultInstance(linkInstance(config.getResultInstance(), scenarioInstanceNameToInstanceMap))
+        .sourceInstance(linkInstanceByType(SOURCE, config.getRequiredInstances(),
+            scenarioInstanceNameToInstanceMap, SourceInstance.class))
+        .build();
+  }
+
+  private static ScenarioAction getActionDeleteDestination(int order,
+      final ScenarioConfigAction config, final Map<String, Instance> scenarioInstanceNameToInstanceMap) {
+    return ActionDeleteDestination
+        .builder()
+        .order(order)
+        .requiredInstances(getRequiredInstances(config, scenarioInstanceNameToInstanceMap))
+        .resultInstance(linkInstance(config.getResultInstance(), scenarioInstanceNameToInstanceMap))
+        .destinationInstance(linkInstanceByType(DESTINATION, config.getRequiredInstances(),
+            scenarioInstanceNameToInstanceMap, DestinationInstance.class))
+        .build();
+  }
+
+  private static ScenarioAction getActionDeleteConnection(int order,
+      final ScenarioConfigAction config, final Map<String, Instance> scenarioInstanceNameToInstanceMap) {
+    return ActionDeleteConnection
+        .builder()
+        .order(order)
+        .requiredInstances(getRequiredInstances(config, scenarioInstanceNameToInstanceMap))
+        .resultInstance(linkInstance(config.getResultInstance(), scenarioInstanceNameToInstanceMap))
+        .connection(linkInstanceByType(CONNECTION, config.getRequiredInstances(),
+            scenarioInstanceNameToInstanceMap, AirbyteConnection.class))
         .build();
   }
 
