@@ -161,15 +161,15 @@ The GA publish the execution result in your original comment.
 
 ## How to run locally
 
-The tool provides possibility to run all scenarious locally. If your command requires credentials, you should provide them locally or request from secret service.
-You have two ways how to provide required credentials to the tool. The main flow is to get credentials from the secret service, but also you can use
-your local files a source for credentials. (See more about credentials below)
+The tool provides the possibility to run all scenarios locally. If your command requires credentials, you should provide them locally or request them from the secret service.
+You have two ways how to provide the required credentials to the tool. The main flow is to get credentials from the secret service, but also you can use
+your local files as a source for credentials. (See more about credentials below)
 
 ### Example: Run scenario with credentials from Secret service
 
 1. Clone the repository
 2. Build the project
-3. Put secret service credential file in the `secrets/service_account_credentials.json` folder in the project root (You can find file structure in
+3. Put the secret service credential file in the `secrets/service_account_credentials.json` folder in the project root (You can find the file structure in
    the ServiceAccountConfig.yaml)
 4. Run the scenario by passing the required arguments to the method `TestingTool::main` with the command `/run-scenario`
 ![Screenshot from 2022-08-30 12-54-42](https://user-images.githubusercontent.com/30464745/187407611-1eeefdff-2417-41a7-8b8b-4467dc4f885a.png)
@@ -179,29 +179,34 @@ The result you can find in the execution log.
 _Note! The help text is formatted for GitHub. You can put it there to get a more readable view._
 ![Screenshot from 2022-09-29 13-41-25](https://user-images.githubusercontent.com/30464745/193010811-a0737686-6fe4-4b63-ad71-d3488496efc3.png)
 
-## How to get list of scenarious
+## How to get the list of scenarios
 
-The tool has help command `/list-scenarios`. The command provides the full list of available scenarious and hints how to get more details about specific scenario.
-_Note! The command also run logical validation for all scenarious. If some scenario is unfinished or invalid, you will see :x: sing after its name._
+The tool has help command `/list-scenarios`. The command provides the full list of available scenarios and hints on how to get more details about a specific scenario.
+
+_Note! The command also runs logical validation for all scenarios. If some scenario is unfinished or invalid, you will see :x: sing after its name._
 ![Screenshot from 2022-09-29 13-46-12](https://user-images.githubusercontent.com/30464745/193011727-5e8259c4-a51f-42ac-83ba-25464b67a897.png)
 
 ## How to prepare a scenario command line
 
-Each scenario has own list of required credentials and their number. In addition, some scenarious might require parameter values in the command line.
-To make this step easier, the tool has command `/help name="<scenario name>"`(How to get name see `How to get list of scenarious`). This command returns prepared command line and list of all credentials which you should put into this line.
-In the result you can find such parts:
-- Call examples - different command lines which can be usefull for your. Note that you need to replace texts like `<put_credential_name>` in this line before run.
+Each scenario has its list of required credentials and their number. In addition, some scenarios might require parameter values in the command line.
+To make this step easier, the tool has command `/help name="<scenario name>"`(How to get name see `How to get the list of scenarios). This command returns a prepared command line and a list of all credentials you should put into this line.
+In the result, you can find such parts:
+- Call examples - different command lines which can be useful for you. Note that you need to replace texts like `<put_credential_name>` in this line before running.
+
 ![Screenshot from 2022-09-29 13-53-41](https://user-images.githubusercontent.com/30464745/193013332-b7bc7049-415c-4b1d-85e5-ee3754b1d3ea.png)
-- Instances in the scenario - list of required instance credentials with their types. Use it to put proper credential name into the command line.
+- Instances in the scenario - List required instance credentials with their types. Use it to put the proper credential name into the command line.
+
 ![Screenshot from 2022-09-29 13-53-47](https://user-images.githubusercontent.com/30464745/193013336-f7a416ca-f1b1-4182-b908-2575af822021.png)
-- Parameters in the scenario - parameter is a simple text value required inside scenario. The name and type of the parameter should be enough to understand which value is expected from you.
+- Parameters in the scenario - parameter is a simple text value required inside a scenario. The name and type of the parameter should be enough to understand which value is expected from you.
+
 ![Screenshot from 2022-09-29 13-53-52](https://user-images.githubusercontent.com/30464745/193013338-2ec3acd7-3b36-427b-8a72-0cc041c6dd99.png)
 
-In the end you should have a command line ready for execution.
+In the end, you should have a command line ready for execution.
 For example, in this case we can get a line like this : `/run-scenario name="Update destination version scenario" airbyte_1=tt_airbyte_docker source_1=tt_postgres_source_aws_1 destination_1=tt_postgres_destination_aws_1 old_version="0.3.22" new_version="0.3.23"`
 
-## How to choise a credential
+## How to choose a credential
 
+TBD
 
 ## CHANGELOG
 
