@@ -175,7 +175,7 @@ jobs:
           name: "/secrets/service_account_credentials.json"
           json: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_CREDENTIALS }}
       - name: Run docker container with params
-        run: docker run -v $(pwd)/secrets:/secrets -v $(pwd)/result:/result airbyte-e2e-testing-tool:latest ${{ github.event.comment.body }}
+        run: docker run -v $(pwd)/secrets:/secrets -v $(pwd)/result:/result airbyte/airbyte-e2e-testing-tool:latest ${{ github.event.comment.body }}
       - name: Read file with results
         id: read_file
         uses: andstor/file-reader-action@v1
