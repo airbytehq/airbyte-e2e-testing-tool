@@ -1,6 +1,8 @@
 package io.airbyte.testingtool.scenario.action;
 
 import io.airbyte.testingtool.scenario.instance.Instance;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.List;
 import lombok.Getter;
 import org.slf4j.Logger;
@@ -9,12 +11,13 @@ import org.slf4j.LoggerFactory;
 public abstract class ScenarioAction implements Comparable<ScenarioAction> {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(ScenarioAction.class);
-
-  protected final int order;
+  @Getter
+  public final int order;
   private final List<Instance> requiredInstances;
   private final Instance resultInstance;
   @Getter
-  private String resultSummary = "";
+  private String context;
+  private Duration duration;
   @Getter
   private ActionStatuses status;
   private boolean isExecuted = false;
@@ -26,32 +29,33 @@ public abstract class ScenarioAction implements Comparable<ScenarioAction> {
     this.status = ActionStatuses.NOT_EXECUTED;
   }
 
-  public int getOrder() {
-    return order;
-  }
-
   @Override
   public int compareTo(ScenarioAction o) {
     return Integer.compare(order, o.getOrder());
   }
 
   public void doAction() {
+    Instant start = Instant.now();
     if (isRepeatable() || !isExecuted) {
       try {
         checkAllRequiredInstancesInitialized();
         doActionInternal();
         status = ActionStatuses.OK;
         markResultInstanceAsInitialized();
-
+        context = getContextInternal();
+        LOGGER.info("Action `{}` context : {}", getActionName(), context);
       } catch (Exception e) {
         status = ActionStatuses.FAILED;
-        resultSummary = "Execution failed with exception : " + e.getMessage();
+        context = e.getMessage();
       }
       isExecuted = true;
     } else {
       LOGGER.error("Action {} can't be executed one more time!", getActionName());
     }
+    duration = Duration.between(start, Instant.now());
   }
+
+  protected abstract String getContextInternal();
 
   private void markResultInstanceAsInitialized() {
     if (resultInstance != null) {
@@ -76,5 +80,8 @@ public abstract class ScenarioAction implements Comparable<ScenarioAction> {
     return true;
   }
 
+  public long getDurationSec() {
+    return (duration != null ? duration.getSeconds() : 0);
+  }
 
 }

@@ -1,29 +1,25 @@
-package io.airbyte.testingtool.scenario.action;
+package io.airbyte.testingtool.scenario.action.source;
 
 import io.airbyte.api.client.invoker.generated.ApiException;
 import io.airbyte.api.client.model.generated.SourceCreate;
-import io.airbyte.testingtool.scenario.instance.AirbyteInstance;
+import io.airbyte.testingtool.scenario.instance.AirbyteApiInstance;
 import io.airbyte.testingtool.scenario.instance.Instance;
 import io.airbyte.testingtool.scenario.instance.SourceInstance;
+import java.util.List;
 import lombok.Builder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.List;
-
-public class ActionCreateSource extends ScenarioAction {
+public class ActionCreateSource extends AbstractSourceAction {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(ActionCreateSource.class);
-
-  private final AirbyteInstance airbyteInstance;
-  private final SourceInstance sourceInstance;
+  protected final AirbyteApiInstance airbyteApiInstance;
 
   @Builder
-  public ActionCreateSource(int order, List<Instance> requiredInstances, Instance resultInstance, AirbyteInstance airbyteInstance,
-      SourceInstance sourceInstance) {
-    super(order, requiredInstances, resultInstance);
-    this.airbyteInstance = airbyteInstance;
-    this.sourceInstance = sourceInstance;
+  public ActionCreateSource(int order, List<Instance> requiredInstances, Instance resultInstance, SourceInstance sourceInstance,
+      AirbyteApiInstance airbyteApiInstance) {
+    super(order, requiredInstances, resultInstance, sourceInstance);
+    this.airbyteApiInstance = airbyteApiInstance;
   }
 
   @Override
@@ -40,13 +36,13 @@ public class ActionCreateSource extends ScenarioAction {
     SourceCreate createSource = new SourceCreate();
     createSource.setConnectionConfiguration(sourceInstance.getCredentialConfig().getCredentialJson());
     createSource.setName(sourceInstance.getInstanceName());
-    createSource.setWorkspaceId(airbyteInstance.getWorkspaceId());
+    createSource.setWorkspaceId(airbyteApiInstance.getWorkspaceId());
     var definitionName = sourceInstance.getCredentialConfig().getInstanceType();
-    createSource.setSourceDefinitionId(airbyteInstance.getSourceDefinitionId(definitionName));
+    createSource.setSourceDefinitionId(airbyteApiInstance.getSourceDefinitionId(definitionName));
     try {
-      var createdSource = airbyteInstance.getAirbyteApi().getSourceApi().createSource(createSource);
+      var createdSource = airbyteApiInstance.getAirbyteApi().getSourceApi().createSource(createSource);
       sourceInstance.setId(createdSource.getSourceId());
-      sourceInstance.setAirbyteInstance(airbyteInstance);
+      sourceInstance.setAirbyteApiInstance(airbyteApiInstance);
       LOGGER.info("New source \"{}\" successfully created.", definitionName);
     } catch (ApiException e) {
       throw new RuntimeException("Fail to create new source", e);

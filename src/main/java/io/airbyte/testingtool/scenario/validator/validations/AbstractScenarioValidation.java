@@ -1,6 +1,6 @@
 package io.airbyte.testingtool.scenario.validator.validations;
 
-import io.airbyte.testingtool.scenario.config.ScenarioConfig;
+import io.airbyte.testingtool.scenario.config.scenarios.ScenarioConfig;
 import io.airbyte.testingtool.scenario.validator.ValidationResult;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +25,7 @@ public abstract class AbstractScenarioValidation {
         .build();
   }
 
-  protected abstract String getValidationName();
+  public abstract String getValidationName();
 
   protected abstract void validateInternal(List<String> errors);
 

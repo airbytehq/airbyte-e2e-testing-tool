@@ -3,8 +3,8 @@ package io.airbyte.testingtool.argument_parser;
 import static io.airbyte.testingtool.argument_parser.ArgumentParser.argumentParser;
 
 import io.airbyte.testingtool.credentials.CredentialsService;
-import io.airbyte.testingtool.scenario.config.ScenarioConfigInstance;
 import io.airbyte.testingtool.scenario.config.ScenarioConfigService;
+import io.airbyte.testingtool.scenario.config.scenarios.ScenarioConfigInstance;
 import java.io.IOException;
 import java.util.Map;
 import java.util.Map.Entry;

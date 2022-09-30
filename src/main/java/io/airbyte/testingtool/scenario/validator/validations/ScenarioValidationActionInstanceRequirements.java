@@ -1,13 +1,13 @@
 package io.airbyte.testingtool.scenario.validator.validations;
 
-import io.airbyte.testingtool.scenario.config.ActionParameterTypes;
-import io.airbyte.testingtool.scenario.config.ScenarioConfig;
-import io.airbyte.testingtool.scenario.config.ScenarioConfigAction;
-import io.airbyte.testingtool.scenario.config.ScenarioConfigActionParameter;
-import io.airbyte.testingtool.scenario.config.ScenarioConfigInstance;
+import io.airbyte.testingtool.scenario.ScenarioUtils;
+import io.airbyte.testingtool.scenario.config.scenarios.ActionParameterTypes;
+import io.airbyte.testingtool.scenario.config.scenarios.ScenarioConfig;
+import io.airbyte.testingtool.scenario.config.scenarios.ScenarioConfigAction;
+import io.airbyte.testingtool.scenario.config.scenarios.ScenarioConfigActionParameter;
+import io.airbyte.testingtool.scenario.config.scenarios.ScenarioConfigInstance;
 import io.airbyte.testingtool.scenario.instance.InstanceTypes;
 import java.util.List;
-import java.util.stream.Stream;
 
 public class ScenarioValidationActionInstanceRequirements extends AbstractScenarioValidation {
 
@@ -16,13 +16,13 @@ public class ScenarioValidationActionInstanceRequirements extends AbstractScenar
   }
 
   @Override
-  protected String getValidationName() {
+  public String getValidationName() {
     return "Action should have all mandatory attributes";
   }
 
   @Override
   protected void validateInternal(List<String> errors) {
-    Stream.concat(getScenarioConfig().getPreparationActions().stream(), getScenarioConfig().getScenarioActions().stream()).forEach(action -> {
+    ScenarioUtils.getAllActions(getScenarioConfig()).forEach(action -> {
       checkRequiredInstances(action, errors);
       checkResultInstance(action, errors);
       checkParameters(action, errors);

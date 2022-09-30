@@ -25,3 +25,7 @@ properties:
     type: array
     items:
       "$ref": ScenarioConfigActionParameter.yaml
+  resultParameter:
+    description: The parameter which is a result of the action execution
+    type: Object
+    $ref: ScenarioConfigActionParameter.yaml

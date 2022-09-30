@@ -1,0 +1,13 @@
+---
+"$schema": http://json-schema.org/draft-07/schema#
+"$id": https://github.com/airbytehq/airbyte/blob/master/airbyte-config/models/src/main/resources/types/State.yaml
+title: AirbyteStreamSettings
+description: Airbyte Catalog Settings for customize stream.
+type: object
+additionalProperties: false
+properties:
+  streams:
+    description: List of stream.
+    type: array
+    items:
+      "$ref": AirbyteStreamAndConfigSettings.yaml

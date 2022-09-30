@@ -1,5 +1,6 @@
 # Intellij Idea project files
 .idea
+.run
 *.iml
 *.ipr
 *.iws
@@ -24,3 +25,6 @@ sonar-project.properties
 
 # local credentials
 secrets
+
+# local result output file
+result

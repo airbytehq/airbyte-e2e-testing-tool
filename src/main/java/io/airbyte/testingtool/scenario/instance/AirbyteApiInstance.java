@@ -2,18 +2,18 @@ package io.airbyte.testingtool.scenario.instance;
 
 import io.airbyte.api.client.AirbyteApiClient;
 import io.airbyte.api.client.invoker.generated.ApiException;
-import io.airbyte.testingtool.scenario.config.CredentialConfig;
+import io.airbyte.testingtool.scenario.config.credentials.CredentialConfig;
+import java.util.Objects;
+import java.util.UUID;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Objects;
-import java.util.UUID;
+public class AirbyteApiInstance extends AutonomousInstance {
 
-public class AirbyteInstance extends InstanceWithCredentials {
-  private static final Logger LOGGER = LoggerFactory.getLogger(AirbyteInstance.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(AirbyteApiInstance.class);
 
   private UUID workspaceId;
 
@@ -22,7 +22,7 @@ public class AirbyteInstance extends InstanceWithCredentials {
   private AirbyteApiClient airbyteApi;
 
   @Builder
-  public AirbyteInstance(String instanceName, CredentialConfig credentialConfig) {
+  public AirbyteApiInstance(String instanceName, CredentialConfig credentialConfig) throws Exception {
     super(instanceName, credentialConfig);
   }
 
@@ -41,12 +41,12 @@ public class AirbyteInstance extends InstanceWithCredentials {
   public UUID getSourceDefinitionId(String definitionName) {
     try {
       var sourceDefinitionsList = airbyteApi.getSourceDefinitionApi()
-              .listSourceDefinitions()
-              .getSourceDefinitions();
+          .listSourceDefinitions()
+          .getSourceDefinitions();
       var optionalSourceDefinition = sourceDefinitionsList
-              .stream()
-              .filter(sourceDefinition -> definitionName.equals(sourceDefinition.getName()))
-              .findFirst();
+          .stream()
+          .filter(sourceDefinition -> definitionName.equals(sourceDefinition.getName()))
+          .findFirst();
       if (optionalSourceDefinition.isPresent()) {
         return optionalSourceDefinition.get().getSourceDefinitionId();
       } else {
@@ -54,7 +54,6 @@ public class AirbyteInstance extends InstanceWithCredentials {
         throw new RuntimeException(String.format("There are no source definition available with name \"%s\"", definitionName));
       }
     } catch (ApiException e) {
-      LOGGER.error("Fail to airbyte client connect");
       throw new RuntimeException("Fail to airbyte client connect", e);
     }
   }
@@ -62,12 +61,12 @@ public class AirbyteInstance extends InstanceWithCredentials {
   public UUID getDestinationDefinitionId(String definitionName) {
     try {
       var destinationDefinitionsList = airbyteApi.getDestinationDefinitionApi()
-              .listDestinationDefinitions()
-              .getDestinationDefinitions();
+          .listDestinationDefinitions()
+          .getDestinationDefinitions();
       var optionalDestinationDefinition = destinationDefinitionsList
-              .stream()
-              .filter(destinationDefinition -> definitionName.equals(destinationDefinition.getName()))
-              .findFirst();
+          .stream()
+          .filter(destinationDefinition -> definitionName.equals(destinationDefinition.getName()))
+          .findFirst();
       if (optionalDestinationDefinition.isPresent()) {
         return optionalDestinationDefinition.get().getDestinationDefinitionId();
       } else {
@@ -86,10 +85,10 @@ public class AirbyteInstance extends InstanceWithCredentials {
     try {
       // todo: Now, we use the first workspace from the list. In the future, it should be replaced, and get workspace by slug name.
       var optionalWorkspaceReader = airbyteApi.getWorkspaceApi()
-              .listWorkspaces()
-              .getWorkspaces()
-              .stream()
-              .findFirst();
+          .listWorkspaces()
+          .getWorkspaces()
+          .stream()
+          .findFirst();
       if (optionalWorkspaceReader.isPresent()) {
         return optionalWorkspaceReader.get().getWorkspaceId();
       } else {

@@ -1,13 +1,13 @@
 package io.airbyte.testingtool.scenario.validator.validations;
 
-import io.airbyte.testingtool.scenario.config.CredentialConfig;
-import io.airbyte.testingtool.scenario.config.ScenarioConfig;
+import io.airbyte.testingtool.scenario.config.credentials.CredentialConfig;
+import io.airbyte.testingtool.scenario.config.scenarios.ScenarioConfig;
 import java.util.List;
 import java.util.Map;
 
 public class RunValidationCredentials extends AbstractScenarioValidation {
 
-  private final Map<String, CredentialConfig> credentialConfigs;
+  protected final Map<String, CredentialConfig> credentialConfigs;
 
   public RunValidationCredentials(ScenarioConfig scenarioConfig, Map<String, CredentialConfig> credentialConfigs) {
     super(scenarioConfig);
@@ -15,7 +15,7 @@ public class RunValidationCredentials extends AbstractScenarioValidation {
   }
 
   @Override
-  protected String getValidationName() {
+  public String getValidationName() {
     return "All required credentials exist";
   }
 
@@ -25,7 +25,9 @@ public class RunValidationCredentials extends AbstractScenarioValidation {
         .filter(instance -> instance.getInstanceType().isCredentialsRequired() && !credentialConfigs.containsKey(instance.getInstanceName()))
         .toList();
     if (!instancesWithoutCredentials.isEmpty()) {
-      instancesWithoutCredentials.forEach(instance -> errors.add("Instance " + instance.getInstanceName() + " doesn't get all required credentials : " + instance.getInstanceType().getRequiredCredentials().value()));
+      instancesWithoutCredentials.forEach(instance -> errors.add(
+          "Instance " + instance.getInstanceName() + " doesn't get all required credentials : " + instance.getInstanceType().getRequiredCredentials()
+              .value()));
     }
   }
 }
