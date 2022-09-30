@@ -39,12 +39,11 @@ jobs:
     needs: set-params
     environment: E2E-testing-tool-env
     steps:
-      - name: Add Success Comment
+      - name: Update comment for processing
         uses: peter-evans/create-or-update-comment@v1
         with:
           comment-id: ${{ needs.set-params.outputs.comment-id }}
-          body: |
-            > :see_no_evil: We apologize. Our team is currently testing new features that will change your life and work for the best. Please wait a few hours.
+          reactions: eyes, rocket
       - name: Checkout Testing Tool
         uses: actions/checkout@v2
         with:
@@ -83,6 +82,22 @@ jobs:
           tags: |
             airbyte/${{ steps.get-name.outputs.name }}:${{ steps.get-version.outputs.version }}
             airbyte/${{ steps.get-name.outputs.name }}:latest
+      - name: Add Success Comment
+        if: needs.set-params.outputs.comment-id && success()
+        uses: peter-evans/create-or-update-comment@v1
+        with:
+          comment-id: ${{ needs.set-params.outputs.comment-id }}
+          body: |
+            > :white_check_mark: https://github.com/${{github.repository}}/actions/runs/${{github.run_id}}
+          reactions: +1
+      - name: Add Failure Comment
+        if: needs.set-params.outputs.comment-id && failure()
+        uses: peter-evans/create-or-update-comment@v1
+        with:
+          comment-id: ${{ needs.set-params.outputs.comment-id }}
+          body: |
+            > :x: https://github.com/${{github.repository}}/actions/runs/${{github.run_id}}
+          reactions: -1
   helps-run:
     runs-on: ubuntu-latest
     if: |
