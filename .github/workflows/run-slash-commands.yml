@@ -80,7 +80,9 @@ jobs:
         with:
           context: .
           push: true
-          tags: airbyte/${{ steps.get-name.outputs.name }}:${{ steps.get-version.outputs.version }}
+          tags: |
+            airbyte/${{ steps.get-name.outputs.name }}:${{ steps.get-version.outputs.version }}
+            airbyte/${{ steps.get-name.outputs.name }}:latest
   helps-run:
     runs-on: ubuntu-latest
     if: |
