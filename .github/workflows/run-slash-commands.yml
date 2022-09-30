@@ -37,6 +37,7 @@ jobs:
     if: |
       needs.set-params.outputs.command == '/publish'
     needs: set-params
+    environment: E2E-testing-tool-env
     steps:
       - name: Add Success Comment
         uses: peter-evans/create-or-update-comment@v1
