@@ -102,6 +102,8 @@ jobs:
           ref: ${{  needs.set-params.outputs.ref }}
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
+      - name: Checkout Testing Tool
+        uses: actions/checkout@v2
       - name: Pull Testing Tool docker image
         run: docker pull airbyte/airbyte-e2e-testing-tool:latest
       - name: Change wrapper permissions
@@ -157,6 +159,8 @@ jobs:
           reactions: eyes, rocket
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
+      - name: Checkout Testing Tool
+        uses: actions/checkout@v2
       - name: Pull Testing Tool docker image
         run : docker pull airbyte/airbyte-e2e-testing-tool:latest
       - name: Download docker-compose file
