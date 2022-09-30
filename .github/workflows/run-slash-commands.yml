@@ -158,6 +158,12 @@ jobs:
       needs.set-params.outputs.command == '/run-scenario-local'
     needs: set-params
     steps:
+      - name: Add Success Comment
+        uses: peter-evans/create-or-update-comment@v1
+        with:
+          comment-id: ${{ needs.set-params.outputs.comment-id }}
+          body: |
+            > :see_no_evil:We apologize. Our team is currently testing new features that will change your life and work for the best. Please wait a few hours.
       - name: Update comment for processing
         uses: peter-evans/create-or-update-comment@v1
         with:
