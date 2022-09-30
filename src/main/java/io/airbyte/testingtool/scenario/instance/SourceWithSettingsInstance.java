@@ -1,7 +1,7 @@
 package io.airbyte.testingtool.scenario.instance;
 
 import io.airbyte.testingtool.credentials.CredentialsService;
-import io.airbyte.testingtool.scenario.config.CredentialConfig;
+import io.airbyte.testingtool.scenario.config.credentials.CredentialConfig;
 import io.airbyte.testingtool.scenario.config.settings.ConnectionSettings;
 import lombok.Builder;
 import lombok.Getter;

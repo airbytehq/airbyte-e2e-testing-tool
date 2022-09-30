@@ -1,8 +1,8 @@
 package io.airbyte.testingtool.scenario;
 
-import io.airbyte.testingtool.scenario.config.ScenarioConfig;
-import io.airbyte.testingtool.scenario.config.ScenarioConfigAction;
-import io.airbyte.testingtool.scenario.config.ScenarioConfigActionParameter;
+import io.airbyte.testingtool.scenario.config.scenarios.ScenarioConfig;
+import io.airbyte.testingtool.scenario.config.scenarios.ScenarioConfigAction;
+import io.airbyte.testingtool.scenario.config.scenarios.ScenarioConfigActionParameter;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
