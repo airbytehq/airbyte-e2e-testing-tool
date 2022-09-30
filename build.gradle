@@ -77,6 +77,9 @@ tasks.register('dockerBuildImage', DockerBuildImage) {
 }
 build.finalizedBy(dockerBuildImage)
 
-tasks.register('getImageVersion'){
-    println("${project.getName()}:${version}")
+tasks.register('getVersion'){
+    println("${version}")
+}
+tasks.register('getProjectName'){
+    println("${project.getName()}")
 }
