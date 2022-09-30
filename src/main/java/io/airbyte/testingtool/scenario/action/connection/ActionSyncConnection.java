@@ -1,6 +1,9 @@
 package io.airbyte.testingtool.scenario.action.connection;
 
 import io.airbyte.api.client.invoker.generated.ApiException;
+import io.airbyte.api.client.model.generated.AttemptInfoRead;
+import io.airbyte.api.client.model.generated.JobIdRequestBody;
+import io.airbyte.api.client.model.generated.JobInfoRead;
 import io.airbyte.testingtool.jobwaiter.JobWaiter;
 import io.airbyte.testingtool.scenario.instance.AirbyteConnection;
 import io.airbyte.testingtool.scenario.instance.Instance;
@@ -25,9 +28,15 @@ public class ActionSyncConnection extends AbstractConnectionAction {
   }
 
   private void sync() throws ApiException, InterruptedException {
-    JobWaiter.waitForJobFinish(connectionInstance.getAirbyteInstance().getAirbyteApi().getJobsApi(),
-        connectionInstance.getAirbyteInstance().getAirbyteApi().getConnectionApi().syncConnection(connectionInstance.getConnectionRequestBody())
-            .getJob().getId());
+    JobInfoRead jir = connectionInstance.getAirbyteInstance().getAirbyteApi().getConnectionApi().syncConnection(connectionInstance.getConnectionRequestBody());
+    JobWaiter.waitForJobFinish(connectionInstance.getAirbyteInstance().getAirbyteApi().getJobsApi(), jir.getJob().getId());
+    JobInfoRead finishedJir = connectionInstance.getAirbyteInstance().getAirbyteApi().getJobsApi().getJobInfo(new JobIdRequestBody().id(jir.getJob().getId()));
+    List<AttemptInfoRead> attempts = finishedJir.getAttempts();
+    AttemptInfoRead lastAttempt = attempts.get(attempts.size() - 1);
+    long syncStart = lastAttempt.getAttempt().getCreatedAt();
+    long syncEnd = lastAttempt.getAttempt().getEndedAt();
+    long bytes = lastAttempt.getAttempt().getBytesSynced();
+    System.out.println("METRIC_SYNC:\nseconds: " + (syncEnd - syncStart)/1000. + "\nbytes: " + bytes);
   }
 
 }
