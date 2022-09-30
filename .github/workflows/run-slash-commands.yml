@@ -43,7 +43,7 @@ jobs:
         with:
           comment-id: ${{ needs.set-params.outputs.comment-id }}
           body: |
-           > :see_no_evil:We apologize. Our team is currently testing new features that will change your life and work for the best. Please wait a few hours.
+            > :see_no_evil: We apologize. Our team is currently testing new features that will change your life and work for the best. Please wait a few hours.
       - name: Checkout Testing Tool
         uses: actions/checkout@v2
         with:
@@ -60,7 +60,7 @@ jobs:
         uses: gradle/gradle-build-action@67421db6bd0bf253fb4bd25b31ebb98943c375e1
         with:
           arguments: build
-        - name: Build application
+      - name: Build application
         run: ./gradlew clean build
         shell: bash
       - name: Login to Docker (on Master)
@@ -163,7 +163,7 @@ jobs:
         with:
           comment-id: ${{ needs.set-params.outputs.comment-id }}
           body: |
-            > :see_no_evil:We apologize. Our team is currently testing new features that will change your life and work for the best. Please wait a few hours.
+            > :see_no_evil: We apologize. Our team is currently testing new features that will change your life and work for the best. Please wait a few hours.
       - name: Update comment for processing
         uses: peter-evans/create-or-update-comment@v1
         with:
