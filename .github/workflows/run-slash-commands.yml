@@ -76,12 +76,11 @@ jobs:
         id: get-name
         run: echo ::set-output name=name::"$(eval ./gradlew getProjectName)"
       - name: Build and push Docker image
-        uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
+        uses: docker/build-push-action@v3
         with:
           context: .
           push: true
-          tags: ${{ steps.get-version.outputs.version }}
-          labels: ${{ steps.get-name.outputs.name }}
+          tags: airbyte/${{ steps.get-name.outputs.name }}:${{ steps.get-version.outputs.version }}
   helps-run:
     runs-on: ubuntu-latest
     if: |
