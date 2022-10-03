@@ -27,7 +27,7 @@ plugins {
 sourceCompatibility = 17
 targetCompatibility = 17
 
-version '0.4.3'
+version '0.4.4'
 
 repositories {
     mavenCentral()
@@ -53,6 +53,8 @@ dependencies {
     implementation 'com.google.cloud:google-cloud-secretmanager'
     implementation 'com.google.auth:google-auth-library-oauth2-http:1.10.0'
     implementation 'org.slf4j:slf4j-api:1.7.30'
+
+    implementation 'org.testcontainers:postgresql:1.17.3'
 }
 
 jsonSchema2Pojo {

@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import io.airbyte.testingtool.json.Jsons;
 import io.airbyte.testingtool.scenario.config.credentials.CredentialConfig.InstanceCredTypes;
 
-public class AirbyteLocalInstance implements LocalInstance{
+class AirbyteLocalInstance implements LocalInstance {
 
   @Override
   public JsonNode startLocalInstance() {

@@ -7,7 +7,8 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public enum AutonomousInstances {
 
-  AIRBYTE(AirbyteLocalInstance.class);
+  AIRBYTE(AirbyteLocalInstance.class),
+  DEST_POSTGRES(DestPostgresLocalInstance.class);
 
   private final Class<? extends LocalInstance> localInstanceClass;
 

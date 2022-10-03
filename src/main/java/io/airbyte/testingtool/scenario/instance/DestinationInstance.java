@@ -12,7 +12,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
-public class DestinationInstance extends InstanceWithCredentials {
+public class DestinationInstance extends AutonomousInstance {
 
   @Getter
   @Setter
@@ -23,7 +23,7 @@ public class DestinationInstance extends InstanceWithCredentials {
   protected AirbyteApiInstance airbyteApiInstance;
 
   @Builder
-  public DestinationInstance(String instanceName, CredentialConfig credentialConfig, UUID id) {
+  public DestinationInstance(String instanceName, CredentialConfig credentialConfig, UUID id) throws Exception {
     super(instanceName, credentialConfig);
     this.id = id;
   }

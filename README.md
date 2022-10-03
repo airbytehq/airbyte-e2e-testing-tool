@@ -212,6 +212,7 @@ TBD
 
 | Version | Description                                                                            |
 |---------|----------------------------------------------------------------------------------------|
+| 0.4.4   | Add common local instances for destinations + Postgres impl                            |
 | 0.4.3   | Make normalization on by default                                                       |
 | 0.4.2   | Add autonomous instances                                                               |
 | 0.4.1   | Action structure improvement + add delete actions for conn/src/dest instances          |
