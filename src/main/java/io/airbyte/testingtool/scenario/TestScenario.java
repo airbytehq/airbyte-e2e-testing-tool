@@ -1,6 +1,8 @@
 package io.airbyte.testingtool.scenario;
 
+import io.airbyte.testingtool.metrics.Metric;
 import io.airbyte.testingtool.scenario.action.ScenarioAction;
+import java.util.Map;
 import java.util.SortedSet;
 import lombok.Builder;
 import lombok.Getter;
@@ -62,9 +64,23 @@ public class TestScenario {
       summary.append("| ").append(action.getActionName())
           .append(" | ").append(action.getStatus().getName())
           .append(" | ").append(action.getContext())
-          .append(" | **").append(action.getDurationSec()).append(" sec** |\n")
+          .append(" | **").append(action.getDurationSec()).append(" sec** |\n").append(getMetrics(action))
     );
     return summary.toString();
+  }
+
+  private String getMetrics(ScenarioAction action) {
+
+    if (action.getMetrics().isEmpty()) {
+      return "";
+    }
+    StringBuffer result = new StringBuffer("\n");
+
+    for (Map.Entry<String, Metric> entry : action.getMetrics().entrySet()) {
+      result.append(entry.getKey() + ": " + entry.getValue() + "\n");
+    }
+
+    return result.toString();
   }
 
 }

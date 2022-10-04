@@ -5,6 +5,11 @@ import io.airbyte.api.client.model.generated.AttemptInfoRead;
 import io.airbyte.api.client.model.generated.JobIdRequestBody;
 import io.airbyte.api.client.model.generated.JobInfoRead;
 import io.airbyte.testingtool.jobwaiter.JobWaiter;
+import io.airbyte.testingtool.metrics.Metric;
+import io.airbyte.testingtool.metrics.ThroughputMetric;
+import io.airbyte.testingtool.metrics.TimeMetric;
+import io.airbyte.testingtool.metrics.impl.ThroughputMetricImpl;
+import io.airbyte.testingtool.metrics.impl.TimeMetricImpl;
 import io.airbyte.testingtool.scenario.instance.AirbyteConnection;
 import io.airbyte.testingtool.scenario.instance.Instance;
 import java.util.List;
@@ -33,10 +38,21 @@ public class ActionSyncConnection extends AbstractConnectionAction {
     JobInfoRead finishedJir = connectionInstance.getAirbyteInstance().getAirbyteApi().getJobsApi().getJobInfo(new JobIdRequestBody().id(jir.getJob().getId()));
     List<AttemptInfoRead> attempts = finishedJir.getAttempts();
     AttemptInfoRead lastAttempt = attempts.get(attempts.size() - 1);
+
     long syncStart = lastAttempt.getAttempt().getCreatedAt();
     long syncEnd = lastAttempt.getAttempt().getEndedAt();
     long bytes = lastAttempt.getAttempt().getBytesSynced();
-    System.out.println("METRIC_SYNC:\nseconds: " + (syncEnd - syncStart)/1000. + "\nbytes: " + bytes);
+
+    TimeMetric timeMetric = new TimeMetricImpl();
+    timeMetric.setStartTime(syncStart);
+    timeMetric.setEndTime(syncEnd);
+
+    double throughput = bytes/(double)(syncEnd - syncStart);
+    ThroughputMetric throughputMetric = new ThroughputMetricImpl();
+    throughputMetric.setThroughput(throughput);
+
+    setMetric(Metric.TIME_METRIC, timeMetric);
+    setMetric(Metric.THROUGHPUT_METRIC, throughputMetric);
   }
 
 }
