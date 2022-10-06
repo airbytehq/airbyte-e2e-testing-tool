@@ -14,7 +14,8 @@ public class SourceWithSettingsInstance extends SourceInstance {
   private ConnectionSettings connectionSettings;
 
   @Builder(builderMethodName = "sourceWithSettingsInstanceBuilder")
-  public SourceWithSettingsInstance(String instanceName, CredentialConfig credentialConfig) {
+  public SourceWithSettingsInstance(String instanceName, CredentialConfig credentialConfig)
+      throws Exception {
     super(instanceName, credentialConfig);
     this.connectionSettings = CredentialsService.extractSettingsFromConfig(this, ConnectionSettings.class);
   }

@@ -13,7 +13,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
-public class SourceInstance extends InstanceWithCredentials {
+public class SourceInstance extends AutonomousInstance {
 
   @Getter
   @Setter
@@ -23,7 +23,7 @@ public class SourceInstance extends InstanceWithCredentials {
   protected AirbyteApiInstance airbyteApiInstance;
 
   @Builder
-  public SourceInstance(String instanceName, CredentialConfig credentialConfig) {
+  public SourceInstance(String instanceName, CredentialConfig credentialConfig) throws Exception{
     super(instanceName, credentialConfig);
   }
 
