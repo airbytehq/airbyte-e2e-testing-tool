@@ -2,13 +2,17 @@ package io.airbyte.testingtool.scenario.instance.autonomous;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import io.airbyte.testingtool.scenario.config.credentials.CredentialConfig.InstanceCredTypes;
+import io.airbyte.testingtool.scenario.instance.autonomous.mysql.DestinationMysqlLocalInstance;
+import io.airbyte.testingtool.scenario.instance.autonomous.mysql.SourceMysqlLocalInstance;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
 public enum AutonomousInstances {
 
   AIRBYTE(AirbyteLocalInstance.class),
-  DEST_POSTGRES(DestPostgresLocalInstance.class);
+  DEST_POSTGRES(DestPostgresLocalInstance.class),
+  DEST_MYSQL(DestinationMysqlLocalInstance .class),
+  SOURCE_MYSQL(SourceMysqlLocalInstance.class);
 
   private final Class<? extends LocalInstance> localInstanceClass;
 

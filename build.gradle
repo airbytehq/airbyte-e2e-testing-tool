@@ -53,8 +53,10 @@ dependencies {
     implementation 'com.google.cloud:google-cloud-secretmanager'
     implementation 'com.google.auth:google-auth-library-oauth2-http:1.10.0'
     implementation 'org.slf4j:slf4j-api:1.7.30'
+    implementation 'mysql:mysql-connector-java:8.0.22'
 
     implementation 'org.testcontainers:postgresql:1.17.3'
+    implementation 'org.testcontainers:mysql:1.15.3'
 }
 
 jsonSchema2Pojo {
