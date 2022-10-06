@@ -2,20 +2,27 @@ package io.airbyte.testingtool.scenario.action.connection;
 
 import io.airbyte.api.client.invoker.generated.ApiException;
 import io.airbyte.api.client.model.generated.AttemptInfoRead;
+import io.airbyte.api.client.model.generated.AttemptStats;
+import io.airbyte.api.client.model.generated.AttemptStreamStats;
 import io.airbyte.api.client.model.generated.JobIdRequestBody;
 import io.airbyte.api.client.model.generated.JobInfoRead;
 import io.airbyte.testingtool.jobwaiter.JobWaiter;
-import io.airbyte.testingtool.metrics.Metric;
-import io.airbyte.testingtool.metrics.ThroughputMetric;
-import io.airbyte.testingtool.metrics.TimeMetric;
-import io.airbyte.testingtool.metrics.impl.ThroughputMetricImpl;
-import io.airbyte.testingtool.metrics.impl.TimeMetricImpl;
+import io.airbyte.testingtool.metrics.Metrics;
 import io.airbyte.testingtool.scenario.instance.AirbyteConnection;
 import io.airbyte.testingtool.scenario.instance.Instance;
 import java.util.List;
 import lombok.Builder;
+import lombok.Getter;
 
+@Getter
 public class ActionSyncConnection extends AbstractConnectionAction {
+
+  private long syncStart;
+  private long syncEnd;
+  private long bytes;
+  private long records;
+  private List<AttemptStreamStats> streamStats;
+  private AttemptStats totalStats;
 
   @Builder
   public ActionSyncConnection(int order, List<Instance> requiredInstances, Instance resultInstance, AirbyteConnection connection) {
@@ -30,6 +37,8 @@ public class ActionSyncConnection extends AbstractConnectionAction {
   @Override
   public void doActionInternal() throws ApiException, InterruptedException {
     sync();
+    metrics = Metrics.builder().bytes(bytes).records(records).startTime(syncStart).endTime(syncEnd).streamStats(streamStats)
+        .totalStats(totalStats).build();
   }
 
   private void sync() throws ApiException, InterruptedException {
@@ -39,20 +48,11 @@ public class ActionSyncConnection extends AbstractConnectionAction {
     List<AttemptInfoRead> attempts = finishedJir.getAttempts();
     AttemptInfoRead lastAttempt = attempts.get(attempts.size() - 1);
 
-    long syncStart = lastAttempt.getAttempt().getCreatedAt();
-    long syncEnd = lastAttempt.getAttempt().getEndedAt();
-    long bytes = lastAttempt.getAttempt().getBytesSynced();
-
-    TimeMetric timeMetric = new TimeMetricImpl();
-    timeMetric.setStartTime(syncStart);
-    timeMetric.setEndTime(syncEnd);
-
-    double throughput = bytes/(double)(syncEnd - syncStart);
-    ThroughputMetric throughputMetric = new ThroughputMetricImpl();
-    throughputMetric.setThroughput(throughput);
-
-    setMetric(Metric.TIME_METRIC, timeMetric);
-    setMetric(Metric.THROUGHPUT_METRIC, throughputMetric);
+    syncStart = lastAttempt.getAttempt().getCreatedAt();
+    syncEnd = lastAttempt.getAttempt().getEndedAt();
+    bytes = lastAttempt.getAttempt().getBytesSynced();
+    records = lastAttempt.getAttempt().getRecordsSynced();
+    streamStats = lastAttempt.getAttempt().getStreamStats();
+    totalStats = lastAttempt.getAttempt().getTotalStats();
   }
-
 }

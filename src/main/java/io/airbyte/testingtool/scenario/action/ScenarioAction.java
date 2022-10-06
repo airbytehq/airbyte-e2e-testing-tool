@@ -1,6 +1,6 @@
 package io.airbyte.testingtool.scenario.action;
 
-import io.airbyte.testingtool.metrics.Metric;
+import io.airbyte.testingtool.metrics.Metrics;
 import io.airbyte.testingtool.scenario.instance.Instance;
 import java.time.Duration;
 import java.time.Instant;
@@ -16,7 +16,7 @@ public abstract class ScenarioAction implements Comparable<ScenarioAction> {
   private static final Logger LOGGER = LoggerFactory.getLogger(ScenarioAction.class);
   @Getter
   public final int order;
-  private Map<String, Metric> metrics;
+  protected Metrics metrics;
   private final List<Instance> requiredInstances;
   private final Instance resultInstance;
   @Getter
@@ -31,15 +31,10 @@ public abstract class ScenarioAction implements Comparable<ScenarioAction> {
     this.requiredInstances = requiredInstances;
     this.resultInstance = resultInstance;
     this.status = ActionStatuses.NOT_EXECUTED;
-    metrics = new HashMap<>();
   }
 
-  public Map<String, Metric> getMetrics() {
+  public Metrics getMetrics() {
     return metrics;
-  }
-
-  protected void setMetric(String metricName, Metric metric) {
-    metrics.put(metricName, metric);
   }
 
   @Override

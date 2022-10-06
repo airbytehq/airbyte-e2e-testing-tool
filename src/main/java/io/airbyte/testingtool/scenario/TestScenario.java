@@ -1,6 +1,6 @@
 package io.airbyte.testingtool.scenario;
 
-import io.airbyte.testingtool.metrics.Metric;
+import io.airbyte.testingtool.metrics.Metrics;
 import io.airbyte.testingtool.scenario.action.ScenarioAction;
 import java.util.Map;
 import java.util.SortedSet;
@@ -71,16 +71,12 @@ public class TestScenario {
 
   private String getMetrics(ScenarioAction action) {
 
-    if (action.getMetrics().isEmpty()) {
+    if (action.getMetrics() == null) {
       return "";
     }
-    StringBuffer result = new StringBuffer("\n");
-
-    for (Map.Entry<String, Metric> entry : action.getMetrics().entrySet()) {
-      result.append(entry.getKey() + ": " + entry.getValue() + "\n");
+    else {
+      return action.getMetrics().toString();
     }
-
-    return result.toString();
   }
 
 }
