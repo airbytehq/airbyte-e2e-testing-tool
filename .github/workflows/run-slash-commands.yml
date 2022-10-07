@@ -102,7 +102,8 @@ jobs:
     runs-on: ubuntu-latest
     if: |
       needs.set-params.outputs.command == '/help-full' ||
-      needs.set-params.outputs.command == '/help'
+      needs.set-params.outputs.command == '/help' ||
+      needs.set-params.outputs.command == '/list-scenarios'
     needs: set-params
     steps:
       - name: Update comment for processing
@@ -118,11 +119,6 @@ jobs:
         run: |
           mkdir secrets
           mkdir result
-      - name: Connect to secret manager
-        uses: jsdaniell/create-json@1.1.2
-        with:
-          name: "/secrets/service_account_credentials.json"
-          json: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_CREDENTIALS }}
       - name: Run docker container with params
         run: docker run -v $(pwd)/secrets:/secrets -v $(pwd)/result:/result airbyte/airbyte-e2e-testing-tool:latest ${{ github.event.comment.body }}
       - name: Read file with results
@@ -148,7 +144,6 @@ jobs:
   scenarios-run:
     runs-on: ubuntu-latest
     if: |
-      needs.set-params.outputs.command == '/list-scenarios' ||
       needs.set-params.outputs.command == '/run-scenario' ||
       needs.set-params.outputs.command == '/run-scenario-local'
     needs: set-params
