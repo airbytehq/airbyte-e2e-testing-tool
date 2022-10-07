@@ -1,14 +1,20 @@
-package io.airbyte.testingtool.scenario.instance.autonomous;
+package io.airbyte.testingtool.scenario.instance.autonomous.postgres;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.collect.ImmutableMap;
 import io.airbyte.testingtool.json.Jsons;
 import io.airbyte.testingtool.scenario.config.credentials.CredentialConfig.InstanceCredTypes;
+import io.airbyte.testingtool.scenario.instance.autonomous.TestContainerLocalInstance;
 import io.airbyte.testingtool.utils.HostPortResolver;
 import java.util.function.Supplier;
 import org.testcontainers.containers.PostgreSQLContainer;
 
-class DestPostgresLocalInstance extends TestContainerLocalInstance<PostgreSQLContainer<?>> {
+public class SourcePostgresLocalInstance extends TestContainerLocalInstance<PostgreSQLContainer<?>> {
+
+  @Override
+  public InstanceCredTypes getInstanceCredType() {
+    return InstanceCredTypes.SOURCE_CREDS;
+  }
 
   @Override
   protected JsonNode getInstanceConfig(PostgreSQLContainer<?> instance) {
@@ -28,10 +34,4 @@ class DestPostgresLocalInstance extends TestContainerLocalInstance<PostgreSQLCon
   protected Supplier<PostgreSQLContainer<?>> getContainerSupplier() {
     return () -> new PostgreSQLContainer<>("postgres:13-alpine");
   }
-
-  @Override
-  public InstanceCredTypes getInstanceCredType() {
-    return InstanceCredTypes.DESTINATION_CREDS;
-  }
-
 }
