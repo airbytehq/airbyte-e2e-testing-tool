@@ -17,13 +17,6 @@ import lombok.Getter;
 @Getter
 public class ActionSyncConnection extends AbstractConnectionAction {
 
-  private long syncStart;
-  private long syncEnd;
-  private long bytes;
-  private long records;
-  private List<AttemptStreamStats> streamStats;
-  private AttemptStats totalStats;
-
   @Builder
   public ActionSyncConnection(int order, List<Instance> requiredInstances, Instance resultInstance, AirbyteConnection connection) {
     super(order, requiredInstances, resultInstance, connection);
@@ -37,22 +30,10 @@ public class ActionSyncConnection extends AbstractConnectionAction {
   @Override
   public void doActionInternal() throws ApiException, InterruptedException {
     sync();
-    metrics = Metrics.builder().bytes(bytes).records(records).startTime(syncStart).endTime(syncEnd).streamStats(streamStats)
-        .totalStats(totalStats).build();
   }
 
   private void sync() throws ApiException, InterruptedException {
     JobInfoRead jir = connectionInstance.getAirbyteInstance().getAirbyteApi().getConnectionApi().syncConnection(connectionInstance.getConnectionRequestBody());
-    JobWaiter.waitForJobFinish(connectionInstance.getAirbyteInstance().getAirbyteApi().getJobsApi(), jir.getJob().getId());
-    JobInfoRead finishedJir = connectionInstance.getAirbyteInstance().getAirbyteApi().getJobsApi().getJobInfo(new JobIdRequestBody().id(jir.getJob().getId()));
-    List<AttemptInfoRead> attempts = finishedJir.getAttempts();
-    AttemptInfoRead lastAttempt = attempts.get(attempts.size() - 1);
-
-    syncStart = lastAttempt.getAttempt().getCreatedAt();
-    syncEnd = lastAttempt.getAttempt().getEndedAt();
-    bytes = lastAttempt.getAttempt().getBytesSynced();
-    records = lastAttempt.getAttempt().getRecordsSynced();
-    streamStats = lastAttempt.getAttempt().getStreamStats();
-    totalStats = lastAttempt.getAttempt().getTotalStats();
+    metrics = JobWaiter.waitForJobFinish(connectionInstance.getAirbyteInstance().getAirbyteApi().getJobsApi(), jir.getJob().getId());
   }
 }

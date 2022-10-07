@@ -31,7 +31,6 @@ version '0.4.3'
 
 repositories {
     mavenCentral()
-    mavenLocal()
     maven {
         url "https://airbyte.mycloudrepo.io/public/repositories/airbyte-public-jars/"
     }
