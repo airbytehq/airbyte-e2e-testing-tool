@@ -25,8 +25,8 @@ public class Metrics implements Serializable {
   @Override
   public String toString() {
     long time = (endTime - startTime);
-    double throughputBytes = time == 0 ? 0 : bytes/(double)time;
-    double throughputRecords = time == 0 ? 0 : records/(double)time;
+    double throughputBytes = time == 0 ? 0 : 1000*bytes/(double)time;
+    double throughputRecords = time == 0 ? 0 : 1000*records/(double)time;
 
     StringBuffer scalabilityMetrics = new StringBuffer();
 
@@ -49,8 +49,8 @@ public class Metrics implements Serializable {
     StringBuffer result = new StringBuffer("time (ms): " + time +
         "\nbytes=" + bytes +
         "\nrecords=" + records +
-        "\nthroughput(bytes)=" +  throughputBytes +
-        "\nthroughput(records)=" + throughputRecords);
+        "\nthroughput(bytes/sec)=" +  throughputBytes +
+        "\nthroughput(records/sec)=" + throughputRecords);
 
     if (streamStats != null) {
       result.append("\nscalability:\n==========\n" + scalabilityMetrics.toString() +

@@ -72,7 +72,7 @@ public class TestScenario {
         Metrics actionMetrics = action.getMetrics();
 
         if (actionMetrics != null) {
-          File output = new File(System.getenv("user.dir") + File.pathSeparator + "metrics" + File.pathSeparator +
+          File output = new File(System.getProperty("user.dir") + File.separator + "metrics" + File.separator +
               action.getActionName() + "_" + System.currentTimeMillis() + ".json");
 
           if (!output.exists()) {
@@ -101,6 +101,7 @@ public class TestScenario {
           .append(" | ").append(action.getStatus().getName())
           .append(" | ").append(action.getContext())
           .append(" | **").append(action.getDurationSec()).append(" sec** |\n")
+          .append("*** METRICS ***")
           .append(getMetrics(action))
     );
     return summary.toString();
