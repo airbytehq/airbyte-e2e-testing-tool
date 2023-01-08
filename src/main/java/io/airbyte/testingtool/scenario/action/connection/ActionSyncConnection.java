@@ -1,12 +1,20 @@
 package io.airbyte.testingtool.scenario.action.connection;
 
 import io.airbyte.api.client.invoker.generated.ApiException;
+import io.airbyte.api.client.model.generated.AttemptInfoRead;
+import io.airbyte.api.client.model.generated.AttemptStats;
+import io.airbyte.api.client.model.generated.AttemptStreamStats;
+import io.airbyte.api.client.model.generated.JobIdRequestBody;
+import io.airbyte.api.client.model.generated.JobInfoRead;
 import io.airbyte.testingtool.jobwaiter.JobWaiter;
+import io.airbyte.testingtool.metrics.Metrics;
 import io.airbyte.testingtool.scenario.instance.AirbyteConnection;
 import io.airbyte.testingtool.scenario.instance.Instance;
 import java.util.List;
 import lombok.Builder;
+import lombok.Getter;
 
+@Getter
 public class ActionSyncConnection extends AbstractConnectionAction {
 
   @Builder
@@ -25,9 +33,7 @@ public class ActionSyncConnection extends AbstractConnectionAction {
   }
 
   private void sync() throws ApiException, InterruptedException {
-    JobWaiter.waitForJobFinish(connectionInstance.getAirbyteInstance().getAirbyteApi().getJobsApi(),
-        connectionInstance.getAirbyteInstance().getAirbyteApi().getConnectionApi().syncConnection(connectionInstance.getConnectionRequestBody())
-            .getJob().getId());
+    JobInfoRead jir = connectionInstance.getAirbyteInstance().getAirbyteApi().getConnectionApi().syncConnection(connectionInstance.getConnectionRequestBody());
+    metrics = JobWaiter.waitForJobFinish(connectionInstance.getAirbyteInstance().getAirbyteApi().getJobsApi(), jir.getJob().getId());
   }
-
 }

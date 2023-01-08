@@ -1,6 +1,13 @@
 package io.airbyte.testingtool.scenario;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import io.airbyte.testingtool.metrics.Metrics;
 import io.airbyte.testingtool.scenario.action.ScenarioAction;
+import java.io.BufferedOutputStream;
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.util.Map;
 import java.util.SortedSet;
 import lombok.Builder;
 import lombok.Getter;
@@ -25,6 +32,7 @@ public class TestScenario {
 
   public void runScenario() {
     executeActions(scenarioActions);
+    storingMetrics(scenarioActions);
   }
 
   private void executeActions(SortedSet<ScenarioAction> actions) {
@@ -56,6 +64,36 @@ public class TestScenario {
         getActionSummaryText(scenarioActions));
   }
 
+  private void storingMetrics(SortedSet<ScenarioAction> actions) {
+    ObjectMapper mapper = new ObjectMapper();
+
+    for (ScenarioAction action: actions) {
+      try {
+        Metrics actionMetrics = action.getMetrics();
+
+        if (actionMetrics != null) {
+          File output = new File(System.getProperty("user.dir") + File.separator + "metrics" + File.separator +
+              action.getActionName() + "_" + System.currentTimeMillis() + ".json");
+
+          if (!output.exists()) {
+            output.getParentFile().mkdirs();
+            output.createNewFile();
+          }
+
+          try (DataOutputStream outputStream = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(output)))) {
+            String jsonString = mapper.writeValueAsString(actionMetrics);
+            outputStream.writeUTF(jsonString);
+          } catch (Exception e) {
+            e.printStackTrace();
+          }
+        }
+      }
+      catch (Exception e) {
+        e.printStackTrace();
+      }
+    }
+  }
+
   private String getActionSummaryText(SortedSet<ScenarioAction> actions) {
     StringBuilder summary = new StringBuilder();
     actions.forEach(action ->
@@ -63,8 +101,19 @@ public class TestScenario {
           .append(" | ").append(action.getStatus().getName())
           .append(" | ").append(action.getContext())
           .append(" | **").append(action.getDurationSec()).append(" sec** |\n")
+          .append("*** METRICS ***")
+          .append(getMetrics(action))
     );
     return summary.toString();
+  }
+
+  private String getMetrics(ScenarioAction action) {
+    if (action.getMetrics() == null) {
+      return "";
+    }
+    else {
+      return action.getMetrics().toString();
+    }
   }
 
 }
