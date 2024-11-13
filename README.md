@@ -1,3 +1,7 @@
+# DEPRECATED
+This repository is no longer in use. 
+
+
 # Airbyte E2E testing tool
 
 This stand-alone testing configurable application will help us execute different end-to-end tests and improve the Airbyte final product quality.
